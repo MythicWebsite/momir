@@ -3,3 +3,4 @@ json/all_creature_cards.json
 json/bulk.json
 Images/*
 json/*
+__pycache__/*
