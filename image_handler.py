@@ -39,3 +39,4 @@ def convert_card(img: bytes, card_id: str) -> bytes:
     img = enhancer.enhance(2)
     img = img.convert("1")
     img.save(f"Images/{card_id}.png")
+    return f"Images/{card_id}.png"
