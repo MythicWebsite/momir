@@ -38,7 +38,7 @@ def check_bulk_data() -> bool:
     new_bulk_data = get_bulk()
     if bulk_data != new_bulk_data:
         print('New bulk data available')
-        save_json_file('json/bulk.json', new_bulk_data)
+        save_json_file(new_bulk_data, 'json/bulk.json')
         return True
     else:
         return False

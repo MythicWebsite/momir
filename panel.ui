@@ -48,7 +48,7 @@ QPushButton {
        <widget class="QGraphicsView" name="graphicsView">
         <property name="minimumSize">
          <size>
-          <width>800</width>
+          <width>500</width>
           <height>100</height>
          </size>
         </property>
@@ -129,19 +129,6 @@ QPushButton {
          </widget>
         </item>
         <item>
-         <spacer name="horizontalSpacer_3">
-          <property name="orientation">
-           <enum>Qt::Orientation::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
          <widget class="QLabel" name="label">
           <property name="font">
            <font>
@@ -159,19 +146,6 @@ QPushButton {
            <set>Qt::AlignmentFlag::AlignCenter</set>
           </property>
          </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer_4">
-          <property name="orientation">
-           <enum>Qt::Orientation::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
         </item>
         <item>
          <widget class="QPushButton" name="pushButton_19">
