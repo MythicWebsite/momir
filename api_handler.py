@@ -4,6 +4,9 @@ import json
 
 api_url = 'https://api.scryfall.com/'
 
+creature_str = '+type%3Acreature'
+block_un_str = '+not%3Afunny+-set%3Aunf'
+
 def get_card(card_name) -> dict:
     response = requests.get(api_url + 'cards/named?fuzzy=' + card_name)
     card = response.json()
@@ -20,7 +23,7 @@ def save_json_file(data, file_path) -> None:
 
 def load_json_file(file_path) -> dict:
     if os.path.exists(file_path):
-        with open(file_path, 'r') as json_file:
+        with open(file_path, 'r', encoding="utf8") as json_file:
             return json.load(json_file)
     return None
 
@@ -58,17 +61,18 @@ def get_next_creature_page(creatures, url) -> tuple[dict,str]:
                 creatures[str(int(card['cmc']))].append(card)
     return creatures, next_page, total
 
-def get_creature_card_list() -> dict:
+def get_creature_card_list(funny: bool = False) -> dict:
     update_check = check_bulk_data()
-    if update_check or not os.path.exists('json/all_creature_cards.json'):
+    path_str = 'json/creatures_no_un.json' if not funny else 'json/creatures_un.json'
+    if update_check or not os.path.exists(path_str):
         creatures: dict[list] = {}
-        creatures, next_page, total = get_next_creature_page(creatures, api_url + 'cards/search?q=type%3Acreature+game%3Apaper+not%3Afunny+-set%3Aunf&order=cmc')
+        creatures, next_page, total = get_next_creature_page(creatures, api_url + f'cards/search?q=game%3Apaper{creature_str}{block_un_str if not funny else ""}&order=cmc')
         count = 2
         while next_page:
             print(f"Getting next page {count}/{int(total/175+1)}")
             count += 1
             creatures, next_page, total = get_next_creature_page(creatures, next_page)
-        save_json_file(creatures, 'json/all_creature_cards.json')
+        save_json_file(creatures, path_str)
         return creatures
     else:
-        return load_json_file('json/all_creature_cards.json')
+        return load_json_file(path_str)
