@@ -76,3 +76,30 @@ def get_creature_card_list(funny: bool = False) -> dict:
         return creatures
     else:
         return load_json_file(path_str)
+
+def get_token_next_page(tokens: list, url: str) -> tuple[dict,str]:
+    response = requests.get(url).json()
+    if response['has_more']:
+        next_page = response['next_page']
+    else:
+        next_page = None
+    total = response['total_cards']
+    for token in response['data']:
+        if not token['id'] in tokens and not token.get('type_line', "") == "Card":
+            tokens.append(token)
+    return tokens, next_page, total
+
+def get_token_list() -> dict:
+    update_check = check_bulk_data()
+    if update_check or not os.path.exists('json/tokens.json'):
+        tokens: list = []
+        tokens, next_page, total = get_token_next_page(tokens, api_url + 'cards/search?q=layout:token&order=name')
+        count = 2
+        while next_page:
+            print(f"Getting next page {count}/{int(total/175+1)}")
+            count += 1
+            tokens, next_page, total = get_token_next_page(tokens, next_page)
+        save_json_file(tokens, 'json/tokens.json')
+        return tokens
+    else:
+        return load_json_file('json/tokens.json')

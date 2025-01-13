@@ -17,14 +17,14 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QFrame, QGridLayout,
     QHBoxLayout, QLabel, QLayout, QMainWindow,
-    QMenuBar, QPushButton, QSizePolicy, QSpacerItem,
-    QVBoxLayout, QWidget)
+    QMenuBar, QPushButton, QScrollArea, QSizePolicy,
+    QSpacerItem, QTabWidget, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1837, 1159)
+        MainWindow.resize(1620, 1042)
         MainWindow.setStyleSheet(u"QWidget {\n"
 "	background-color: rgb(120, 120, 255);\n"
 "}\n"
@@ -39,92 +39,46 @@ class Ui_MainWindow(object):
 "}\n"
 "QPushButton:pressed {\n"
 "	background-color:rgb(50,50,50);\n"
+"}\n"
+"QTabWidget::pane{\n"
+"	background: rgb(28, 20, 255);\n"
+"	border: 0px solid rgb(90, 90, 90);\n"
+"	top:-1px;\n"
+"}\n"
+"QTabBar::tab {\n"
+"	background: rgb(80, 80, 190);\n"
+"	border: 3px solid black;\n"
+"	padding: 5px;\n"
+"}\n"
+"QTabBar::tab:selected {\n"
+"	background: rgb(120, 120, 255);\n"
+"	margin-bottom: -3px;\n"
+"}\n"
+"QScrollBar:vertical {\n"
+"	width:100px;\n"
 "}")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.horizontalLayout_2 = QHBoxLayout(self.centralwidget)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.horizontalSpacer_5 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout_2.addItem(self.horizontalSpacer_5)
-
-        self.verticalLayout_2 = QVBoxLayout()
-        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.card_display = QLabel(self.centralwidget)
-        self.card_display.setObjectName(u"card_display")
-        self.card_display.setMinimumSize(QSize(500, 1000))
-        self.card_display.setFrameShape(QFrame.Shape.NoFrame)
-        self.card_display.setPixmap(QPixmap(u"Magic_card_back.png"))
-        self.card_display.setScaledContents(False)
-        self.card_display.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.verticalLayout_2.addWidget(self.card_display)
-
-
-        self.horizontalLayout_2.addLayout(self.verticalLayout_2)
-
+        self.tabWidget = QTabWidget(self.centralwidget)
+        self.tabWidget.setObjectName(u"tabWidget")
+        font = QFont()
+        font.setPointSize(40)
+        self.tabWidget.setFont(font)
+        self.tabWidget.setTabShape(QTabWidget.TabShape.Rounded)
+        self.tabWidget.setElideMode(Qt.TextElideMode.ElideLeft)
+        self.momir_tab = QWidget()
+        self.momir_tab.setObjectName(u"momir_tab")
+        self.gridLayout_3 = QGridLayout(self.momir_tab)
+        self.gridLayout_3.setObjectName(u"gridLayout_3")
         self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.horizontalLayout_2.addItem(self.horizontalSpacer)
-
-        self.gridLayout_2 = QGridLayout()
-        self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout_2.addItem(self.verticalSpacer, 6, 0, 1, 1)
-
-        self.check_un = QCheckBox(self.centralwidget)
-        self.check_un.setObjectName(u"check_un")
-        font = QFont()
-        font.setPointSize(24)
-        font.setStrikeOut(False)
-        self.check_un.setFont(font)
-        self.check_un.setAutoFillBackground(False)
-        self.check_un.setIconSize(QSize(30, 30))
-        self.check_un.setTristate(False)
-
-        self.gridLayout_2.addWidget(self.check_un, 1, 0, 1, 1)
-
-        self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout_2.addItem(self.verticalSpacer_4, 4, 0, 1, 1)
-
-        self.momir_icon = QLabel(self.centralwidget)
-        self.momir_icon.setObjectName(u"momir_icon")
-        self.momir_icon.setPixmap(QPixmap(u"Momir_Vig.png"))
-
-        self.gridLayout_2.addWidget(self.momir_icon, 5, 0, 1, 1)
-
-        self.line = QFrame(self.centralwidget)
-        self.line.setObjectName(u"line")
-        self.line.setAutoFillBackground(False)
-        self.line.setFrameShadow(QFrame.Shadow.Plain)
-        self.line.setLineWidth(200)
-        self.line.setMidLineWidth(200)
-        self.line.setFrameShape(QFrame.Shape.HLine)
-
-        self.gridLayout_2.addWidget(self.line, 2, 0, 1, 1)
-
-        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout_2.addItem(self.verticalSpacer_2, 0, 0, 1, 1)
-
-        self.check_noncreature = QCheckBox(self.centralwidget)
-        self.check_noncreature.setObjectName(u"check_noncreature")
-        font1 = QFont()
-        font1.setPointSize(24)
-        font1.setStrikeOut(True)
-        self.check_noncreature.setFont(font1)
-        self.check_noncreature.setIconSize(QSize(30, 30))
-
-        self.gridLayout_2.addWidget(self.check_noncreature, 3, 0, 1, 1)
-
-
-        self.horizontalLayout_2.addLayout(self.gridLayout_2)
+        self.gridLayout_3.addItem(self.horizontalSpacer, 0, 0, 1, 1)
 
         self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.horizontalLayout_2.addItem(self.horizontalSpacer_2)
+        self.gridLayout_3.addItem(self.horizontalSpacer_2, 0, 2, 1, 1)
 
         self.verticalLayout = QVBoxLayout()
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -132,7 +86,7 @@ class Ui_MainWindow(object):
         self.gridLayout.setObjectName(u"gridLayout")
         self.gridLayout.setSizeConstraint(QLayout.SizeConstraint.SetMinAndMaxSize)
         self.gridLayout.setContentsMargins(40, 0, 40, 40)
-        self.button_14 = QPushButton(self.centralwidget)
+        self.button_14 = QPushButton(self.momir_tab)
         self.button_14.setObjectName(u"button_14")
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Maximum)
         sizePolicy.setHorizontalStretch(0)
@@ -144,7 +98,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.button_14, 7, 3, 1, 1)
 
-        self.button_8 = QPushButton(self.centralwidget)
+        self.button_8 = QPushButton(self.momir_tab)
         self.button_8.setObjectName(u"button_8")
         sizePolicy.setHeightForWidth(self.button_8.sizePolicy().hasHeightForWidth())
         self.button_8.setSizePolicy(sizePolicy)
@@ -153,7 +107,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.button_8, 4, 3, 1, 1)
 
-        self.button_7 = QPushButton(self.centralwidget)
+        self.button_7 = QPushButton(self.momir_tab)
         self.button_7.setObjectName(u"button_7")
         sizePolicy.setHeightForWidth(self.button_7.sizePolicy().hasHeightForWidth())
         self.button_7.setSizePolicy(sizePolicy)
@@ -162,7 +116,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.button_7, 4, 2, 1, 1)
 
-        self.button_6 = QPushButton(self.centralwidget)
+        self.button_6 = QPushButton(self.momir_tab)
         self.button_6.setObjectName(u"button_6")
         sizePolicy.setHeightForWidth(self.button_6.sizePolicy().hasHeightForWidth())
         self.button_6.setSizePolicy(sizePolicy)
@@ -171,7 +125,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.button_6, 4, 1, 1, 1)
 
-        self.button_11 = QPushButton(self.centralwidget)
+        self.button_11 = QPushButton(self.momir_tab)
         self.button_11.setObjectName(u"button_11")
         sizePolicy.setHeightForWidth(self.button_11.sizePolicy().hasHeightForWidth())
         self.button_11.setSizePolicy(sizePolicy)
@@ -180,7 +134,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.button_11, 5, 3, 1, 1)
 
-        self.button_3 = QPushButton(self.centralwidget)
+        self.button_3 = QPushButton(self.momir_tab)
         self.button_3.setObjectName(u"button_3")
         sizePolicy.setHeightForWidth(self.button_3.sizePolicy().hasHeightForWidth())
         self.button_3.setSizePolicy(sizePolicy)
@@ -190,7 +144,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.button_3, 3, 1, 1, 1)
 
-        self.button_2 = QPushButton(self.centralwidget)
+        self.button_2 = QPushButton(self.momir_tab)
         self.button_2.setObjectName(u"button_2")
         sizePolicy.setHeightForWidth(self.button_2.sizePolicy().hasHeightForWidth())
         self.button_2.setSizePolicy(sizePolicy)
@@ -199,7 +153,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.button_2, 1, 3, 1, 1)
 
-        self.button_5 = QPushButton(self.centralwidget)
+        self.button_5 = QPushButton(self.momir_tab)
         self.button_5.setObjectName(u"button_5")
         sizePolicy.setHeightForWidth(self.button_5.sizePolicy().hasHeightForWidth())
         self.button_5.setSizePolicy(sizePolicy)
@@ -208,7 +162,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.button_5, 3, 3, 1, 1)
 
-        self.button_12 = QPushButton(self.centralwidget)
+        self.button_12 = QPushButton(self.momir_tab)
         self.button_12.setObjectName(u"button_12")
         sizePolicy.setHeightForWidth(self.button_12.sizePolicy().hasHeightForWidth())
         self.button_12.setSizePolicy(sizePolicy)
@@ -217,7 +171,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.button_12, 7, 1, 1, 1)
 
-        self.button_1 = QPushButton(self.centralwidget)
+        self.button_1 = QPushButton(self.momir_tab)
         self.button_1.setObjectName(u"button_1")
         sizePolicy.setHeightForWidth(self.button_1.sizePolicy().hasHeightForWidth())
         self.button_1.setSizePolicy(sizePolicy)
@@ -226,13 +180,13 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.button_1, 1, 2, 1, 1)
 
-        self.button_print = QPushButton(self.centralwidget)
+        self.button_print = QPushButton(self.momir_tab)
         self.button_print.setObjectName(u"button_print")
         self.button_print.setMinimumSize(QSize(500, 100))
 
         self.gridLayout.addWidget(self.button_print, 10, 1, 1, 3)
 
-        self.button_15 = QPushButton(self.centralwidget)
+        self.button_15 = QPushButton(self.momir_tab)
         self.button_15.setObjectName(u"button_15")
         sizePolicy.setHeightForWidth(self.button_15.sizePolicy().hasHeightForWidth())
         self.button_15.setSizePolicy(sizePolicy)
@@ -242,7 +196,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.button_15, 8, 1, 1, 1)
 
-        self.button_0 = QPushButton(self.centralwidget)
+        self.button_0 = QPushButton(self.momir_tab)
         self.button_0.setObjectName(u"button_0")
         sizePolicy.setHeightForWidth(self.button_0.sizePolicy().hasHeightForWidth())
         self.button_0.setSizePolicy(sizePolicy)
@@ -252,7 +206,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.button_0, 1, 1, 1, 1)
 
-        self.button_4 = QPushButton(self.centralwidget)
+        self.button_4 = QPushButton(self.momir_tab)
         self.button_4.setObjectName(u"button_4")
         sizePolicy.setHeightForWidth(self.button_4.sizePolicy().hasHeightForWidth())
         self.button_4.setSizePolicy(sizePolicy)
@@ -261,17 +215,17 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.button_4, 3, 2, 1, 1)
 
-        self.cmc_label = QLabel(self.centralwidget)
+        self.cmc_label = QLabel(self.momir_tab)
         self.cmc_label.setObjectName(u"cmc_label")
-        font2 = QFont()
-        font2.setPointSize(40)
-        font2.setBold(True)
-        self.cmc_label.setFont(font2)
+        font1 = QFont()
+        font1.setPointSize(40)
+        font1.setBold(True)
+        self.cmc_label.setFont(font1)
         self.cmc_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.gridLayout.addWidget(self.cmc_label, 0, 1, 1, 3)
 
-        self.button_16 = QPushButton(self.centralwidget)
+        self.button_16 = QPushButton(self.momir_tab)
         self.button_16.setObjectName(u"button_16")
         sizePolicy.setHeightForWidth(self.button_16.sizePolicy().hasHeightForWidth())
         self.button_16.setSizePolicy(sizePolicy)
@@ -280,7 +234,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.button_16, 8, 2, 1, 1)
 
-        self.button_9 = QPushButton(self.centralwidget)
+        self.button_9 = QPushButton(self.momir_tab)
         self.button_9.setObjectName(u"button_9")
         sizePolicy.setHeightForWidth(self.button_9.sizePolicy().hasHeightForWidth())
         self.button_9.setSizePolicy(sizePolicy)
@@ -289,22 +243,22 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.button_9, 5, 1, 1, 1)
 
-        self.button_10 = QPushButton(self.centralwidget)
+        self.button_10 = QPushButton(self.momir_tab)
         self.button_10.setObjectName(u"button_10")
         sizePolicy.setHeightForWidth(self.button_10.sizePolicy().hasHeightForWidth())
         self.button_10.setSizePolicy(sizePolicy)
         self.button_10.setMinimumSize(QSize(100, 100))
         self.button_10.setMaximumSize(QSize(5000, 5000))
-        font3 = QFont()
-        font3.setFamilies([u"Segoe UI"])
-        font3.setBold(True)
-        font3.setItalic(False)
-        font3.setStrikeOut(False)
-        self.button_10.setFont(font3)
+        font2 = QFont()
+        font2.setFamilies([u"Segoe UI"])
+        font2.setBold(True)
+        font2.setItalic(False)
+        font2.setStrikeOut(False)
+        self.button_10.setFont(font2)
 
         self.gridLayout.addWidget(self.button_10, 5, 2, 1, 1)
 
-        self.button_13 = QPushButton(self.centralwidget)
+        self.button_13 = QPushButton(self.momir_tab)
         self.button_13.setObjectName(u"button_13")
         sizePolicy.setHeightForWidth(self.button_13.sizePolicy().hasHeightForWidth())
         self.button_13.setSizePolicy(sizePolicy)
@@ -313,7 +267,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.button_13, 7, 2, 1, 1)
 
-        self.label_3 = QLabel(self.centralwidget)
+        self.label_3 = QLabel(self.momir_tab)
         self.label_3.setObjectName(u"label_3")
 
         self.gridLayout.addWidget(self.label_3, 9, 1, 1, 1)
@@ -322,30 +276,133 @@ class Ui_MainWindow(object):
         self.verticalLayout.addLayout(self.gridLayout)
 
 
-        self.horizontalLayout_2.addLayout(self.verticalLayout)
+        self.gridLayout_3.addLayout(self.verticalLayout, 0, 5, 1, 1)
 
-        self.horizontalSpacer_6 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.horizontalLayout_2.addItem(self.horizontalSpacer_6)
+        self.gridLayout_3.addItem(self.horizontalSpacer_3, 0, 4, 1, 1)
+
+        self.horizontalLayout = QHBoxLayout()
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.card_display = QLabel(self.momir_tab)
+        self.card_display.setObjectName(u"card_display")
+        self.card_display.setMinimumSize(QSize(500, 1000))
+        self.card_display.setFrameShape(QFrame.Shape.NoFrame)
+        self.card_display.setPixmap(QPixmap(u"Magic_card_back.png"))
+        self.card_display.setScaledContents(False)
+        self.card_display.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.card_display.setMargin(0)
+
+        self.horizontalLayout.addWidget(self.card_display)
+
+
+        self.gridLayout_3.addLayout(self.horizontalLayout, 0, 1, 1, 1)
+
+        self.gridLayout_2 = QGridLayout()
+        self.gridLayout_2.setObjectName(u"gridLayout_2")
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_2.addItem(self.verticalSpacer, 7, 0, 1, 1)
+
+        self.check_un = QCheckBox(self.momir_tab)
+        self.check_un.setObjectName(u"check_un")
+        font3 = QFont()
+        font3.setPointSize(24)
+        font3.setStrikeOut(False)
+        self.check_un.setFont(font3)
+        self.check_un.setAutoFillBackground(False)
+        self.check_un.setIconSize(QSize(30, 30))
+        self.check_un.setTristate(False)
+
+        self.gridLayout_2.addWidget(self.check_un, 2, 0, 1, 1)
+
+        self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_2.addItem(self.verticalSpacer_4, 5, 0, 1, 1)
+
+        self.momir_icon = QLabel(self.momir_tab)
+        self.momir_icon.setObjectName(u"momir_icon")
+        self.momir_icon.setPixmap(QPixmap(u"Momir_Vig.png"))
+
+        self.gridLayout_2.addWidget(self.momir_icon, 6, 0, 1, 1)
+
+        self.line = QFrame(self.momir_tab)
+        self.line.setObjectName(u"line")
+        self.line.setAutoFillBackground(False)
+        self.line.setFrameShadow(QFrame.Shadow.Plain)
+        self.line.setLineWidth(200)
+        self.line.setMidLineWidth(200)
+        self.line.setFrameShape(QFrame.Shape.HLine)
+
+        self.gridLayout_2.addWidget(self.line, 3, 0, 1, 1)
+
+        self.check_noncreature = QCheckBox(self.momir_tab)
+        self.check_noncreature.setObjectName(u"check_noncreature")
+        font4 = QFont()
+        font4.setPointSize(24)
+        font4.setStrikeOut(True)
+        self.check_noncreature.setFont(font4)
+        self.check_noncreature.setIconSize(QSize(30, 30))
+
+        self.gridLayout_2.addWidget(self.check_noncreature, 4, 0, 1, 1)
+
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_2.addItem(self.verticalSpacer_2, 1, 0, 1, 1)
+
+
+        self.gridLayout_3.addLayout(self.gridLayout_2, 0, 3, 1, 1)
+
+        self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_3.addItem(self.horizontalSpacer_4, 0, 6, 1, 1)
+
+        self.tabWidget.addTab(self.momir_tab, "")
+        self.tokens_tab = QWidget()
+        self.tokens_tab.setObjectName(u"tokens_tab")
+        self.horizontalLayout_3 = QHBoxLayout(self.tokens_tab)
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.scrollArea = QScrollArea(self.tokens_tab)
+        self.scrollArea.setObjectName(u"scrollArea")
+        self.scrollArea.setFrameShape(QFrame.Shape.NoFrame)
+        self.scrollArea.setFrameShadow(QFrame.Shadow.Plain)
+        self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollAreaWidgetContents = QWidget()
+        self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1484, 899))
+        self.horizontalLayout_4 = QHBoxLayout(self.scrollAreaWidgetContents)
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.horizontalLayout_4.setContentsMargins(-1, -1, 0, -1)
+        self.token_grid = QGridLayout()
+        self.token_grid.setObjectName(u"token_grid")
+
+        self.horizontalLayout_4.addLayout(self.token_grid)
+
+        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+
+        self.horizontalLayout_3.addWidget(self.scrollArea)
+
+        self.tabWidget.addTab(self.tokens_tab, "")
+
+        self.horizontalLayout_2.addWidget(self.tabWidget)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1837, 22))
+        self.menubar.setGeometry(QRect(0, 0, 1620, 22))
         MainWindow.setMenuBar(self.menubar)
 
         self.retranslateUi(MainWindow)
+
+        self.tabWidget.setCurrentIndex(1)
+
 
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.card_display.setText("")
-        self.check_un.setText(QCoreApplication.translate("MainWindow", u"  Enable Un-Cards", None))
-        self.momir_icon.setText("")
-        self.check_noncreature.setText(QCoreApplication.translate("MainWindow", u"  Enable non-creature \n"
-"  cards", None))
         self.button_14.setText(QCoreApplication.translate("MainWindow", u"14", None))
         self.button_8.setText(QCoreApplication.translate("MainWindow", u"8", None))
         self.button_7.setText(QCoreApplication.translate("MainWindow", u"7", None))
@@ -366,5 +423,12 @@ class Ui_MainWindow(object):
         self.button_10.setText(QCoreApplication.translate("MainWindow", u"10", None))
         self.button_13.setText(QCoreApplication.translate("MainWindow", u"13", None))
         self.label_3.setText("")
+        self.card_display.setText("")
+        self.check_un.setText(QCoreApplication.translate("MainWindow", u"  Enable Un-Cards", None))
+        self.momir_icon.setText("")
+        self.check_noncreature.setText(QCoreApplication.translate("MainWindow", u"  Enable non-creature \n"
+"  cards", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.momir_tab), QCoreApplication.translate("MainWindow", u"  Momir  ", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tokens_tab), QCoreApplication.translate("MainWindow", u"  Tokens  ", None))
     # retranslateUi
 

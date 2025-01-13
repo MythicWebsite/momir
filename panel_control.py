@@ -1,15 +1,16 @@
 import sys, os
 import random
-from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton
+from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel
 from PySide6.QtGui import QPixmap
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QSize
 from ui_panel import Ui_MainWindow
-from api_handler import get_creature_card_list, download_img
+from api_handler import get_creature_card_list, download_img, get_token_list
 from image_handler import convert_card, flip_card_image
 from print_handler import print_card
 
 creatures: dict = get_creature_card_list()
 un_creatures:dict = get_creature_card_list(funny=True)
+tokens: list = get_token_list()
 current_card: dict = {}
 
 class MainWindow(QMainWindow):
@@ -25,6 +26,22 @@ class MainWindow(QMainWindow):
                 button.clicked.connect(self.on_cmc_click)
 
         self.ui.check_un.stateChanged.connect(self.on_unset_check)
+
+        count = 0
+        for token in tokens:
+            if token.get('image_uris', None):
+                if not os.path.exists(f'Images/{token["id"]}.png'):
+                    print(f"Creating image for {token['name']}")
+                    img_url = token['image_uris']['border_crop']
+                    card_loc = convert_card(download_img(img_url), token['id'])
+                else:
+                    card_loc = f'Images/{token["id"]}.png'
+                pixmap = QPixmap(card_loc).scaled(self.ui.tokens_tab.size()/1.9, aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
+                new_card = QLabel()
+                new_card.setPixmap(pixmap)
+                new_card.objectName = {token['id']}
+                self.ui.token_grid.addWidget(new_card, count//8, count%8)
+                count += 1
         
 
     def on_cmc_click(self):
