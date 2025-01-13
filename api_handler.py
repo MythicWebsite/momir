@@ -52,9 +52,10 @@ def get_next_creature_page(creatures, url) -> tuple[dict,str]:
     total = response['total_cards']
     for card in response['data']:
         if 'Creature' in card['type_line'].split('//')[0]:
-            if not str(int(card['cmc'])) in creatures:
-                creatures[str(int(card['cmc']))] = []
-            creatures[str(int(card['cmc']))].append(card)
+            if not (card.get('all_parts', None) and card.get("mana_cost", "1") == ""):
+                if not str(int(card['cmc'])) in creatures:
+                    creatures[str(int(card['cmc']))] = []
+                creatures[str(int(card['cmc']))].append(card)
     return creatures, next_page, total
 
 def get_creature_card_list() -> dict:
