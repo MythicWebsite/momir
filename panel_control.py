@@ -58,6 +58,8 @@ class MainWindow(QMainWindow):
                         img_count += 1
                 else:
                     card_loc.append(f'Images/{token["id"]}.png')
+                    if os.path.exists(f'Images/{token["id"]}-1.png'):
+                        card_loc.append(f'Images/{token["id"]}-1.png')
                 for cl in card_loc:
                     pixmap = QPixmap(cl).scaled(self.ui.tokens_tab_2.size()/1.9, aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
                     new_card = QLabel()
