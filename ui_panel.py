@@ -24,7 +24,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1620, 1042)
+        MainWindow.resize(1644, 1188)
         MainWindow.setStyleSheet(u"QWidget {\n"
 "	background-color: rgb(120, 120, 255);\n"
 "}\n"
@@ -45,6 +45,9 @@ class Ui_MainWindow(object):
 "	border: 0px solid rgb(90, 90, 90);\n"
 "	top:-1px;\n"
 "}\n"
+"QTabWidget::tab-bar{\n"
+"	alignment:center;\n"
+"}\n"
 "QTabBar::tab {\n"
 "	background: rgb(80, 80, 190);\n"
 "	border: 3px solid black;\n"
@@ -64,7 +67,7 @@ class Ui_MainWindow(object):
         self.tabWidget = QTabWidget(self.centralwidget)
         self.tabWidget.setObjectName(u"tabWidget")
         font = QFont()
-        font.setPointSize(40)
+        font.setPointSize(60)
         self.tabWidget.setFont(font)
         self.tabWidget.setTabShape(QTabWidget.TabShape.Rounded)
         self.tabWidget.setElideMode(Qt.TextElideMode.ElideLeft)
@@ -300,31 +303,15 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2 = QGridLayout()
         self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout_2.addItem(self.verticalSpacer, 7, 0, 1, 1)
-
-        self.check_un = QCheckBox(self.momir_tab)
-        self.check_un.setObjectName(u"check_un")
+        self.check_noncreature = QCheckBox(self.momir_tab)
+        self.check_noncreature.setObjectName(u"check_noncreature")
         font3 = QFont()
         font3.setPointSize(24)
-        font3.setStrikeOut(False)
-        self.check_un.setFont(font3)
-        self.check_un.setAutoFillBackground(False)
-        self.check_un.setIconSize(QSize(30, 30))
-        self.check_un.setTristate(False)
+        font3.setStrikeOut(True)
+        self.check_noncreature.setFont(font3)
+        self.check_noncreature.setIconSize(QSize(30, 30))
 
-        self.gridLayout_2.addWidget(self.check_un, 2, 0, 1, 1)
-
-        self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout_2.addItem(self.verticalSpacer_4, 5, 0, 1, 1)
-
-        self.momir_icon = QLabel(self.momir_tab)
-        self.momir_icon.setObjectName(u"momir_icon")
-        self.momir_icon.setPixmap(QPixmap(u"Momir_Vig.png"))
-
-        self.gridLayout_2.addWidget(self.momir_icon, 6, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.check_noncreature, 3, 0, 1, 1)
 
         self.line = QFrame(self.momir_tab)
         self.line.setObjectName(u"line")
@@ -334,21 +321,39 @@ class Ui_MainWindow(object):
         self.line.setMidLineWidth(200)
         self.line.setFrameShape(QFrame.Shape.HLine)
 
-        self.gridLayout_2.addWidget(self.line, 3, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.line, 2, 0, 1, 1)
 
-        self.check_noncreature = QCheckBox(self.momir_tab)
-        self.check_noncreature.setObjectName(u"check_noncreature")
+        self.check_un = QCheckBox(self.momir_tab)
+        self.check_un.setObjectName(u"check_un")
         font4 = QFont()
         font4.setPointSize(24)
-        font4.setStrikeOut(True)
-        self.check_noncreature.setFont(font4)
-        self.check_noncreature.setIconSize(QSize(30, 30))
+        font4.setStrikeOut(False)
+        self.check_un.setFont(font4)
+        self.check_un.setAutoFillBackground(False)
+        self.check_un.setIconSize(QSize(30, 30))
+        self.check_un.setTristate(False)
 
-        self.gridLayout_2.addWidget(self.check_noncreature, 4, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.check_un, 1, 0, 1, 1)
+
+        self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_2.addItem(self.verticalSpacer_4, 4, 0, 1, 1)
+
+        self.momir_icon = QLabel(self.momir_tab)
+        self.momir_icon.setObjectName(u"momir_icon")
+        self.momir_icon.setMaximumSize(QSize(500, 16777215))
+        self.momir_icon.setPixmap(QPixmap(u"Momir_Vig.png"))
+        self.momir_icon.setScaledContents(False)
+
+        self.gridLayout_2.addWidget(self.momir_icon, 5, 0, 1, 1)
+
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_2.addItem(self.verticalSpacer, 7, 0, 1, 1)
 
         self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.gridLayout_2.addItem(self.verticalSpacer_2, 1, 0, 1, 1)
+        self.gridLayout_2.addItem(self.verticalSpacer_2, 6, 0, 1, 1)
 
 
         self.gridLayout_3.addLayout(self.gridLayout_2, 0, 3, 1, 1)
@@ -360,9 +365,115 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(self.momir_tab, "")
         self.tokens_tab = QWidget()
         self.tokens_tab.setObjectName(u"tokens_tab")
-        self.horizontalLayout_3 = QHBoxLayout(self.tokens_tab)
+        self.horizontalLayout_6 = QHBoxLayout(self.tokens_tab)
+        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.gridLayout_5 = QGridLayout()
+        self.gridLayout_5.setObjectName(u"gridLayout_5")
+        self.gridLayout_5.setSizeConstraint(QLayout.SizeConstraint.SetMaximumSize)
+        self.button_print_token = QPushButton(self.tokens_tab)
+        self.button_print_token.setObjectName(u"button_print_token")
+        self.button_print_token.setMinimumSize(QSize(500, 100))
+        self.button_print_token.setMaximumSize(QSize(600, 16777215))
+
+        self.gridLayout_5.addWidget(self.button_print_token, 1, 0, 1, 1)
+
+        self.token_display = QLabel(self.tokens_tab)
+        self.token_display.setObjectName(u"token_display")
+        self.token_display.setMinimumSize(QSize(500, 0))
+        self.token_display.setMaximumSize(QSize(600, 16777215))
+
+        self.gridLayout_5.addWidget(self.token_display, 0, 0, 1, 1)
+
+
+        self.horizontalLayout_6.addLayout(self.gridLayout_5)
+
+        self.scrollArea_2 = QScrollArea(self.tokens_tab)
+        self.scrollArea_2.setObjectName(u"scrollArea_2")
+        self.scrollArea_2.setFrameShape(QFrame.Shape.NoFrame)
+        self.scrollArea_2.setFrameShadow(QFrame.Shadow.Plain)
+        self.scrollArea_2.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+        self.scrollArea_2.setWidgetResizable(True)
+        self.scrollAreaWidgetContents_2 = QWidget()
+        self.scrollAreaWidgetContents_2.setObjectName(u"scrollAreaWidgetContents_2")
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 1000, 1009))
+        self.horizontalLayout_5 = QHBoxLayout(self.scrollAreaWidgetContents_2)
+        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
+        self.token_grid = QGridLayout()
+        self.token_grid.setObjectName(u"token_grid")
+        self.label_8 = QLabel(self.scrollAreaWidgetContents_2)
+        self.label_8.setObjectName(u"label_8")
+
+        self.token_grid.addWidget(self.label_8, 3, 1, 1, 1)
+
+        self.label_5 = QLabel(self.scrollAreaWidgetContents_2)
+        self.label_5.setObjectName(u"label_5")
+
+        self.token_grid.addWidget(self.label_5, 3, 4, 1, 1)
+
+        self.label_6 = QLabel(self.scrollAreaWidgetContents_2)
+        self.label_6.setObjectName(u"label_6")
+
+        self.token_grid.addWidget(self.label_6, 3, 3, 1, 1)
+
+        self.label_2 = QLabel(self.scrollAreaWidgetContents_2)
+        self.label_2.setObjectName(u"label_2")
+
+        self.token_grid.addWidget(self.label_2, 3, 6, 1, 1)
+
+        self.label_7 = QLabel(self.scrollAreaWidgetContents_2)
+        self.label_7.setObjectName(u"label_7")
+
+        self.token_grid.addWidget(self.label_7, 3, 2, 1, 1)
+
+        self.label = QLabel(self.scrollAreaWidgetContents_2)
+        self.label.setObjectName(u"label")
+
+        self.token_grid.addWidget(self.label, 3, 7, 1, 1)
+
+        self.label_4 = QLabel(self.scrollAreaWidgetContents_2)
+        self.label_4.setObjectName(u"label_4")
+
+        self.token_grid.addWidget(self.label_4, 3, 5, 1, 1)
+
+        self.label_9 = QLabel(self.scrollAreaWidgetContents_2)
+        self.label_9.setObjectName(u"label_9")
+
+        self.token_grid.addWidget(self.label_9, 3, 0, 1, 1)
+
+
+        self.horizontalLayout_5.addLayout(self.token_grid)
+
+        self.scrollArea_2.setWidget(self.scrollAreaWidgetContents_2)
+
+        self.horizontalLayout_6.addWidget(self.scrollArea_2)
+
+        self.tabWidget.addTab(self.tokens_tab, "")
+        self.tokens_tab_2 = QWidget()
+        self.tokens_tab_2.setObjectName(u"tokens_tab_2")
+        self.horizontalLayout_3 = QHBoxLayout(self.tokens_tab_2)
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.scrollArea = QScrollArea(self.tokens_tab)
+        self.gridLayout_4 = QGridLayout()
+        self.gridLayout_4.setObjectName(u"gridLayout_4")
+        self.gridLayout_4.setSizeConstraint(QLayout.SizeConstraint.SetMaximumSize)
+        self.button_print_token_2 = QPushButton(self.tokens_tab_2)
+        self.button_print_token_2.setObjectName(u"button_print_token_2")
+        self.button_print_token_2.setMinimumSize(QSize(500, 100))
+        self.button_print_token_2.setMaximumSize(QSize(600, 16777215))
+
+        self.gridLayout_4.addWidget(self.button_print_token_2, 1, 0, 1, 1)
+
+        self.token_display_2 = QLabel(self.tokens_tab_2)
+        self.token_display_2.setObjectName(u"token_display_2")
+        self.token_display_2.setMinimumSize(QSize(500, 0))
+        self.token_display_2.setMaximumSize(QSize(600, 16777215))
+
+        self.gridLayout_4.addWidget(self.token_display_2, 0, 0, 1, 1)
+
+
+        self.horizontalLayout_3.addLayout(self.gridLayout_4)
+
+        self.scrollArea = QScrollArea(self.tokens_tab_2)
         self.scrollArea.setObjectName(u"scrollArea")
         self.scrollArea.setFrameShape(QFrame.Shape.NoFrame)
         self.scrollArea.setFrameShadow(QFrame.Shadow.Plain)
@@ -370,32 +481,32 @@ class Ui_MainWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1484, 899))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1000, 1009))
         self.horizontalLayout_4 = QHBoxLayout(self.scrollAreaWidgetContents)
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
-        self.horizontalLayout_4.setContentsMargins(-1, -1, 0, -1)
-        self.token_grid = QGridLayout()
-        self.token_grid.setObjectName(u"token_grid")
+        self.horizontalLayout_4.setContentsMargins(0, 0, 0, 0)
+        self.token_grid_2 = QGridLayout()
+        self.token_grid_2.setObjectName(u"token_grid_2")
 
-        self.horizontalLayout_4.addLayout(self.token_grid)
+        self.horizontalLayout_4.addLayout(self.token_grid_2)
 
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
 
         self.horizontalLayout_3.addWidget(self.scrollArea)
 
-        self.tabWidget.addTab(self.tokens_tab, "")
+        self.tabWidget.addTab(self.tokens_tab_2, "")
 
         self.horizontalLayout_2.addWidget(self.tabWidget)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1620, 22))
+        self.menubar.setGeometry(QRect(0, 0, 1644, 22))
         MainWindow.setMenuBar(self.menubar)
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -424,11 +535,24 @@ class Ui_MainWindow(object):
         self.button_13.setText(QCoreApplication.translate("MainWindow", u"13", None))
         self.label_3.setText("")
         self.card_display.setText("")
-        self.check_un.setText(QCoreApplication.translate("MainWindow", u"  Enable Un-Cards", None))
-        self.momir_icon.setText("")
         self.check_noncreature.setText(QCoreApplication.translate("MainWindow", u"  Enable non-creature \n"
 "  cards", None))
+        self.check_un.setText(QCoreApplication.translate("MainWindow", u"  Enable Un-Cards", None))
+        self.momir_icon.setText("")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.momir_tab), QCoreApplication.translate("MainWindow", u"  Momir  ", None))
+        self.button_print_token.setText(QCoreApplication.translate("MainWindow", u" Print", None))
+        self.token_display.setText("")
+        self.label_8.setText("")
+        self.label_5.setText("")
+        self.label_6.setText("")
+        self.label_2.setText("")
+        self.label_7.setText("")
+        self.label.setText("")
+        self.label_4.setText("")
+        self.label_9.setText("")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tokens_tab), QCoreApplication.translate("MainWindow", u"  Tokens  ", None))
+        self.button_print_token_2.setText(QCoreApplication.translate("MainWindow", u" Print", None))
+        self.token_display_2.setText("")
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tokens_tab_2), QCoreApplication.translate("MainWindow", u"  All Tokens  ", None))
     # retranslateUi
 
