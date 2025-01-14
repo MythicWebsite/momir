@@ -303,15 +303,39 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2 = QGridLayout()
         self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.check_noncreature = QCheckBox(self.momir_tab)
-        self.check_noncreature.setObjectName(u"check_noncreature")
+        self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_2.addItem(self.verticalSpacer_4, 5, 0, 1, 1)
+
+        self.momir_icon = QLabel(self.momir_tab)
+        self.momir_icon.setObjectName(u"momir_icon")
+        self.momir_icon.setMaximumSize(QSize(500, 16777215))
+        self.momir_icon.setPixmap(QPixmap(u"Momir_Vig.png"))
+        self.momir_icon.setScaledContents(False)
+
+        self.gridLayout_2.addWidget(self.momir_icon, 6, 0, 1, 1)
+
+        self.check_un = QCheckBox(self.momir_tab)
+        self.check_un.setObjectName(u"check_un")
         font3 = QFont()
         font3.setPointSize(24)
-        font3.setStrikeOut(True)
-        self.check_noncreature.setFont(font3)
+        font3.setStrikeOut(False)
+        self.check_un.setFont(font3)
+        self.check_un.setAutoFillBackground(False)
+        self.check_un.setIconSize(QSize(30, 30))
+        self.check_un.setTristate(False)
+
+        self.gridLayout_2.addWidget(self.check_un, 2, 0, 1, 1)
+
+        self.check_noncreature = QCheckBox(self.momir_tab)
+        self.check_noncreature.setObjectName(u"check_noncreature")
+        font4 = QFont()
+        font4.setPointSize(24)
+        font4.setStrikeOut(True)
+        self.check_noncreature.setFont(font4)
         self.check_noncreature.setIconSize(QSize(30, 30))
 
-        self.gridLayout_2.addWidget(self.check_noncreature, 3, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.check_noncreature, 4, 0, 1, 1)
 
         self.line = QFrame(self.momir_tab)
         self.line.setObjectName(u"line")
@@ -321,39 +345,19 @@ class Ui_MainWindow(object):
         self.line.setMidLineWidth(200)
         self.line.setFrameShape(QFrame.Shape.HLine)
 
-        self.gridLayout_2.addWidget(self.line, 2, 0, 1, 1)
-
-        self.check_un = QCheckBox(self.momir_tab)
-        self.check_un.setObjectName(u"check_un")
-        font4 = QFont()
-        font4.setPointSize(24)
-        font4.setStrikeOut(False)
-        self.check_un.setFont(font4)
-        self.check_un.setAutoFillBackground(False)
-        self.check_un.setIconSize(QSize(30, 30))
-        self.check_un.setTristate(False)
-
-        self.gridLayout_2.addWidget(self.check_un, 1, 0, 1, 1)
-
-        self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout_2.addItem(self.verticalSpacer_4, 4, 0, 1, 1)
-
-        self.momir_icon = QLabel(self.momir_tab)
-        self.momir_icon.setObjectName(u"momir_icon")
-        self.momir_icon.setMaximumSize(QSize(500, 16777215))
-        self.momir_icon.setPixmap(QPixmap(u"Momir_Vig.png"))
-        self.momir_icon.setScaledContents(False)
-
-        self.gridLayout_2.addWidget(self.momir_icon, 5, 0, 1, 1)
-
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout_2.addItem(self.verticalSpacer, 7, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.line, 3, 0, 1, 1)
 
         self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.gridLayout_2.addItem(self.verticalSpacer_2, 6, 0, 1, 1)
+        self.gridLayout_2.addItem(self.verticalSpacer_2, 7, 0, 1, 1)
+
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_2.addItem(self.verticalSpacer, 8, 0, 1, 1)
+
+        self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_2.addItem(self.verticalSpacer_3, 1, 0, 1, 1)
 
 
         self.gridLayout_3.addLayout(self.gridLayout_2, 0, 3, 1, 1)
@@ -401,6 +405,56 @@ class Ui_MainWindow(object):
         self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
         self.token_grid = QGridLayout()
         self.token_grid.setObjectName(u"token_grid")
+        self.label_4 = QLabel(self.scrollAreaWidgetContents_2)
+        self.label_4.setObjectName(u"label_4")
+
+        self.token_grid.addWidget(self.label_4, 0, 4, 1, 1)
+
+        self.label_8 = QLabel(self.scrollAreaWidgetContents_2)
+        self.label_8.setObjectName(u"label_8")
+
+        self.token_grid.addWidget(self.label_8, 0, 0, 1, 1)
+
+        self.label_9 = QLabel(self.scrollAreaWidgetContents_2)
+        self.label_9.setObjectName(u"label_9")
+
+        self.token_grid.addWidget(self.label_9, 1, 6, 1, 1)
+
+        self.label = QLabel(self.scrollAreaWidgetContents_2)
+        self.label.setObjectName(u"label")
+
+        self.token_grid.addWidget(self.label, 0, 6, 1, 1)
+
+        self.label_7 = QLabel(self.scrollAreaWidgetContents_2)
+        self.label_7.setObjectName(u"label_7")
+
+        self.token_grid.addWidget(self.label_7, 0, 1, 1, 1)
+
+        self.label_10 = QLabel(self.scrollAreaWidgetContents_2)
+        self.label_10.setObjectName(u"label_10")
+
+        self.token_grid.addWidget(self.label_10, 2, 6, 1, 1)
+
+        self.label_6 = QLabel(self.scrollAreaWidgetContents_2)
+        self.label_6.setObjectName(u"label_6")
+
+        self.token_grid.addWidget(self.label_6, 0, 2, 1, 1)
+
+        self.label_5 = QLabel(self.scrollAreaWidgetContents_2)
+        self.label_5.setObjectName(u"label_5")
+
+        self.token_grid.addWidget(self.label_5, 0, 3, 1, 1)
+
+        self.label_2 = QLabel(self.scrollAreaWidgetContents_2)
+        self.label_2.setObjectName(u"label_2")
+
+        self.token_grid.addWidget(self.label_2, 0, 5, 1, 1)
+
+        self.label_11 = QLabel(self.scrollAreaWidgetContents_2)
+        self.label_11.setObjectName(u"label_11")
+
+        self.token_grid.addWidget(self.label_11, 3, 6, 1, 1)
+
 
         self.horizontalLayout_5.addLayout(self.token_grid)
 
@@ -495,13 +549,23 @@ class Ui_MainWindow(object):
         self.button_13.setText(QCoreApplication.translate("MainWindow", u"13", None))
         self.label_3.setText("")
         self.card_display.setText("")
+        self.momir_icon.setText("")
+        self.check_un.setText(QCoreApplication.translate("MainWindow", u"  Enable Un-Cards", None))
         self.check_noncreature.setText(QCoreApplication.translate("MainWindow", u"  Enable non-creature \n"
 "  cards", None))
-        self.check_un.setText(QCoreApplication.translate("MainWindow", u"  Enable Un-Cards", None))
-        self.momir_icon.setText("")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.momir_tab), QCoreApplication.translate("MainWindow", u"  Momir  ", None))
         self.button_print_token.setText(QCoreApplication.translate("MainWindow", u" Print", None))
         self.token_display.setText("")
+        self.label_4.setText("")
+        self.label_8.setText("")
+        self.label_9.setText("")
+        self.label.setText("")
+        self.label_7.setText("")
+        self.label_10.setText("")
+        self.label_6.setText("")
+        self.label_5.setText("")
+        self.label_2.setText("")
+        self.label_11.setText("")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tokens_tab), QCoreApplication.translate("MainWindow", u"  Tokens  ", None))
         self.button_print_token_2.setText(QCoreApplication.translate("MainWindow", u" Print", None))
         self.token_display_2.setText("")

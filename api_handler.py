@@ -85,7 +85,7 @@ def get_token_next_page(tokens: list, url: str) -> tuple[dict,str]:
         next_page = None
     total = response['total_cards']
     for token in response['data']:
-        if not token['id'] in tokens and not token.get('type_line', "") == "Card":
+        if not token['id'] in tokens:
             tokens.append(token)
     return tokens, next_page, total
 

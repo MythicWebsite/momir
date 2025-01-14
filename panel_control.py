@@ -76,7 +76,7 @@ class MainWindow(QMainWindow):
             card_loc = f'Images/{current_card["id"]}.png'
         if current_card.get('all_parts', None):
             for part in current_card['all_parts']:
-                if part['component'] == 'token':
+                if part['component'] == 'token' or 'Card' in part['type_line']:
                     if os.path.exists(f'Images/{part["id"]}.png'):
                         token_loc = f'Images/{part["id"]}.png'
                     else:
@@ -84,9 +84,9 @@ class MainWindow(QMainWindow):
                         token_loc = convert_card(download_img(card_data['image_uris']['border_crop']), part['id'])
                     new_token = QLabel()
                     new_token.objectName = {part['id']}
-                    pixmap_token = QPixmap(token_loc).scaled(self.ui.tokens_tab_2.size()/1.9, aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
+                    pixmap_token = QPixmap(token_loc).scaled(QSize(300,300), aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
                     new_token.setPixmap(pixmap_token)
-                    self.ui.token_grid.addWidget(new_token, (self.ui.token_grid.count()-0)//8, (self.ui.token_grid.count()-0)%8)
+                    self.ui.token_grid.addWidget(new_token, (self.ui.token_grid.count()-10)//7, (self.ui.token_grid.count()-10)%7)
                     new_token.mousePressEvent = functools.partial(self.token_click, source_object=new_token)
 
 
