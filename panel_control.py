@@ -15,6 +15,8 @@ un_creatures:dict = get_creature_card_list(funny=True)
 tokens: list = get_token_list()
 current_card: dict = {}
 
+token_ignore_list = [' Ad', 'Decklist', ' Bio', 'Checklist', 'Punchcard']
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -36,7 +38,7 @@ class MainWindow(QMainWindow):
 
         count = 0
         for token in tokens:
-            if token.get('image_uris', None):
+            if token.get('image_uris', None) and not any(ignore in token['name'] for ignore in token_ignore_list):
                 if not os.path.exists(f'Images/{token["id"]}.png'):
                     print(f"Creating image for {token['name']}")
                     img_url = token['image_uris']['border_crop']
