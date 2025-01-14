@@ -3,7 +3,7 @@ import random
 import requests
 import functools
 from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel
-from PySide6.QtGui import QPixmap
+from PySide6.QtGui import QPixmap, QFontDatabase, QFont
 from PySide6.QtCore import Qt, QSize
 from ui_panel import Ui_MainWindow
 from api_handler import get_creature_card_list, download_img, get_token_list
@@ -24,8 +24,11 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
+        QFontDatabase.addApplicationFont("Planewalker-38m6.ttf")
+
         all_buttons = self.ui.centralwidget.findChildren(QPushButton)
 
+        
         for button in all_buttons:
             if button.objectName().split("_")[1].isdigit():
                 button.clicked.connect(self.on_cmc_click)
@@ -136,6 +139,7 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    app.setFont(QFont("Planewalker"))
     window = MainWindow()
     window.showFullScreen()
     sys.exit(app.exec())
