@@ -7,6 +7,8 @@ api_url = 'https://api.scryfall.com/'
 creature_str = '+type%3Acreature'
 block_un_str = '+not%3Afunny+-set%3Aunf'
 
+token_searches = ['cards/search?q=layout:token&order=name', 'cards/search?q=layout:emblem&order=name', 'cards/search?q=type:Dungeon&order=name','cards/search?q=layout:double_faced_token+-type:Token+-name:Bounty+-set_type:minigame+-type:Dungeon&order=name']
+
 def get_card(card_name) -> dict:
     response = requests.get(api_url + 'cards/named?fuzzy=' + card_name)
     card = response.json()
@@ -93,12 +95,13 @@ def get_token_list() -> dict:
     update_check = check_bulk_data()
     if update_check or not os.path.exists('json/tokens.json'):
         tokens: list = []
-        tokens, next_page, total = get_token_next_page(tokens, api_url + 'cards/search?q=layout:token&order=name')
-        count = 2
-        while next_page:
-            print(f"Getting next page {count}/{int(total/175+1)}")
-            count += 1
-            tokens, next_page, total = get_token_next_page(tokens, next_page)
+        for search in token_searches:
+            tokens, next_page, total = get_token_next_page(tokens, api_url + search)
+            count = 2
+            while next_page:
+                print(f"Getting next page {count}/{int(total/175+1)}")
+                count += 1
+                tokens, next_page, total = get_token_next_page(tokens, next_page)
         save_json_file(tokens, 'json/tokens.json')
         return tokens
     else:
