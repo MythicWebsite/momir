@@ -401,46 +401,6 @@ class Ui_MainWindow(object):
         self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
         self.token_grid = QGridLayout()
         self.token_grid.setObjectName(u"token_grid")
-        self.label_8 = QLabel(self.scrollAreaWidgetContents_2)
-        self.label_8.setObjectName(u"label_8")
-
-        self.token_grid.addWidget(self.label_8, 3, 1, 1, 1)
-
-        self.label_5 = QLabel(self.scrollAreaWidgetContents_2)
-        self.label_5.setObjectName(u"label_5")
-
-        self.token_grid.addWidget(self.label_5, 3, 4, 1, 1)
-
-        self.label_6 = QLabel(self.scrollAreaWidgetContents_2)
-        self.label_6.setObjectName(u"label_6")
-
-        self.token_grid.addWidget(self.label_6, 3, 3, 1, 1)
-
-        self.label_2 = QLabel(self.scrollAreaWidgetContents_2)
-        self.label_2.setObjectName(u"label_2")
-
-        self.token_grid.addWidget(self.label_2, 3, 6, 1, 1)
-
-        self.label_7 = QLabel(self.scrollAreaWidgetContents_2)
-        self.label_7.setObjectName(u"label_7")
-
-        self.token_grid.addWidget(self.label_7, 3, 2, 1, 1)
-
-        self.label = QLabel(self.scrollAreaWidgetContents_2)
-        self.label.setObjectName(u"label")
-
-        self.token_grid.addWidget(self.label, 3, 7, 1, 1)
-
-        self.label_4 = QLabel(self.scrollAreaWidgetContents_2)
-        self.label_4.setObjectName(u"label_4")
-
-        self.token_grid.addWidget(self.label_4, 3, 5, 1, 1)
-
-        self.label_9 = QLabel(self.scrollAreaWidgetContents_2)
-        self.label_9.setObjectName(u"label_9")
-
-        self.token_grid.addWidget(self.label_9, 3, 0, 1, 1)
-
 
         self.horizontalLayout_5.addLayout(self.token_grid)
 
@@ -481,7 +441,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1000, 1009))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 83, 30))
         self.horizontalLayout_4 = QHBoxLayout(self.scrollAreaWidgetContents)
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
         self.horizontalLayout_4.setContentsMargins(0, 0, 0, 0)
@@ -542,14 +502,6 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.momir_tab), QCoreApplication.translate("MainWindow", u"  Momir  ", None))
         self.button_print_token.setText(QCoreApplication.translate("MainWindow", u" Print", None))
         self.token_display.setText("")
-        self.label_8.setText("")
-        self.label_5.setText("")
-        self.label_6.setText("")
-        self.label_2.setText("")
-        self.label_7.setText("")
-        self.label.setText("")
-        self.label_4.setText("")
-        self.label_9.setText("")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tokens_tab), QCoreApplication.translate("MainWindow", u"  Tokens  ", None))
         self.button_print_token_2.setText(QCoreApplication.translate("MainWindow", u" Print", None))
         self.token_display_2.setText("")

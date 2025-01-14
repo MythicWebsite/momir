@@ -86,7 +86,7 @@ class MainWindow(QMainWindow):
                     new_token.objectName = {part['id']}
                     pixmap_token = QPixmap(token_loc).scaled(self.ui.tokens_tab_2.size()/1.9, aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
                     new_token.setPixmap(pixmap_token)
-                    self.ui.token_grid.addWidget(new_token, (self.ui.token_grid.count()-8)//8, (self.ui.token_grid.count()-8)%8)
+                    self.ui.token_grid.addWidget(new_token, (self.ui.token_grid.count()-0)//8, (self.ui.token_grid.count()-0)%8)
                     new_token.mousePressEvent = functools.partial(self.token_click, source_object=new_token)
 
 
