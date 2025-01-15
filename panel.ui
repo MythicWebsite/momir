@@ -372,7 +372,7 @@ QScrollBar:vertical {
              </widget>
             </item>
             <item row="10" column="1" colspan="3">
-             <widget class="QPushButton" name="button_print">
+             <widget class="QPushButton" name="button_print_card">
               <property name="minimumSize">
                <size>
                 <width>500</width>
@@ -1035,8 +1035,8 @@ QScrollBar:vertical {
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>83</width>
-             <height>30</height>
+             <width>1000</width>
+             <height>1009</height>
             </rect>
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_4">

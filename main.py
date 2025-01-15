@@ -18,7 +18,13 @@ current_card: dict = {}
 token_ignore_list = [' Ad', 'Decklist', ' Bio', 'Checklist', 'Punchcard']
 token_types = ['Token', 'Card', 'Dungeon', 'Emblem']
 
+
+
+
 class MainWindow(QMainWindow):
+    card_print = None
+    token_print = None
+    
     def __init__(self):
         super().__init__()
         self.ui = Ui_MainWindow()
@@ -32,6 +38,8 @@ class MainWindow(QMainWindow):
         for button in all_buttons:
             if button.objectName().split("_")[1].isdigit():
                 button.clicked.connect(self.on_cmc_click)
+            elif button.objectName().split('_')[1] == 'print':
+                button.clicked.connect(self.on_print_click)
 
         self.ui.check_un.stateChanged.connect(self.on_unset_check)
 
@@ -126,20 +134,28 @@ class MainWindow(QMainWindow):
                     self.ui.scrollArea_2.verticalScrollBar().setValue(self.ui.scrollArea_2.verticalScrollBar().maximum())
         
         pixmap = QPixmap(card_loc).scaled(self.ui.card_display.size(), aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
+        self.card_print = card_loc
         self.ui.card_display.setPixmap(pixmap)
 
     def on_unset_check(self, state):
         print("Check box state: ", state)
+
+    def on_print_click(self):
+        if 'card' in self.sender().objectName().split("_")[2]:
+            print_card(self.card_print)
+        elif 'token' in self.sender().objectName().split("_")[2]:
+            print_card(self.token_print)
 
     def token_click(self, event, source_object:QLabel = None):
         print(f"Token clicked: {str(source_object.objectName).strip('{\'}')}")
         pixmap = QPixmap(f'Images/{str(source_object.objectName).strip('{\'}')}.png').scaled(self.ui.card_display.size(), aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
         self.ui.token_display.setPixmap(pixmap)
         self.ui.token_display_2.setPixmap(pixmap)
+        self.token_print = f'Images/{str(source_object.objectName).strip('{\'}')}.png'
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setFont(QFont("Planewalker"))
     window = MainWindow()
-    window.showFullScreen()
+    window.showMaximized()
     sys.exit(app.exec())

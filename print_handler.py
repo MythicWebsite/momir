@@ -41,9 +41,9 @@ def print_card(file_name):
     #
     hDC = win32ui.CreateDC ()
     hDC.CreatePrinterDC (printer_name)
-    # printable_area = hDC.GetDeviceCaps (HORZRES), hDC.GetDeviceCaps (VERTRES)
-    # printer_size = hDC.GetDeviceCaps (PHYSICALWIDTH), hDC.GetDeviceCaps (PHYSICALHEIGHT)
-    # printer_margins = hDC.GetDeviceCaps (PHYSICALOFFSETX), hDC.GetDeviceCaps (PHYSICALOFFSETY)
+    printable_area = hDC.GetDeviceCaps (HORZRES), hDC.GetDeviceCaps (VERTRES)
+    printer_size = hDC.GetDeviceCaps (PHYSICALWIDTH), hDC.GetDeviceCaps (PHYSICALHEIGHT)
+    printer_margins = hDC.GetDeviceCaps (PHYSICALOFFSETX), hDC.GetDeviceCaps (PHYSICALOFFSETY)
 
     #
     # Open the image, rotate it if it's wider than
@@ -51,12 +51,13 @@ def print_card(file_name):
     #  each pixel by to get it as big as possible on
     #  the page without distorting.
     #
-    bmp = Image.open (file_name)
+    bmp = Image.open(file_name)
+    # bmp = file_name
     if bmp.size[0] > bmp.size[1]:
         bmp = bmp.rotate (90)
 
-    # ratios = [1.0 * printable_area[0] / bmp.size[0], 1.0 * printable_area[1] / bmp.size[1]]
-    # scale = min (ratios)
+    ratios = [1.0 * printable_area[0] / bmp.size[0], 1.0 * printable_area[1] / bmp.size[1]]
+    scale = min (ratios)
 
     #
     # Start the print job, and draw the bitmap to
@@ -66,11 +67,11 @@ def print_card(file_name):
     hDC.StartPage ()
 
     dib = ImageWin.Dib (bmp)
-    # scaled_width, scaled_height = [int (scale * i) for i in bmp.size]
-    # x1 = int ((printer_size[0] - scaled_width) / 2)
-    # y1 = int ((printer_size[1] - scaled_height) / 2)
-    # x2 = x1 + scaled_width
-    # y2 = y1 + scaled_height
+    scaled_width, scaled_height = [int (scale * i) for i in bmp.size]
+    x1 = int ((printer_size[0] - scaled_width) / 2)
+    y1 = int ((printer_size[1] - scaled_height) / 2)
+    x2 = x1 + scaled_width
+    y2 = y1 + scaled_height
     dib.draw(hDC.GetHandleOutput(),(0,0,bmp.size[0],bmp.size[1])) #(x1, y1, x2, y2))
 
     hDC.EndPage ()

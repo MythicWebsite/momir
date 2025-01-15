@@ -183,11 +183,11 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.button_1, 1, 2, 1, 1)
 
-        self.button_print = QPushButton(self.momir_tab)
-        self.button_print.setObjectName(u"button_print")
-        self.button_print.setMinimumSize(QSize(500, 100))
+        self.button_print_card = QPushButton(self.momir_tab)
+        self.button_print_card.setObjectName(u"button_print_card")
+        self.button_print_card.setMinimumSize(QSize(500, 100))
 
-        self.gridLayout.addWidget(self.button_print, 10, 1, 1, 3)
+        self.gridLayout.addWidget(self.button_print_card, 10, 1, 1, 3)
 
         self.button_15 = QPushButton(self.momir_tab)
         self.button_15.setObjectName(u"button_15")
@@ -495,7 +495,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 83, 30))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1000, 1009))
         self.horizontalLayout_4 = QHBoxLayout(self.scrollAreaWidgetContents)
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
         self.horizontalLayout_4.setContentsMargins(0, 0, 0, 0)
@@ -538,7 +538,7 @@ class Ui_MainWindow(object):
         self.button_5.setText(QCoreApplication.translate("MainWindow", u"5", None))
         self.button_12.setText(QCoreApplication.translate("MainWindow", u"12", None))
         self.button_1.setText(QCoreApplication.translate("MainWindow", u"1", None))
-        self.button_print.setText(QCoreApplication.translate("MainWindow", u"Print", None))
+        self.button_print_card.setText(QCoreApplication.translate("MainWindow", u"Print", None))
         self.button_15.setText(QCoreApplication.translate("MainWindow", u"15", None))
         self.button_0.setText(QCoreApplication.translate("MainWindow", u"0", None))
         self.button_4.setText(QCoreApplication.translate("MainWindow", u"4", None))
