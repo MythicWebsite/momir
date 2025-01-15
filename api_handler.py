@@ -1,6 +1,7 @@
 import requests
 import os
 import json
+from image_handler import convert_card, flip_card_image
 
 api_url = 'https://api.scryfall.com/'
 
@@ -8,6 +9,8 @@ creature_str = '+type%3Acreature'
 block_un_str = '+not%3Afunny+-set%3Aunf'
 
 token_searches = ['cards/search?q=layout:token&order=name', 'cards/search?q=layout:emblem&order=name', 'cards/search?q=type:Dungeon&order=name','cards/search?q=layout:double_faced_token+-type:Token+-name:Bounty+-set_type:minigame+-type:Dungeon&order=name']
+token_types = ['Token', 'Card', 'Dungeon', 'Emblem']
+token_ignore_list = [' Ad', 'Decklist', ' Bio', 'Checklist', 'Punchcard']
 
 def get_card(card_name) -> dict:
     response = requests.get(api_url + 'cards/named?fuzzy=' + card_name)
@@ -106,3 +109,38 @@ def get_token_list() -> dict:
         return tokens
     else:
         return load_json_file('json/tokens.json')
+    
+def download_all_images(data: dict, same_img_flip: bool = False) -> None:
+    for current_card in data:
+        if not os.path.exists(f'Images/{current_card["id"]}.png'):
+            print(f"Downloading {current_card['name']}")
+            if current_card.get('card_faces', [{}])[0].get('image_uris',None) and "//" in current_card['type_line']:
+                if not current_card.get('card_faces', [{}])[1].get('mana_cost',None):
+                    img_url = current_card['card_faces'][0]['image_uris']['border_crop']
+                    img_url2 = current_card['card_faces'][1]['image_uris']['border_crop']
+                    if same_img_flip:
+                        convert_card(flip_card_image(download_img(img_url), download_img(img_url2)), current_card['id'])
+                    else:
+                        convert_card(download_img(img_url), current_card['id'])
+                        convert_card(download_img(img_url2), f'{current_card["id"]}-1')
+                else:
+                    convert_card(download_img(current_card['card_faces'][0]['image_uris']['border_crop']), current_card['id'])
+            else:
+                convert_card(download_img(current_card['image_uris']['border_crop']), current_card['id'])
+            
+            if current_card.get('all_parts', None):
+                for part in current_card['all_parts']:
+                    if part['component'] == 'token' or any (token_type in part['type_line'] for token_type in token_types):
+                        if not os.path.exists(f'Images/{part["id"]}.png'):
+                            print(f"Downloading {part['name']}")
+                            card_data = requests.get(part['uri']).json()
+                            if card_data.get('image_uris', None):
+                                convert_card(download_img(card_data['image_uris']['border_crop']), part['id'])
+                            elif card_data.get('card_faces', [{}])[0].get('image_uris',None):
+                                face_count = 0
+                                for face in card_data['card_faces']:
+                                    if face.get('image_uris', None):
+                                        convert_card(download_img(face['image_uris']['border_crop']), f'{part["id"]}{"-"+str(face_count) if face_count else ""}')
+                                        face_count += 1
+                            else:
+                                continue
