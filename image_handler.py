@@ -3,23 +3,27 @@ import numpy as np
 from io import BytesIO
 
 def resize_image(img: Image, new_width: int):
-    """Resizes an image to a new width while maintaining the aspect ratio."""
     width_percent = new_width / img.size[0]
     new_height = int(img.size[1] * width_percent)
     return img.resize((new_width, new_height))
 
 def convert_card(img: bytes, card_id: str) -> bytes:
-    """Converts a card image to a black and white image."""
     img = Image.open(BytesIO(img))
     img = resize_image(img, 384)
-    enhancer = ImageEnhance.Contrast(img)
-    img = enhancer.enhance(2)
+    
+    contrast = ImageEnhance.Contrast(img)
+    img = contrast.enhance(2)
+    sharpness = ImageEnhance.Sharpness(img)
+    img = sharpness.enhance(6)
+    brightness = ImageEnhance.Brightness(img)
+    img = brightness.enhance(4)
+    
+    
     img = img.convert("1")
     img.save(f"Images/{card_id}.png")
     return f"Images/{card_id}.png"
 
-def flip_card_image(img: bytes, img2: bytes, card_id: str) -> bytes:
-    """Flips the card image to create a double sided card."""
+def flip_card_image(img: bytes, img2: bytes) -> bytes:
     img = Image.open(BytesIO(img))
     img2 = Image.open(BytesIO(img2))
     img = resize_image(img, 384)
@@ -35,3 +39,10 @@ def flip_card_image(img: bytes, img2: bytes, card_id: str) -> bytes:
     combo_img.save(img_bytes, format='PNG')
     return img_bytes.getvalue()
     
+if __name__ == "__main__":
+    with open("test.jpg", "rb") as f:
+        img = f.read()
+        convert_card(img, "000")
+    with open("test2.jpg", "rb") as f:
+        img = f.read()
+        convert_card(img, "001")

@@ -33,7 +33,7 @@ class Ui_MainWindow(object):
 "	border-radius: 16px;\n"
 "	color:  black;\n"
 "	background-color: rgb(97, 97, 97);\n"
-"	font-size: 20px;\n"
+"	font-size: 40px;\n"
 "	font-weight: bold;\n"
 "	color: white;\n"
 "}\n"
@@ -221,7 +221,7 @@ class Ui_MainWindow(object):
         self.cmc_label = QLabel(self.momir_tab)
         self.cmc_label.setObjectName(u"cmc_label")
         font1 = QFont()
-        font1.setPointSize(40)
+        font1.setPointSize(60)
         font1.setBold(True)
         self.cmc_label.setFont(font1)
         self.cmc_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -252,12 +252,6 @@ class Ui_MainWindow(object):
         self.button_10.setSizePolicy(sizePolicy)
         self.button_10.setMinimumSize(QSize(100, 100))
         self.button_10.setMaximumSize(QSize(5000, 5000))
-        font2 = QFont()
-        font2.setFamilies([u"Segoe UI"])
-        font2.setBold(True)
-        font2.setItalic(False)
-        font2.setStrikeOut(False)
-        self.button_10.setFont(font2)
 
         self.gridLayout.addWidget(self.button_10, 5, 2, 1, 1)
 
@@ -317,10 +311,10 @@ class Ui_MainWindow(object):
 
         self.check_un = QCheckBox(self.momir_tab)
         self.check_un.setObjectName(u"check_un")
-        font3 = QFont()
-        font3.setPointSize(24)
-        font3.setStrikeOut(False)
-        self.check_un.setFont(font3)
+        font2 = QFont()
+        font2.setPointSize(24)
+        font2.setStrikeOut(False)
+        self.check_un.setFont(font2)
         self.check_un.setAutoFillBackground(False)
         self.check_un.setIconSize(QSize(30, 30))
         self.check_un.setTristate(False)
@@ -329,10 +323,10 @@ class Ui_MainWindow(object):
 
         self.check_noncreature = QCheckBox(self.momir_tab)
         self.check_noncreature.setObjectName(u"check_noncreature")
-        font4 = QFont()
-        font4.setPointSize(24)
-        font4.setStrikeOut(True)
-        self.check_noncreature.setFont(font4)
+        font3 = QFont()
+        font3.setPointSize(24)
+        font3.setStrikeOut(True)
+        self.check_noncreature.setFont(font3)
         self.check_noncreature.setIconSize(QSize(30, 30))
 
         self.gridLayout_2.addWidget(self.check_noncreature, 4, 0, 1, 1)
@@ -367,6 +361,102 @@ class Ui_MainWindow(object):
         self.gridLayout_3.addItem(self.horizontalSpacer_4, 0, 6, 1, 1)
 
         self.tabWidget.addTab(self.momir_tab, "")
+        self.tab = QWidget()
+        self.tab.setObjectName(u"tab")
+        self.horizontalLayout_8 = QHBoxLayout(self.tab)
+        self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
+        self.gridLayout_6 = QGridLayout()
+        self.gridLayout_6.setObjectName(u"gridLayout_6")
+        self.gridLayout_6.setSizeConstraint(QLayout.SizeConstraint.SetMaximumSize)
+        self.button_print_history = QPushButton(self.tab)
+        self.button_print_history.setObjectName(u"button_print_history")
+        self.button_print_history.setMinimumSize(QSize(500, 100))
+        self.button_print_history.setMaximumSize(QSize(600, 16777215))
+
+        self.gridLayout_6.addWidget(self.button_print_history, 1, 0, 1, 1)
+
+        self.history_display = QLabel(self.tab)
+        self.history_display.setObjectName(u"history_display")
+        self.history_display.setMinimumSize(QSize(500, 0))
+        self.history_display.setMaximumSize(QSize(600, 16777215))
+
+        self.gridLayout_6.addWidget(self.history_display, 0, 0, 1, 1)
+
+
+        self.horizontalLayout_8.addLayout(self.gridLayout_6)
+
+        self.scrollArea_3 = QScrollArea(self.tab)
+        self.scrollArea_3.setObjectName(u"scrollArea_3")
+        self.scrollArea_3.setFrameShape(QFrame.Shape.NoFrame)
+        self.scrollArea_3.setFrameShadow(QFrame.Shadow.Plain)
+        self.scrollArea_3.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+        self.scrollArea_3.setWidgetResizable(True)
+        self.scrollAreaWidgetContents_3 = QWidget()
+        self.scrollAreaWidgetContents_3.setObjectName(u"scrollAreaWidgetContents_3")
+        self.scrollAreaWidgetContents_3.setGeometry(QRect(0, 0, 1000, 1009))
+        self.horizontalLayout_7 = QHBoxLayout(self.scrollAreaWidgetContents_3)
+        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
+        self.horizontalLayout_7.setContentsMargins(0, 0, 0, 0)
+        self.history_grid = QGridLayout()
+        self.history_grid.setObjectName(u"history_grid")
+        self.label_12 = QLabel(self.scrollAreaWidgetContents_3)
+        self.label_12.setObjectName(u"label_12")
+
+        self.history_grid.addWidget(self.label_12, 0, 4, 1, 1)
+
+        self.label_13 = QLabel(self.scrollAreaWidgetContents_3)
+        self.label_13.setObjectName(u"label_13")
+
+        self.history_grid.addWidget(self.label_13, 0, 0, 1, 1)
+
+        self.label_14 = QLabel(self.scrollAreaWidgetContents_3)
+        self.label_14.setObjectName(u"label_14")
+
+        self.history_grid.addWidget(self.label_14, 1, 6, 1, 1)
+
+        self.label_15 = QLabel(self.scrollAreaWidgetContents_3)
+        self.label_15.setObjectName(u"label_15")
+
+        self.history_grid.addWidget(self.label_15, 0, 6, 1, 1)
+
+        self.label_16 = QLabel(self.scrollAreaWidgetContents_3)
+        self.label_16.setObjectName(u"label_16")
+
+        self.history_grid.addWidget(self.label_16, 0, 1, 1, 1)
+
+        self.label_17 = QLabel(self.scrollAreaWidgetContents_3)
+        self.label_17.setObjectName(u"label_17")
+
+        self.history_grid.addWidget(self.label_17, 2, 6, 1, 1)
+
+        self.label_18 = QLabel(self.scrollAreaWidgetContents_3)
+        self.label_18.setObjectName(u"label_18")
+
+        self.history_grid.addWidget(self.label_18, 0, 2, 1, 1)
+
+        self.label_19 = QLabel(self.scrollAreaWidgetContents_3)
+        self.label_19.setObjectName(u"label_19")
+
+        self.history_grid.addWidget(self.label_19, 0, 3, 1, 1)
+
+        self.label_20 = QLabel(self.scrollAreaWidgetContents_3)
+        self.label_20.setObjectName(u"label_20")
+
+        self.history_grid.addWidget(self.label_20, 0, 5, 1, 1)
+
+        self.label_21 = QLabel(self.scrollAreaWidgetContents_3)
+        self.label_21.setObjectName(u"label_21")
+
+        self.history_grid.addWidget(self.label_21, 3, 6, 1, 1)
+
+
+        self.horizontalLayout_7.addLayout(self.history_grid)
+
+        self.scrollArea_3.setWidget(self.scrollAreaWidgetContents_3)
+
+        self.horizontalLayout_8.addWidget(self.scrollArea_3)
+
+        self.tabWidget.addTab(self.tab, "")
         self.tokens_tab = QWidget()
         self.tokens_tab.setObjectName(u"tokens_tab")
         self.horizontalLayout_6 = QHBoxLayout(self.tokens_tab)
@@ -554,6 +644,19 @@ class Ui_MainWindow(object):
         self.check_noncreature.setText(QCoreApplication.translate("MainWindow", u"  Enable non-creature \n"
 "  cards", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.momir_tab), QCoreApplication.translate("MainWindow", u"  Momir  ", None))
+        self.button_print_history.setText(QCoreApplication.translate("MainWindow", u" Print", None))
+        self.history_display.setText("")
+        self.label_12.setText("")
+        self.label_13.setText("")
+        self.label_14.setText("")
+        self.label_15.setText("")
+        self.label_16.setText("")
+        self.label_17.setText("")
+        self.label_18.setText("")
+        self.label_19.setText("")
+        self.label_20.setText("")
+        self.label_21.setText("")
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"  History  ", None))
         self.button_print_token.setText(QCoreApplication.translate("MainWindow", u" Print", None))
         self.token_display.setText("")
         self.label_4.setText("")

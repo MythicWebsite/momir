@@ -22,7 +22,7 @@ QPushButton {
 	border-radius: 16px;
 	color:  black;
 	background-color: rgb(97, 97, 97);
-	font-size: 20px;
+	font-size: 40px;
 	font-weight: bold;
 	color: white;
 }
@@ -469,7 +469,7 @@ QScrollBar:vertical {
              <widget class="QLabel" name="cmc_label">
               <property name="font">
                <font>
-                <pointsize>40</pointsize>
+                <pointsize>60</pointsize>
                 <bold>true</bold>
                </font>
               </property>
@@ -550,15 +550,6 @@ QScrollBar:vertical {
                 <width>5000</width>
                 <height>5000</height>
                </size>
-              </property>
-              <property name="font">
-               <font>
-                <family>Segoe UI</family>
-                <pointsize>-1</pointsize>
-                <italic>false</italic>
-                <bold>true</bold>
-                <strikeout>false</strikeout>
-               </font>
               </property>
               <property name="text">
                <string>10</string>
@@ -797,6 +788,172 @@ QScrollBar:vertical {
            </size>
           </property>
          </spacer>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>  History  </string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_8">
+        <item>
+         <layout class="QGridLayout" name="gridLayout_6">
+          <property name="sizeConstraint">
+           <enum>QLayout::SizeConstraint::SetMaximumSize</enum>
+          </property>
+          <item row="1" column="0">
+           <widget class="QPushButton" name="button_print_history">
+            <property name="minimumSize">
+             <size>
+              <width>500</width>
+              <height>100</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>600</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="text">
+             <string> Print</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="history_display">
+            <property name="minimumSize">
+             <size>
+              <width>500</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>600</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QScrollArea" name="scrollArea_3">
+          <property name="frameShape">
+           <enum>QFrame::Shape::NoFrame</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Shadow::Plain</enum>
+          </property>
+          <property name="verticalScrollBarPolicy">
+           <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOn</enum>
+          </property>
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents_3">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>1000</width>
+             <height>1009</height>
+            </rect>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_7">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <layout class="QGridLayout" name="history_grid" rowstretch="0,0,0,0">
+              <item row="0" column="4">
+               <widget class="QLabel" name="label_12">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_13">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="6">
+               <widget class="QLabel" name="label_14">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="6">
+               <widget class="QLabel" name="label_15">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLabel" name="label_16">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="6">
+               <widget class="QLabel" name="label_17">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="2">
+               <widget class="QLabel" name="label_18">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="3">
+               <widget class="QLabel" name="label_19">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="5">
+               <widget class="QLabel" name="label_20">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="6">
+               <widget class="QLabel" name="label_21">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </widget>
         </item>
        </layout>
       </widget>

@@ -2,7 +2,7 @@ import sys, os
 import random
 import requests
 import functools
-from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel
+from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QGridLayout
 from PySide6.QtGui import QPixmap, QFontDatabase, QFont
 from PySide6.QtCore import Qt, QSize
 from ui_panel import Ui_MainWindow
@@ -24,6 +24,7 @@ token_types = ['Token', 'Card', 'Dungeon', 'Emblem']
 class MainWindow(QMainWindow):
     card_print = None
     token_print = None
+    history_print = None
     
     def __init__(self):
         super().__init__()
@@ -49,36 +50,36 @@ class MainWindow(QMainWindow):
         self.ui.token_display_2.setPixmap(card_back)
 
         count = 0
-        for token in tokens:
-            if not any(ignore in token['name'] for ignore in token_ignore_list):
-                card_loc = []
-                img_url = []
-                img_count = 0
-                if not os.path.exists(f'Images/{token["id"]}.png'):
-                    print(f"Creating image for {token['name']}")
-                    if token.get('image_uris', None):
-                        img_url.append(token['image_uris']['border_crop'])
-                    elif token.get('card_faces', [{}])[0].get('image_uris',None):
-                        for face in token['card_faces']:
-                            if face.get('image_uris', None):
-                                img_url.append(face['image_uris']['border_crop'])
-                    else:
-                        continue
-                    for img in img_url:
-                        card_loc.append(convert_card(download_img(img), f'{token['id']}{'-'+str(img_count) if img_count else ''}'))
-                        img_count += 1
-                else:
-                    card_loc.append(f'Images/{token["id"]}.png')
-                    if os.path.exists(f'Images/{token["id"]}-1.png'):
-                        card_loc.append(f'Images/{token["id"]}-1.png')
-                for cl in card_loc:
-                    pixmap = QPixmap(cl).scaled(self.ui.tokens_tab_2.size()/1.9, aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
-                    new_card = QLabel()
-                    new_card.setPixmap(pixmap)
-                    new_card.objectName = {cl.split('/')[1].split('.')[0]}
-                    self.ui.token_grid_2.addWidget(new_card, count//8, count%8)
-                    new_card.mousePressEvent = functools.partial(self.token_click, source_object=new_card)
-                    count += 1
+        # for token in tokens:
+        #     if not any(ignore in token['name'] for ignore in token_ignore_list):
+        #         card_loc = []
+        #         img_url = []
+        #         img_count = 0
+        #         if not os.path.exists(f'Images/{token["id"]}.png'):
+        #             print(f"Creating image for {token['name']}")
+        #             if token.get('image_uris', None):
+        #                 img_url.append(token['image_uris']['border_crop'])
+        #             elif token.get('card_faces', [{}])[0].get('image_uris',None):
+        #                 for face in token['card_faces']:
+        #                     if face.get('image_uris', None):
+        #                         img_url.append(face['image_uris']['border_crop'])
+        #             else:
+        #                 continue
+        #             for img in img_url:
+        #                 card_loc.append(convert_card(download_img(img), f'{token['id']}{'-'+str(img_count) if img_count else ''}'))
+        #                 img_count += 1
+        #         else:
+        #             card_loc.append(f'Images/{token["id"]}.png')
+        #             if os.path.exists(f'Images/{token["id"]}-1.png'):
+        #                 card_loc.append(f'Images/{token["id"]}-1.png')
+        #         for cl in card_loc:
+        #             pixmap = QPixmap(cl).scaled(self.ui.tokens_tab_2.size()/1.9, aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
+        #             new_card = QLabel()
+        #             new_card.setPixmap(pixmap)
+        #             new_card.objectName = {cl.split('/')[1].split('.')[0]}
+        #             self.ui.token_grid_2.addWidget(new_card, count//8, count%8)
+        #             new_card.mousePressEvent = functools.partial(self.grid_item_click, source_object=new_card)
+        #             count += 1
 
     def on_cmc_click(self):
         cmc = self.sender().objectName().split("_")[1]
@@ -93,7 +94,7 @@ class MainWindow(QMainWindow):
                 if not current_card.get('card_faces', [{}])[1].get('mana_cost',None):
                     img_url = current_card['card_faces'][0]['image_uris']['border_crop']
                     img_url2 = current_card['card_faces'][1]['image_uris']['border_crop']
-                    card_loc = flip_card_image(download_img(img_url), download_img(img_url2), current_card['id'])
+                    card_loc = flip_card_image(download_img(img_url), download_img(img_url2))
                     card_loc = convert_card(card_loc, current_card['id'])
                 else:
                     img_url = current_card['card_faces'][0]['image_uris']['border_crop']
@@ -124,15 +125,11 @@ class MainWindow(QMainWindow):
                         else:
                             continue
                     for token in token_loc:
-                        new_token = QLabel()
-                        new_token.objectName = {part['id']}
-                        pixmap_token = QPixmap(token).scaled(QSize(300,300), aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
-                        new_token.setPixmap(pixmap_token)
-                        self.ui.token_grid.addWidget(new_token, (self.ui.token_grid.count()-10)//7, (self.ui.token_grid.count()-10)%7)
-                        new_token.mousePressEvent = functools.partial(self.token_click, source_object=new_token)
-                    
-                    self.ui.scrollArea_2.verticalScrollBar().setValue(self.ui.scrollArea_2.verticalScrollBar().maximum())
+                        self.add_item_to_grid(part, token, self.ui.token_grid)
+                        
         
+        self.add_item_to_grid(current_card, card_loc, self.ui.history_grid)
+
         pixmap = QPixmap(card_loc).scaled(self.ui.card_display.size(), aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
         self.card_print = card_loc
         self.ui.card_display.setPixmap(pixmap)
@@ -146,12 +143,32 @@ class MainWindow(QMainWindow):
         elif 'token' in self.sender().objectName().split("_")[2]:
             print_card(self.token_print)
 
-    def token_click(self, event, source_object:QLabel = None):
-        print(f"Token clicked: {str(source_object.objectName).strip('{\'}')}")
+    def add_item_to_grid(self, card: dict, img_loc: str, grid: QGridLayout):
+        for i in list(range(grid.count()))[::-1]:
+            row, col, _, _ = grid.getItemPosition(i)
+            if col == 7:
+                row += 1
+                col = 0
+            else:
+                col += 1
+            shift_item = grid.itemAt(i).widget()
+            grid.addWidget(shift_item, row, col) 
+        new_card = QLabel()
+        new_card.objectName = {card['id']}
+        pixmap_card = QPixmap(img_loc).scaled(QSize(300,300), aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
+        new_card.setPixmap(pixmap_card)
+        grid.addWidget(new_card, 0, 0)
+        new_card.mousePressEvent = functools.partial(self.grid_item_click, source_object=new_card, grid=grid.objectName().split('_')[0])
+
+    def grid_item_click(self, event, source_object:QLabel = None, grid = 'token'):
         pixmap = QPixmap(f'Images/{str(source_object.objectName).strip('{\'}')}.png').scaled(self.ui.card_display.size(), aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
-        self.ui.token_display.setPixmap(pixmap)
-        self.ui.token_display_2.setPixmap(pixmap)
-        self.token_print = f'Images/{str(source_object.objectName).strip('{\'}')}.png'
+        if grid == 'token':
+            self.ui.token_display.setPixmap(pixmap)
+            self.ui.token_display_2.setPixmap(pixmap)
+            self.token_print = f'Images/{str(source_object.objectName).strip('{\'}')}.png'
+        elif grid == 'history':
+            self.ui.history_display.setPixmap(pixmap)
+            self.history_print = f'Images/{str(source_object.objectName).strip('{\'}')}.png'
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
