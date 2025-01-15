@@ -1,4 +1,4 @@
-import sys, os
+import sys, os, json
 import random
 import requests
 import functools
@@ -12,12 +12,20 @@ from print_handler import print_card
 
 test_flip = False
 disable_all_tokens = False
-offline_mode = False
+offline_mode = True
 download_images = True
 
-creatures: dict = get_creature_card_list()
-un_creatures:dict = get_creature_card_list(funny=True)
-tokens: list = get_token_list()
+if not offline_mode:
+    creatures: dict = get_creature_card_list()
+    un_creatures:dict = get_creature_card_list(funny=True)
+    tokens: list = get_token_list()
+else:
+    with open('json/creatures_no_un.json') as f:
+        creatures = json.load(f)
+    with open('json/creatures_un.json') as f:
+        un_creatures = json.load(f)
+    with open('json/tokens.json') as f:
+        tokens = json.load(f)
 
 if download_images and not offline_mode:
     for cmc in un_creatures:
@@ -29,10 +37,13 @@ current_card: dict = {}
 token_ignore_list = [' Ad', 'Decklist', ' Bio', 'Checklist', 'Punchcard']
 token_types = ['Token', 'Card', 'Dungeon', 'Emblem']
 
+display_size = QSize(700,700)
+
 class MainWindow(QMainWindow):
     card_print = None
     token_print = None
     history_print = None
+    debounce = False
     
     def __init__(self):
         super().__init__()
@@ -52,7 +63,7 @@ class MainWindow(QMainWindow):
 
         self.ui.check_un.stateChanged.connect(self.on_unset_check)
 
-        card_back = QPixmap("Magic_card_back.png").scaled(self.ui.card_display.size(), aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
+        card_back = QPixmap("Magic_card_back.png").scaled(display_size, aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
         self.ui.card_display.setPixmap(card_back)
         self.ui.token_display.setPixmap(card_back)
         self.ui.token_display_2.setPixmap(card_back)
@@ -91,70 +102,74 @@ class MainWindow(QMainWindow):
                         count += 1
 
     def on_cmc_click(self):
-        cmc = self.sender().objectName().split("_")[1]
-        self.ui.cmc_label.setText(f"CMC: {cmc}")
-        found = False
-        retry = 0
-        while not found and retry < 1000:
-            if not test_flip:
-                current_card = random.choice(un_creatures[cmc]) if self.ui.check_un.isChecked() else random.choice(creatures[cmc])
-            else:
-                current_card = {'type_line':"no"}
-                stop = 0
-                while not "//" in current_card['type_line'] and stop < 100:
-                    current_card = random.choice(creatures[cmc])
-                    stop += 1
-
-            # print(current_card["name"])
-            card_loc = None
-            if not os.path.exists(f'Images/{current_card["id"]}.png') and not offline_mode:
-                # print(f"Creating image for {current_card['name']}")
-                if current_card.get('card_faces', [{}])[0].get('image_uris',None) and "//" in current_card['type_line']:
-                    img_url = current_card['card_faces'][0]['image_uris']['border_crop']
-                    img_url2 = current_card['card_faces'][1]['image_uris']['border_crop']
-                    card_loc = flip_card_image(download_img(img_url), download_img(img_url2))
-                    card_loc = convert_card(card_loc, current_card['id'])
+        if not self.debounce:
+            self.debounce = True
+            cmc = self.sender().objectName().split("_")[1]
+            self.ui.cmc_label.setText(f"CMC: {cmc}")
+            found = False
+            retry = 0
+            while not found and retry < 1000:
+                if not test_flip:
+                    current_card = random.choice(un_creatures[cmc]) if self.ui.check_un.isChecked() else random.choice(creatures[cmc])
                 else:
-                    img_url = current_card['image_uris']['border_crop']
-                    card_loc = convert_card(download_img(img_url), current_card['id'])
-                found = True
-            elif os.path.exists(f'Images/{current_card["id"]}.png'):
-                card_loc = f'Images/{current_card["id"]}.png'
-                found = True
-            else:
-                retry += 1
-                continue
-            if current_card.get('all_parts', None):
-                for part in current_card['all_parts']:
-                    if part['component'] == 'token' or any (token_type in part['type_line'] for token_type in token_types):
-                        token_loc = []
-                        if os.path.exists(f'Images/{part["id"]}.png'):
-                            token_loc.append(f'Images/{part["id"]}.png')
-                            if os.path.exists(f'Images/{part["id"]}-1.png'):
-                                token_loc.append(f'Images/{part["id"]}-1.png')
-                        else:
-                            card_data = requests.get(part['uri']).json()
-                            if card_data.get('image_uris', None):
-                                token_loc.append(convert_card(download_img(card_data['image_uris']['border_crop']), part['id']))
-                            elif card_data.get('card_faces', [{}])[0].get('image_uris',None):
-                                face_count = 0
-                                for face in card_data['card_faces']:
-                                    if face.get('image_uris', None):
-                                        token_loc.append(convert_card(download_img(face['image_uris']['border_crop']), f'{part["id"]}{"-"+str(face_count) if face_count else ""}'))
-                                        face_count += 1
-                            else:
-                                continue
-                        for token in token_loc:
-                            self.add_item_to_grid(part, token, self.ui.token_grid)
-                            
-            
-            self.add_item_to_grid(current_card, card_loc, self.ui.history_grid)
+                    current_card = {'type_line':"no"}
+                    stop = 0
+                    while not "//" in current_card['type_line'] and stop < 100:
+                        current_card = random.choice(creatures[cmc])
+                        stop += 1
 
-            pixmap = QPixmap(card_loc).scaled(QSize(750,750), aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
-            self.card_print = card_loc
-            self.ui.card_display.setPixmap(pixmap)
-        if not found:
-            print("No card found")
+                # print(current_card["name"])
+                card_loc = None
+                if not os.path.exists(f'Images/{current_card["id"]}.png') and not offline_mode:
+                    # print(f"Creating image for {current_card['name']}")
+                    if current_card.get('card_faces', [{}])[0].get('image_uris',None) and "//" in current_card['type_line']:
+                        img_url = current_card['card_faces'][0]['image_uris']['border_crop']
+                        img_url2 = current_card['card_faces'][1]['image_uris']['border_crop']
+                        card_loc = flip_card_image(download_img(img_url), download_img(img_url2))
+                        card_loc = convert_card(card_loc, current_card['id'])
+                    else:
+                        img_url = current_card['image_uris']['border_crop']
+                        card_loc = convert_card(download_img(img_url), current_card['id'])
+                    found = True
+                elif os.path.exists(f'Images/{current_card["id"]}.png'):
+                    card_loc = f'Images/{current_card["id"]}.png'
+                    found = True
+                else:
+                    retry += 1
+                    continue
+                if current_card.get('all_parts', None):
+                    for part in current_card['all_parts']:
+                        if part['component'] == 'token' or any (token_type in part['type_line'] for token_type in token_types):
+                            token_loc = []
+                            if os.path.exists(f'Images/{part["id"]}.png'):
+                                token_loc.append(f'Images/{part["id"]}.png')
+                                if os.path.exists(f'Images/{part["id"]}-1.png'):
+                                    token_loc.append(f'Images/{part["id"]}-1.png')
+                            else:
+                                card_data = requests.get(part['uri']).json()
+                                if card_data.get('image_uris', None):
+                                    token_loc.append(convert_card(download_img(card_data['image_uris']['border_crop']), part['id']))
+                                elif card_data.get('card_faces', [{}])[0].get('image_uris',None):
+                                    face_count = 0
+                                    for face in card_data['card_faces']:
+                                        if face.get('image_uris', None):
+                                            token_loc.append(convert_card(download_img(face['image_uris']['border_crop']), f'{part["id"]}{"-"+str(face_count) if face_count else ""}'))
+                                            face_count += 1
+                                else:
+                                    continue
+                            for token in token_loc:
+                                self.add_item_to_grid(part, token, self.ui.token_grid)
+                                
+                
+                self.add_item_to_grid(current_card, card_loc, self.ui.history_grid)
+
+                pixmap = QPixmap(card_loc).scaled(display_size, aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
+                self.card_print = card_loc
+                self.ui.card_display.setPixmap(pixmap)
+            if not found:
+                print("No card found")
+            self.debounce = False
+
 
 
     def on_unset_check(self, state):
@@ -171,7 +186,7 @@ class MainWindow(QMainWindow):
     def add_item_to_grid(self, card: dict, img_loc: str, grid: QGridLayout):
         for i in list(range(grid.count()))[::-1]:
             row, col, _, _ = grid.getItemPosition(i)
-            if col == 7:
+            if col == 6:
                 row += 1
                 col = 0
             else:
@@ -186,7 +201,7 @@ class MainWindow(QMainWindow):
         new_card.mousePressEvent = functools.partial(self.grid_item_click, source_object=new_card, grid=grid.objectName().split('_')[0])
 
     def grid_item_click(self, event, source_object:QLabel = None, grid = 'token'):
-        pixmap = QPixmap(f'Images/{str(source_object.objectName).strip('{\'}')}.png').scaled(QSize(750,750), aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
+        pixmap = QPixmap(f'Images/{str(source_object.objectName).strip('{\'}')}.png').scaled(display_size, aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
         if grid == 'token':
             self.ui.token_display.setPixmap(pixmap)
             self.ui.token_display_2.setPixmap(pixmap)
@@ -199,5 +214,5 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setFont(QFont("Planewalker"))
     window = MainWindow()
-    window.showMaximized()
+    window.showFullScreen()
     sys.exit(app.exec())
