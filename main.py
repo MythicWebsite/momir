@@ -12,7 +12,7 @@ from print_handler import print_card
 
 test_flip = False
 disable_all_tokens = False
-offline_mode = True
+offline_mode = False
 download_images = True
 
 if not offline_mode:
@@ -54,7 +54,6 @@ class MainWindow(QMainWindow):
 
         all_buttons = self.ui.centralwidget.findChildren(QPushButton)
 
-        
         for button in all_buttons:
             if button.objectName().split("_")[1].isdigit():
                 button.clicked.connect(self.on_cmc_click)
@@ -105,19 +104,25 @@ class MainWindow(QMainWindow):
         if not self.debounce:
             self.debounce = True
             cmc = self.sender().objectName().split("_")[1]
+            choice_list = un_creatures if self.ui.check_un.isChecked() else creatures
+            if not choice_list.get(cmc, None):
+                self.debounce = False
+                print("No cards of that CMC")
+                return
             self.ui.cmc_label.setText(f"CMC: {cmc}")
             found = False
             retry = 0
             while not found and retry < 1000:
                 if not test_flip:
-                    current_card = random.choice(un_creatures[cmc]) if self.ui.check_un.isChecked() else random.choice(creatures[cmc])
+                    current_card = random.choice(choice_list[cmc]) if self.ui.check_un.isChecked() else random.choice(choice_list[cmc])
                 else:
                     current_card = {'type_line':"no"}
                     stop = 0
                     while not "//" in current_card['type_line'] and stop < 100:
-                        current_card = random.choice(creatures[cmc])
+                        current_card = random.choice(choice_list[cmc])
                         stop += 1
-
+                if not current_card:
+                    continue
                 # print(current_card["name"])
                 card_loc = None
                 if not os.path.exists(f'Images/{current_card["id"]}.png') and not offline_mode:

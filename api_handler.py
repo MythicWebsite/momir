@@ -115,16 +115,13 @@ def download_all_images(data: dict, same_img_flip: bool = False) -> None:
         if not os.path.exists(f'Images/{current_card["id"]}.png'):
             print(f"Downloading {current_card['name']}")
             if current_card.get('card_faces', [{}])[0].get('image_uris',None) and "//" in current_card['type_line']:
-                if not current_card.get('card_faces', [{}])[1].get('mana_cost',None):
-                    img_url = current_card['card_faces'][0]['image_uris']['border_crop']
-                    img_url2 = current_card['card_faces'][1]['image_uris']['border_crop']
-                    if same_img_flip:
-                        convert_card(flip_card_image(download_img(img_url), download_img(img_url2)), current_card['id'])
-                    else:
-                        convert_card(download_img(img_url), current_card['id'])
-                        convert_card(download_img(img_url2), f'{current_card["id"]}-1')
+                img_url = current_card['card_faces'][0]['image_uris']['border_crop']
+                img_url2 = current_card['card_faces'][1]['image_uris']['border_crop']
+                if same_img_flip:
+                    convert_card(flip_card_image(download_img(img_url), download_img(img_url2)), current_card['id'])
                 else:
-                    convert_card(download_img(current_card['card_faces'][0]['image_uris']['border_crop']), current_card['id'])
+                    convert_card(download_img(img_url), current_card['id'])
+                    convert_card(download_img(img_url2), f'{current_card["id"]}-1')
             else:
                 convert_card(download_img(current_card['image_uris']['border_crop']), current_card['id'])
             
