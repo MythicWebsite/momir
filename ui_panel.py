@@ -16,9 +16,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QFrame, QGridLayout,
-    QHBoxLayout, QLabel, QLayout, QMainWindow,
-    QMenuBar, QPushButton, QScrollArea, QSizePolicy,
-    QSpacerItem, QTabWidget, QVBoxLayout, QWidget)
+    QHBoxLayout, QLabel, QLayout, QListView,
+    QListWidget, QListWidgetItem, QMainWindow, QMenuBar,
+    QPushButton, QScrollArea, QSizePolicy, QSpacerItem,
+    QTabWidget, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -59,6 +60,10 @@ class Ui_MainWindow(object):
 "}\n"
 "QScrollBar:vertical {\n"
 "	width:100px;\n"
+"}\n"
+"QListWidget {\n"
+"	alternate-background-color: rgb(100, 100, 190);\n"
+"	padding: 10px;\n"
 "}")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
@@ -301,14 +306,6 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addItem(self.verticalSpacer_4, 5, 0, 1, 1)
 
-        self.momir_icon = QLabel(self.momir_tab)
-        self.momir_icon.setObjectName(u"momir_icon")
-        self.momir_icon.setMaximumSize(QSize(500, 16777215))
-        self.momir_icon.setPixmap(QPixmap(u"Momir_Vig.png"))
-        self.momir_icon.setScaledContents(False)
-
-        self.gridLayout_2.addWidget(self.momir_icon, 6, 0, 1, 1)
-
         self.check_un = QCheckBox(self.momir_tab)
         self.check_un.setObjectName(u"check_un")
         font2 = QFont()
@@ -320,6 +317,14 @@ class Ui_MainWindow(object):
         self.check_un.setTristate(False)
 
         self.gridLayout_2.addWidget(self.check_un, 2, 0, 1, 1)
+
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_2.addItem(self.verticalSpacer, 7, 0, 1, 1)
+
+        self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_2.addItem(self.verticalSpacer_3, 1, 0, 1, 1)
 
         self.check_noncreature = QCheckBox(self.momir_tab)
         self.check_noncreature.setObjectName(u"check_noncreature")
@@ -341,17 +346,30 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addWidget(self.line, 3, 0, 1, 1)
 
-        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.action_list = QListWidget(self.momir_tab)
+        self.action_list.setObjectName(u"action_list")
+        self.action_list.setMinimumSize(QSize(0, 500))
+        font4 = QFont()
+        font4.setPointSize(14)
+        font4.setBold(True)
+        self.action_list.setFont(font4)
+        self.action_list.setFrameShape(QFrame.Shape.Box)
+        self.action_list.setFrameShadow(QFrame.Shadow.Plain)
+        self.action_list.setLineWidth(3)
+        self.action_list.setMidLineWidth(3)
+        self.action_list.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.action_list.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.action_list.setAlternatingRowColors(True)
+        self.action_list.setTextElideMode(Qt.TextElideMode.ElideLeft)
+        self.action_list.setMovement(QListView.Movement.Free)
+        self.action_list.setResizeMode(QListView.ResizeMode.Fixed)
+        self.action_list.setSpacing(5)
+        self.action_list.setBatchSize(10)
+        self.action_list.setWordWrap(True)
+        self.action_list.setItemAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.action_list.setSortingEnabled(False)
 
-        self.gridLayout_2.addItem(self.verticalSpacer_2, 7, 0, 1, 1)
-
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout_2.addItem(self.verticalSpacer, 8, 0, 1, 1)
-
-        self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout_2.addItem(self.verticalSpacer_3, 1, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.action_list, 6, 0, 1, 1)
 
 
         self.gridLayout_3.addLayout(self.gridLayout_2, 0, 3, 1, 1)
@@ -639,7 +657,6 @@ class Ui_MainWindow(object):
         self.button_13.setText(QCoreApplication.translate("MainWindow", u"13", None))
         self.label_3.setText("")
         self.card_display.setText("")
-        self.momir_icon.setText("")
         self.check_un.setText(QCoreApplication.translate("MainWindow", u"  Enable Un-Cards", None))
         self.check_noncreature.setText(QCoreApplication.translate("MainWindow", u"  Enable non-creature \n"
 "  cards", None))

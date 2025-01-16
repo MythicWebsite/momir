@@ -2,7 +2,7 @@ import sys, os, json
 import random
 import requests
 import functools
-from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QGridLayout
+from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QGridLayout, QListWidgetItem
 from PySide6.QtGui import QPixmap, QFontDatabase, QFont
 from PySide6.QtCore import Qt, QSize
 from ui_panel import Ui_MainWindow
@@ -12,8 +12,8 @@ from print_handler import print_card
 
 test_flip = False
 disable_all_tokens = False
-offline_mode = False
-download_images = True
+offline_mode = True
+download_images = False
 
 if not offline_mode:
     creatures: dict = get_creature_card_list()
@@ -62,7 +62,10 @@ class MainWindow(QMainWindow):
 
         self.ui.check_un.stateChanged.connect(self.on_unset_check)
 
-        card_back = QPixmap("Magic_card_back.png").scaled(display_size, aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
+        if not os.path.exists('Images/preview_image.png'):
+            card_back = QPixmap(convert_card(download_img('https://cards.scryfall.io/border_crop/front/f/5/f5ed5ad3-b970-4720-b23b-308a25f42887.jpg?1562953277'),'preview_image')).scaled(display_size, aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
+        else:
+            card_back = QPixmap("Images/preview_image.png").scaled(display_size, aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
         self.ui.card_display.setPixmap(card_back)
         self.ui.token_display.setPixmap(card_back)
         self.ui.token_display_2.setPixmap(card_back)
@@ -107,7 +110,7 @@ class MainWindow(QMainWindow):
             choice_list = un_creatures if self.ui.check_un.isChecked() else creatures
             if not choice_list.get(cmc, None):
                 self.debounce = False
-                print("No cards of that CMC")
+                self.logprint(f"No cards of {cmc} CMC exist")
                 return
             self.ui.cmc_label.setText(f"CMC: {cmc}")
             found = False
@@ -165,7 +168,7 @@ class MainWindow(QMainWindow):
                             for token in token_loc:
                                 self.add_item_to_grid(part, token, self.ui.token_grid)
                                 
-                
+                self.logprint(f"{current_card['name']} with CMC {cmc} was created")
                 self.add_item_to_grid(current_card, card_loc, self.ui.history_grid)
 
                 pixmap = QPixmap(card_loc).scaled(display_size, aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
@@ -174,8 +177,6 @@ class MainWindow(QMainWindow):
             if not found:
                 print("No card found")
             self.debounce = False
-
-
 
     def on_unset_check(self, state):
         print("Check box state: ", state)
@@ -214,6 +215,11 @@ class MainWindow(QMainWindow):
         elif grid == 'history':
             self.ui.history_display.setPixmap(pixmap)
             self.history_print = f'Images/{str(source_object.objectName).strip('{\'}')}.png'
+
+    def logprint(self, message):
+        item = QListWidgetItem(message)
+        item.setFont(QFont("SenguiUI"))
+        self.ui.action_list.insertItem(0, item)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
