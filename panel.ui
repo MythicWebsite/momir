@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1644</width>
-    <height>1188</height>
+    <width>1964</width>
+    <height>1224</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -615,7 +615,7 @@ QListWidget {
            <widget class="QLabel" name="card_display">
             <property name="minimumSize">
              <size>
-              <width>500</width>
+              <width>800</width>
               <height>1000</height>
              </size>
             </property>
@@ -660,7 +660,7 @@ QListWidget {
            <widget class="QCheckBox" name="check_un">
             <property name="font">
              <font>
-              <pointsize>24</pointsize>
+              <pointsize>35</pointsize>
               <strikeout>false</strikeout>
              </font>
             </property>
@@ -711,7 +711,7 @@ QListWidget {
            <widget class="QCheckBox" name="check_noncreature">
             <property name="font">
              <font>
-              <pointsize>24</pointsize>
+              <pointsize>35</pointsize>
               <strikeout>true</strikeout>
              </font>
             </property>
@@ -779,7 +779,7 @@ QListWidget {
              <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
             </property>
             <property name="dragDropMode">
-             <enum>QAbstractItemView::DragDropMode::NoDragDrop</enum>
+             <enum>QAbstractItemView::DragDropMode::DragOnly</enum>
             </property>
             <property name="defaultDropAction">
              <enum>Qt::DropAction::IgnoreAction</enum>
@@ -899,8 +899,8 @@ QListWidget {
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>1000</width>
-             <height>1009</height>
+             <width>1320</width>
+             <height>1045</height>
             </rect>
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_7">
@@ -1065,8 +1065,8 @@ QListWidget {
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>1000</width>
-             <height>1009</height>
+             <width>1320</width>
+             <height>1045</height>
             </rect>
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_5">
@@ -1231,8 +1231,8 @@ QListWidget {
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>1000</width>
-             <height>1009</height>
+             <width>1320</width>
+             <height>1045</height>
             </rect>
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -1266,7 +1266,7 @@ QListWidget {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1644</width>
+     <width>1964</width>
      <height>22</height>
     </rect>
    </property>

@@ -63,12 +63,15 @@ class MainWindow(QMainWindow):
         self.ui.check_un.stateChanged.connect(self.on_unset_check)
 
         if not os.path.exists('Images/preview_image.png'):
-            card_back = QPixmap(convert_card(download_img('https://cards.scryfall.io/border_crop/front/f/5/f5ed5ad3-b970-4720-b23b-308a25f42887.jpg?1562953277'),'preview_image')).scaled(display_size, aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
+            card_back = QPixmap(convert_card(download_img('https://cards.scryfall.io/border_crop/front/f/5/f5ed5ad3-b970-4720-b23b-308a25f42887.jpg?1562953277'),'preview_image')).scaled(display_size*1.5, aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
         else:
-            card_back = QPixmap("Images/preview_image.png").scaled(display_size, aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
+            card_back = QPixmap("Images/preview_image.png").scaled(display_size*1.5, aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
         self.ui.card_display.setPixmap(card_back)
+        self.ui.card_display.setAlignment(Qt.AlignCenter)
         self.ui.token_display.setPixmap(card_back)
+        self.ui.token_display.setAlignment(Qt.AlignCenter)
         self.ui.token_display_2.setPixmap(card_back)
+        self.ui.token_display_2.setAlignment(Qt.AlignCenter)
 
         count = 0
         if not disable_all_tokens:
@@ -171,9 +174,10 @@ class MainWindow(QMainWindow):
                 self.logprint(f"{current_card['name']} with CMC {cmc} was created")
                 self.add_item_to_grid(current_card, card_loc, self.ui.history_grid)
 
-                pixmap = QPixmap(card_loc).scaled(display_size, aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
+                pixmap = QPixmap(card_loc).scaled(display_size*1.5, aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
                 self.card_print = card_loc
                 self.ui.card_display.setPixmap(pixmap)
+                self.ui.card_display.setAlignment(Qt.AlignCenter)
             if not found:
                 print("No card found")
             self.debounce = False
@@ -203,6 +207,7 @@ class MainWindow(QMainWindow):
         new_card.objectName = {img_loc.split('/')[1].split('.')[0]}
         pixmap_card = QPixmap(img_loc).scaled(QSize(300,300), aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
         new_card.setPixmap(pixmap_card)
+        new_card.setAlignment(Qt.AlignCenter)
         grid.addWidget(new_card, 0, 0)
         new_card.mousePressEvent = functools.partial(self.grid_item_click, source_object=new_card, grid=grid.objectName().split('_')[0])
 
@@ -211,9 +216,12 @@ class MainWindow(QMainWindow):
         if grid == 'token':
             self.ui.token_display.setPixmap(pixmap)
             self.ui.token_display_2.setPixmap(pixmap)
+            self.ui.token_display.setAlignment(Qt.AlignCenter)
+            self.ui.token_display_2.setAlignment(Qt.AlignCenter)
             self.token_print = f'Images/{str(source_object.objectName).strip('{\'}')}.png'
         elif grid == 'history':
             self.ui.history_display.setPixmap(pixmap)
+            self.ui.history_display.setAlignment(Qt.AlignCenter)
             self.history_print = f'Images/{str(source_object.objectName).strip('{\'}')}.png'
 
     def logprint(self, message):
