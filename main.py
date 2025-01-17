@@ -200,7 +200,7 @@ class MainWindow(QMainWindow):
             shift_item = grid.itemAt(i).widget()
             grid.addWidget(shift_item, row, col) 
         new_card = QLabel()
-        new_card.objectName = {card['id']}
+        new_card.objectName = {img_loc.split('/')[1].split('.')[0]}
         pixmap_card = QPixmap(img_loc).scaled(QSize(300,300), aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
         new_card.setPixmap(pixmap_card)
         grid.addWidget(new_card, 0, 0)

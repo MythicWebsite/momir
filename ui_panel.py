@@ -15,11 +15,11 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QFrame, QGridLayout,
-    QHBoxLayout, QLabel, QLayout, QListView,
-    QListWidget, QListWidgetItem, QMainWindow, QMenuBar,
-    QPushButton, QScrollArea, QSizePolicy, QSpacerItem,
-    QTabWidget, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QAbstractItemView, QApplication, QCheckBox, QFrame,
+    QGridLayout, QHBoxLayout, QLabel, QLayout,
+    QListView, QListWidget, QListWidgetItem, QMainWindow,
+    QMenuBar, QPushButton, QScrollArea, QSizePolicy,
+    QSpacerItem, QTabWidget, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -348,9 +348,9 @@ class Ui_MainWindow(object):
 
         self.action_list = QListWidget(self.momir_tab)
         self.action_list.setObjectName(u"action_list")
-        self.action_list.setMinimumSize(QSize(0, 500))
+        self.action_list.setMinimumSize(QSize(500, 800))
         font4 = QFont()
-        font4.setPointSize(14)
+        font4.setPointSize(25)
         font4.setBold(True)
         self.action_list.setFont(font4)
         self.action_list.setFrameShape(QFrame.Shape.Box)
@@ -359,6 +359,8 @@ class Ui_MainWindow(object):
         self.action_list.setMidLineWidth(3)
         self.action_list.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.action_list.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.action_list.setDragDropMode(QAbstractItemView.DragDropMode.NoDragDrop)
+        self.action_list.setDefaultDropAction(Qt.DropAction.IgnoreAction)
         self.action_list.setAlternatingRowColors(True)
         self.action_list.setTextElideMode(Qt.TextElideMode.ElideLeft)
         self.action_list.setMovement(QListView.Movement.Free)
