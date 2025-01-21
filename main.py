@@ -2,7 +2,7 @@ import sys, os, json
 import random
 import requests
 import functools
-from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QGridLayout, QListWidgetItem
+from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QGridLayout, QListWidgetItem, QCheckBox
 from PySide6.QtGui import QPixmap, QFontDatabase, QFont
 from PySide6.QtCore import Qt, QSize, QTimer
 from ui_panel import Ui_MainWindow
@@ -11,30 +11,6 @@ from api_handler import find_newest_version, get_creature_card_list, download_im
 from image_handler import convert_card, flip_card_image
 from print_handler import print_card
 
-test_flip = False
-disable_all_tokens = False
-offline_mode = True
-download_images = False
-
-# if not offline_mode:
-#     creatures: dict = get_creature_card_list()
-#     un_creatures:dict = get_creature_card_list(funny=True)
-#     tokens: list = get_token_list()
-# else:
-#     with open('json/creatures_no_un.json') as f:
-#         creatures = json.load(f)
-#     with open('json/creatures_un.json') as f:
-#         un_creatures = json.load(f)
-#     with open('json/tokens.json') as f:
-#         tokens = json.load(f)
-
-# if download_images and not offline_mode:
-#     for cmc in un_creatures:
-#         download_all_images(un_creatures[cmc], True)
-#     download_all_images(tokens)
-
-current_card: dict = {}
-
 token_ignore_list = [' Ad', 'Decklist', ' Bio', 'Checklist', 'Punchcard']
 token_types = ['token', 'dungeon', 'emblem', 'double_faced_token']
 token_card_types = ['Token', 'Card', 'Dungeon', 'Emblem']
@@ -42,10 +18,17 @@ card_types = ['Creature', 'Artifact', 'Enchantment', 'Instant', 'Sorcery', 'Plan
 
 display_size = QSize(700,700)
 
+def un_filter(card_list: list, cmc:bool = True) -> list:
+    if not cmc:
+        return [card for card in card_list if not (card['set_type'] == 'funny' or card['set'] == 'unf') and not card['layout'] in ['token', 'double_faced_token'] and not 'Mystery Booster' in card.get('set_name', '')]
+    else:
+        for cmc in card_list:
+            card_list[cmc] = [card for card in card_list[cmc] if not (card['set_type'] == 'funny' or card['set'] == 'unf') and not card['layout'] in ['token', 'double_faced_token'] and not 'Mystery Booster' in card.get('set_name', '')]
+        return card_list
+
+
 class LoadingWindow(QMainWindow):
-    creatures = {}
-    un_creatures = {}
-    tokens = []
+    card_data: dict = {}
 
     def __init__(self):
         super().__init__()
@@ -56,18 +39,41 @@ class LoadingWindow(QMainWindow):
 
         self.show()
 
+        self.set_info("Checking for settings")
         self.set_bar(0)
 
-        if not os.path.exists('Images/preview_image.png'):
-            self.ui.loading_info.setText("Downloading preview image")
-            self.set_bar(25)
-            convert_card(download_img('https://cards.scryfall.io/border_crop/front/f/5/f5ed5ad3-b970-4720-b23b-308a25f42887.jpg?1562953277'),'preview_image')
-            self.set_bar(50)
+        if not os.path.exists('json/settings.json'):
+            self.card_data['settings'] = {
+                'Online': True,
+                'Creature': True,
+                'Artifact': False,
+                'Enchantment': False,
+                'Instant': False,
+                'Sorcery': False,
+                'Planeswalker': False,
+                'Land': False,
+                'Battle': False,
+                'Un': False
+            }
+            with open('json/settings.json', 'w') as json_file:
+                json.dump(self.card_data['settings'], json_file)
         else:
-            self.set_bar(50)
+            with open('json/settings.json', 'r') as json_file:
+                self.card_data['settings'] = json.load(json_file)
 
-        self.set_info("Checking for updates")
-        update = check_bulk_data()
+        self.set_info("Checking for preview image")
+        self.set_bar(20)
+
+        if not os.path.exists('Images/preview_image.png'):
+            convert_card(download_img('https://cards.scryfall.io/border_crop/front/f/5/f5ed5ad3-b970-4720-b23b-308a25f42887.jpg?1562953277'),'preview_image')
+        self.set_bar(50)
+
+        if self.card_data['settings']['Online']:
+            self.set_info("Checking for updates")
+            update = check_bulk_data()
+        else:
+            update = False
+
         if update:
             self.set_info("Downloading bulk data")
             with open('json/bulk.json', 'r') as json_file:
@@ -75,85 +81,88 @@ class LoadingWindow(QMainWindow):
             for data_type in bulk['data']:
                 if data_type['type'] == 'default_cards' or data_type['type'] == 'oracle_cards':
                     self.set_info(f"Downloading {data_type['type']} data from bulk data")
-                    download_json_file(data_type['download_uri'], f"json/{data_type['type']}.json")
+                    self.card_data[data_type['type']] = download_json_file(data_type['download_uri'], f"json/{data_type['type']}.json")
                     self.set_bar(self.ui.progressBar.value() + 25)
-        else:
-            self.set_bar(100)
         
-        self.set_info("Reading all non-unique card data")
         self.set_bar(0)
-        
-            
         self.set_info("Reading all unique card data")
-        with open('json/oracle_cards.json', 'r', encoding='utf8') as json_file:
-            oracle_cards = json.load(json_file)
+        if not self.card_data.get('oracle_cards', None):
+            with open('json/oracle_cards.json', 'r', encoding='utf8') as json_file:
+                self.card_data['oracle_cards'] = json.load(json_file)
         self.set_bar(20)
-        all_data = {}
+
         if update:
-            with open('json/default_cards.json', 'r', encoding='utf8') as json_file:
-                default_cards = json.load(json_file)
-            self.set_bar(40)
             self.set_info("Filtering all non-unique card data")
-            default_cards = [card for card in default_cards if 'paper' in card.get('games', []) and not card.get('variation', False) and not card.get('oversized', False) and not card.get('textless', False) and not 'alchemy' == card.get('set_type', '')]
-            self.set_info("Saving non-unique card data")
-            with open('json/default_cards.json', 'w') as json_file:
-                json.dump(default_cards, json_file)
-            self.set_bar(60)
+            self.card_data['default_cards'] = [card for card in self.card_data['default_cards'] if 'paper' in card.get('games', []) and not card.get('variation', False) and not card.get('oversized', False) and not card.get('textless', False) and not 'alchemy' == card.get('set_type', '')]
+            self.set_bar(50)
             self.set_info("Filtering all unique card data")
-            oracle_cards = [card for card in oracle_cards if any(c in card.get('games', []) for c in ['paper', 'mtgo']) and not card.get('variation', False) and not card.get('oversized', False) and not card.get('textless', False) and not 'alchemy' == card.get('set_type', '')]
+            self.card_data['oracle_cards'] = [card for card in self.card_data['oracle_cards'] if any(c in card.get('games', []) for c in ['paper', 'mtgo']) and not card.get('variation', False) and not card.get('oversized', False) and not card.get('textless', False) and not 'alchemy' == card.get('set_type', '')]
             self.set_bar(80)
             self.set_info("Gathering MTGO card data from unique cards")
-            mtgo_cards = [card for card in oracle_cards if 'mtgo' in card.get('games', False) and not 'paper' in card.get('games', False) or 'Mystery Booster' in card.get('set_name', None)]
+            mtgo_cards = [card for card in self.card_data['oracle_cards'] if 'mtgo' in card.get('games', False) and not 'paper' in card.get('games', False) or 'Mystery Booster' in card.get('set_name', None)]
             self.set_bar(0)
             self.set_info("Replacing MTGO card data with paper card data")
             total = len(mtgo_cards)
             count = 1
             for card in mtgo_cards:
-                card_list = [c for c in default_cards if c.get('oracle_id', None) == card['oracle_id'] and 'paper' in c['games'] and not 'Mystery Booster' in c.get('set_name', None)]
+                card_list = [c for c in self.card_data['default_cards'] if c.get('oracle_id', None) == card['oracle_id'] and 'paper' in c['games'] and not 'Mystery Booster' in c.get('set_name', None)]
                 new_card = find_newest_version(card['oracle_id'], card_list)
                 if new_card:
-                    for i in range(len(oracle_cards)):
-                        if oracle_cards[i]['oracle_id'] == new_card['oracle_id']:
-                            oracle_cards[i] = new_card
+                    for i in range(len(self.card_data['oracle_cards'])):
+                        if self.card_data['oracle_cards'][i]['oracle_id'] == new_card['oracle_id']:
+                            self.card_data['oracle_cards'][i] = new_card
                             break
                 count += 1
                 if count % int(total/100) == 0:
                     self.set_bar(count/total*100)
             self.set_info("Saving new unique card data")
+            self.set_bar(50)
             with open('json/oracle_cards.json', 'w') as json_file:
-                json.dump(oracle_cards, json_file)
+                json.dump(self.card_data['oracle_cards'], json_file)
 
             self.set_bar(0)
             self.set_info("Sorting card data")
             for card_type in card_types:
                 self.set_info(f"Sorting {card_type} data")
-                card_list = [card for card in oracle_cards if card_type in card['type_line'].split('//')[0]]
+                card_list = [card for card in self.card_data['oracle_cards'] if card_type in card['type_line'].split('//')[0] and not card['layout'] in ['token', 'double_faced_token']]
                 card_list = self.sort_data(card_list)
-                all_data[card_type] = card_list
+                self.card_data[card_type] = card_list
                 with open(f'json/{card_type.lower()}.json', 'w') as json_file:
                     json.dump(card_list, json_file)
                 self.set_bar(self.ui.progressBar.value() + 100/len(card_types)+1)
                 
             self.set_info("Sorting token data")
-            self.tokens = [card for card in oracle_cards if any(token_type in card['layout'] for token_type in token_types) and not any(ignore in card['name'] for ignore in token_ignore_list) and not card['set_type'] == 'minigame']
-            self.tokens = sorted(self.tokens, key=lambda x: x['name'])
-            with open('json/tokens.json', 'w') as json_file:
-                json.dump(self.tokens, json_file)
+            self.card_data['Token'] = [card for card in self.card_data['oracle_cards'] if any(token_type in card['layout'] for token_type in token_types) and not any(ignore in card['name'] for ignore in token_ignore_list) and not card['set_type'] == 'minigame']
+            self.card_data['Token'] = sorted(self.card_data['Token'], key=lambda x: x['name'])
+            with open('json/token.json', 'w') as json_file:
+                json.dump(self.card_data['Token'], json_file)
             self.set_bar(100)
-
-        self.set_info("Filtering out tokens from creature data")
-        if all_data:
-            self.un_creatures = all_data['Creature']
         else:
-            with open('json/creature.json', 'r') as json_file:
-                self.un_creatures = json.load(json_file)
-            with open('json/tokens.json', 'r') as json_file:
-                self.tokens = json.load(json_file)
-        self.set_bar(50)
-        for cmc in self.un_creatures:
-            self.creatures[cmc] = [card for card in self.un_creatures[cmc] if not (card['set_type'] == 'funny' or card['set'] == 'unf') and not card['layout'] in ['token', 'double_faced_token'] and not 'Mystery Booster' in card.get('set_name', '')]
+            self.set_bar(0)
+            total = len(card_types)
+            count = 1
+            for file in os.listdir('json'):
+                file_name = file.split('.')[0].capitalize()
+                if file_name in card_types and not file_name in ['oracle_cards', 'default_cards', 'bulk', 'settings']:
+                    self.set_info(f"Reading {file_name} data")
+                    self.set_bar(count/total*100)
+                    count += 1
+                    with open(f'json/{file}', 'r') as json_file:
+                        self.card_data[file_name] = json.load(json_file)
+
+        # self.set_info("Filtering out tokens from creature data")
+        # if all_data:
+        #     self.un_creatures = self.card_data['Creature']
+        # else:
+        #     with open('json/creature.json', 'r') as json_file:
+        #         self.un_creatures = json.load(json_file)
+        #     with open('json/tokens.json', 'r') as json_file:
+        #         self.tokens = json.load(json_file)
+        # self.set_bar(50)
+        # for cmc in self.un_creatures:
+        #     self.creatures[cmc] = [card for card in self.un_creatures[cmc] if not (card['set_type'] == 'funny' or card['set'] == 'unf') and not card['layout'] in ['token', 'double_faced_token'] and not 'Mystery Booster' in card.get('set_name', '')]
         # self.creatures = [card for card in un_creatures if not (card['set_type'] == 'funny' or card['set'] == 'unf')]
-        self.set_bar(70)
+        # self.set_bar(70)
 
         QApplication.processEvents()
         QTimer.singleShot(1000, self.finished)
@@ -177,9 +186,11 @@ class LoadingWindow(QMainWindow):
 
     def finished(self):
         self.panel = MainWindow()
-        self.panel.creatures = self.creatures
-        self.panel.un_creatures = self.un_creatures
-        self.panel.tokens = self.tokens
+        self.panel.card_data = self.card_data
+        all_checks = self.panel.ui.centralwidget.findChildren(QCheckBox)
+        for check in all_checks:
+            if check.objectName().split('_')[1].capitalize() in self.card_data['settings']:
+                check.setChecked(self.card_data['settings'][check.objectName().split('_')[1].capitalize()])
         self.panel.showFullScreen()
         self.close()
 
@@ -243,9 +254,7 @@ class MainWindow(QMainWindow):
     token_print = None
     history_print = None
     debounce = False
-    creatures = {}
-    un_creatures = {}
-    tokens = []
+    card_data = {}
     
     def __init__(self):
         super().__init__()
@@ -255,6 +264,7 @@ class MainWindow(QMainWindow):
         QFontDatabase.addApplicationFont("Planewalker-38m6.ttf")
 
         all_buttons = self.ui.centralwidget.findChildren(QPushButton)
+        all_checks = self.ui.centralwidget.findChildren(QCheckBox)
 
         for button in all_buttons:
             if button.objectName().split("_")[1].isdigit():
@@ -264,7 +274,8 @@ class MainWindow(QMainWindow):
             elif button.objectName().split('_')[1] == 'loadtokens':
                 button.clicked.connect(self.on_loadtokens_click)
 
-        # self.ui.check_un.stateChanged.connect(self.on_unset_check)
+        for check in all_checks:
+            check.stateChanged.connect(self.on_check)
 
         card_back = QPixmap("Images/preview_image.png").scaled(display_size*1.5, aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
         self.ui.card_display.setPixmap(card_back)
@@ -275,7 +286,7 @@ class MainWindow(QMainWindow):
         if not self.debounce:
             self.debounce = True
             cmc = self.sender().objectName().split("_")[1]
-            choice_list = self.un_creatures if self.ui.check_un.isChecked() else self.creatures
+            choice_list = self.card_data['Creature'] if self.card_data['settings']['Un'] else un_filter(self.card_data['Creature'])
             if not choice_list.get(cmc, None):
                 self.debounce = False
                 self.logprint(f"No cards of {cmc} CMC exist")
@@ -284,19 +295,13 @@ class MainWindow(QMainWindow):
             found = False
             retry = 0
             while not found and retry < 1000:
-                if not test_flip:
-                    current_card = random.choice(choice_list[cmc])
-                else:
-                    current_card = {'type_line':"no"}
-                    stop = 0
-                    while not "//" in current_card['type_line'] and stop < 100:
-                        current_card = random.choice(choice_list[cmc])
-                        stop += 1
+                current_card = {'type_line':"no"}
+                current_card = random.choice(choice_list[cmc])
                 if not current_card:
-                    continue
+                    break
                 # print(current_card["name"])
                 card_loc = None
-                if not os.path.exists(f'Images/{current_card["oracle_id"]}.png') and not offline_mode:
+                if not os.path.exists(f'Images/{current_card["oracle_id"]}.png') and self.card_data['settings']['Online']:
                     # print(f"Creating image for {current_card['name']}")
                     if current_card.get('card_faces', [{}])[0].get('image_uris',None) and "//" in current_card['type_line']:
                         img_url = current_card['card_faces'][0]['image_uris']['border_crop']
@@ -321,7 +326,7 @@ class MainWindow(QMainWindow):
                                 token_loc.append(f'Images/{part["id"]}.png')
                                 if os.path.exists(f'Images/{part["id"]}-1.png'):
                                     token_loc.append(f'Images/{part["id"]}-1.png')
-                            else:
+                            elif card_data['settings']['Online']:
                                 card_data = requests.get(part['uri']).json()
                                 if card_data.get('image_uris', None):
                                     token_loc.append(convert_card(download_img(card_data['image_uris']['border_crop']), part['id']))
@@ -355,12 +360,12 @@ class MainWindow(QMainWindow):
             QApplication.processEvents()
             self.ui.token_grid_2.takeAt(0).widget().deleteLater()
             count = 0
-            for token in self.tokens:
+            for token in self.card_data['Token']:
                 if not any(ignore in token['name'] for ignore in token_ignore_list):
                     card_loc = []
                     img_url = []
                     img_count = 0
-                    if not os.path.exists(f'Images/{token["oracle_id"]}.png') and not True:
+                    if not os.path.exists(f'Images/{token["oracle_id"]}.png') and self.card_data['settings']['Online']:
                         print(f"Creating image for {token['name']}")
                         if token.get('image_uris', None):
                             img_url.append(token['image_uris']['border_crop'])
@@ -388,8 +393,17 @@ class MainWindow(QMainWindow):
                             count += 1
             self.debounce = False
 
-    def on_unset_check(self, state):
-        print("Check box state: ", state)
+    def on_check(self, state):
+        if not self.debounce:
+            self.debounce = True
+            self.setEnabled(False)
+            setting = self.sender().objectName().split('_')[1].capitalize()
+            # print(f"{setting} box state: ", state)
+            self.card_data['settings'][setting] = True if state else False
+            with open('json/settings.json', 'w') as json_file:
+                json.dump(self.card_data['settings'], json_file)
+            self.setEnabled(True)
+            self.debounce = False
 
     def on_print_click(self):
         if 'card' in self.sender().objectName().split("_")[2]:

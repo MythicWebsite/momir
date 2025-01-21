@@ -37,6 +37,7 @@ def download_json_file(url, file_path) -> None:
     response = requests.get(url)
     with open(file_path, 'wb') as file:
         file.write(response.content)
+    return response.json()
 
 def download_img(url):
     response = requests.get(url)

@@ -379,7 +379,7 @@ class Ui_MainWindow(object):
         self.scrollArea_3.setWidgetResizable(True)
         self.scrollAreaWidgetContents_3 = QWidget()
         self.scrollAreaWidgetContents_3.setObjectName(u"scrollAreaWidgetContents_3")
-        self.scrollAreaWidgetContents_3.setGeometry(QRect(0, 0, 1320, 1045))
+        self.scrollAreaWidgetContents_3.setGeometry(QRect(0, 0, 1320, 1062))
         self.horizontalLayout_7 = QHBoxLayout(self.scrollAreaWidgetContents_3)
         self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
         self.horizontalLayout_7.setContentsMargins(0, 0, 0, 0)
@@ -475,7 +475,7 @@ class Ui_MainWindow(object):
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName(u"scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 1320, 1045))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 1320, 1062))
         self.horizontalLayout_5 = QHBoxLayout(self.scrollAreaWidgetContents_2)
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
         self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
@@ -571,7 +571,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1320, 1045))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1320, 1062))
         self.horizontalLayout_4 = QHBoxLayout(self.scrollAreaWidgetContents)
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
         self.horizontalLayout_4.setContentsMargins(0, 0, 0, 0)
@@ -626,43 +626,9 @@ class Ui_MainWindow(object):
 "}")
         self.gridLayout_7 = QGridLayout(self.settings_tab)
         self.gridLayout_7.setObjectName(u"gridLayout_7")
-        self.horizontalSpacer_5 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.gridLayout_7.addItem(self.horizontalSpacer_5, 1, 0, 1, 1)
-
         self.horizontalSpacer_8 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.gridLayout_7.addItem(self.horizontalSpacer_8, 1, 6, 1, 1)
-
-        self.verticalLayout_4 = QVBoxLayout()
-        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
-        self.label_23 = QLabel(self.settings_tab)
-        self.label_23.setObjectName(u"label_23")
-        self.label_23.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.verticalLayout_4.addWidget(self.label_23)
-
-        self.check_online = QCheckBox(self.settings_tab)
-        self.check_online.setObjectName(u"check_online")
-        self.check_online.setMinimumSize(QSize(400, 0))
-        self.check_online.setMaximumSize(QSize(400, 16777215))
-        self.check_online.setChecked(True)
-
-        self.verticalLayout_4.addWidget(self.check_online, 0, Qt.AlignmentFlag.AlignHCenter)
-
-        self.check_un = QCheckBox(self.settings_tab)
-        self.check_un.setObjectName(u"check_un")
-        self.check_un.setMinimumSize(QSize(400, 0))
-        self.check_un.setMaximumSize(QSize(400, 16777215))
-
-        self.verticalLayout_4.addWidget(self.check_un, 0, Qt.AlignmentFlag.AlignHCenter)
-
-        self.verticalSpacer_5 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.verticalLayout_4.addItem(self.verticalSpacer_5)
-
-
-        self.gridLayout_7.addLayout(self.verticalLayout_4, 1, 3, 1, 1)
+        self.gridLayout_7.addItem(self.horizontalSpacer_8, 2, 7, 1, 1)
 
         self.verticalLayout_2 = QVBoxLayout()
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
@@ -701,6 +667,13 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_2.addWidget(self.check_planeswalker, 0, Qt.AlignmentFlag.AlignHCenter)
 
+        self.check_land = QCheckBox(self.settings_tab)
+        self.check_land.setObjectName(u"check_land")
+        self.check_land.setMinimumSize(QSize(400, 0))
+        self.check_land.setMaximumSize(QSize(400, 16777215))
+
+        self.verticalLayout_2.addWidget(self.check_land, 0, Qt.AlignmentFlag.AlignHCenter)
+
         self.check_battle = QCheckBox(self.settings_tab)
         self.check_battle.setObjectName(u"check_battle")
         self.check_battle.setMinimumSize(QSize(400, 0))
@@ -727,7 +700,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.addItem(self.verticalSpacer_2)
 
 
-        self.gridLayout_7.addLayout(self.verticalLayout_2, 1, 1, 1, 1)
+        self.gridLayout_7.addLayout(self.verticalLayout_2, 1, 2, 2, 1)
 
         self.verticalLayout_3 = QVBoxLayout()
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
@@ -749,8 +722,8 @@ class Ui_MainWindow(object):
         self.download_everything = QPushButton(self.settings_tab)
         self.download_everything.setObjectName(u"download_everything")
         self.download_everything.setEnabled(True)
-        self.download_everything.setMinimumSize(QSize(400, 75))
-        self.download_everything.setMaximumSize(QSize(300, 16777215))
+        self.download_everything.setMinimumSize(QSize(400, 65))
+        self.download_everything.setMaximumSize(QSize(300, 65))
         self.download_everything.setCheckable(False)
         self.download_everything.setChecked(False)
 
@@ -758,57 +731,64 @@ class Ui_MainWindow(object):
 
         self.download_tokens = QPushButton(self.settings_tab)
         self.download_tokens.setObjectName(u"download_tokens")
-        self.download_tokens.setMinimumSize(QSize(400, 75))
-        self.download_tokens.setMaximumSize(QSize(300, 16777215))
+        self.download_tokens.setMinimumSize(QSize(400, 65))
+        self.download_tokens.setMaximumSize(QSize(300, 65))
 
         self.verticalLayout_3.addWidget(self.download_tokens, 0, Qt.AlignmentFlag.AlignHCenter)
 
         self.download_creature = QPushButton(self.settings_tab)
         self.download_creature.setObjectName(u"download_creature")
-        self.download_creature.setMinimumSize(QSize(400, 75))
-        self.download_creature.setMaximumSize(QSize(300, 16777215))
+        self.download_creature.setMinimumSize(QSize(400, 65))
+        self.download_creature.setMaximumSize(QSize(300, 65))
 
         self.verticalLayout_3.addWidget(self.download_creature, 0, Qt.AlignmentFlag.AlignHCenter)
 
         self.download_artifact = QPushButton(self.settings_tab)
         self.download_artifact.setObjectName(u"download_artifact")
-        self.download_artifact.setMinimumSize(QSize(400, 75))
-        self.download_artifact.setMaximumSize(QSize(300, 16777215))
+        self.download_artifact.setMinimumSize(QSize(400, 65))
+        self.download_artifact.setMaximumSize(QSize(300, 65))
 
         self.verticalLayout_3.addWidget(self.download_artifact, 0, Qt.AlignmentFlag.AlignHCenter)
 
         self.download_enchantment = QPushButton(self.settings_tab)
         self.download_enchantment.setObjectName(u"download_enchantment")
-        self.download_enchantment.setMinimumSize(QSize(400, 75))
-        self.download_enchantment.setMaximumSize(QSize(300, 16777215))
+        self.download_enchantment.setMinimumSize(QSize(400, 65))
+        self.download_enchantment.setMaximumSize(QSize(300, 65))
 
         self.verticalLayout_3.addWidget(self.download_enchantment, 0, Qt.AlignmentFlag.AlignHCenter)
 
         self.download_planeswalker = QPushButton(self.settings_tab)
         self.download_planeswalker.setObjectName(u"download_planeswalker")
-        self.download_planeswalker.setMinimumSize(QSize(400, 75))
-        self.download_planeswalker.setMaximumSize(QSize(300, 16777215))
+        self.download_planeswalker.setMinimumSize(QSize(400, 65))
+        self.download_planeswalker.setMaximumSize(QSize(300, 65))
 
         self.verticalLayout_3.addWidget(self.download_planeswalker, 0, Qt.AlignmentFlag.AlignHCenter)
 
+        self.download_land = QPushButton(self.settings_tab)
+        self.download_land.setObjectName(u"download_land")
+        self.download_land.setMinimumSize(QSize(400, 65))
+        self.download_land.setMaximumSize(QSize(300, 65))
+
+        self.verticalLayout_3.addWidget(self.download_land, 0, Qt.AlignmentFlag.AlignHCenter)
+
         self.download_battle = QPushButton(self.settings_tab)
         self.download_battle.setObjectName(u"download_battle")
-        self.download_battle.setMinimumSize(QSize(400, 75))
-        self.download_battle.setMaximumSize(QSize(300, 16777215))
+        self.download_battle.setMinimumSize(QSize(400, 65))
+        self.download_battle.setMaximumSize(QSize(300, 65))
 
         self.verticalLayout_3.addWidget(self.download_battle, 0, Qt.AlignmentFlag.AlignHCenter)
 
         self.download_instant = QPushButton(self.settings_tab)
         self.download_instant.setObjectName(u"download_instant")
-        self.download_instant.setMinimumSize(QSize(400, 75))
-        self.download_instant.setMaximumSize(QSize(300, 16777215))
+        self.download_instant.setMinimumSize(QSize(400, 65))
+        self.download_instant.setMaximumSize(QSize(300, 65))
 
         self.verticalLayout_3.addWidget(self.download_instant, 0, Qt.AlignmentFlag.AlignHCenter)
 
         self.download_sorcery = QPushButton(self.settings_tab)
         self.download_sorcery.setObjectName(u"download_sorcery")
-        self.download_sorcery.setMinimumSize(QSize(400, 75))
-        self.download_sorcery.setMaximumSize(QSize(300, 16777215))
+        self.download_sorcery.setMinimumSize(QSize(400, 65))
+        self.download_sorcery.setMaximumSize(QSize(300, 65))
 
         self.verticalLayout_3.addWidget(self.download_sorcery, 0, Qt.AlignmentFlag.AlignHCenter)
 
@@ -817,20 +797,54 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.addItem(self.verticalSpacer_6)
 
 
-        self.gridLayout_7.addLayout(self.verticalLayout_3, 1, 5, 1, 1)
-
-        self.horizontalSpacer_7 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.gridLayout_7.addItem(self.horizontalSpacer_7, 1, 4, 1, 1)
+        self.gridLayout_7.addLayout(self.verticalLayout_3, 1, 6, 2, 1)
 
         self.horizontalSpacer_6 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.gridLayout_7.addItem(self.horizontalSpacer_6, 1, 2, 1, 1)
+        self.gridLayout_7.addItem(self.horizontalSpacer_6, 2, 3, 1, 1)
+
+        self.verticalLayout_4 = QVBoxLayout()
+        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
+        self.label_23 = QLabel(self.settings_tab)
+        self.label_23.setObjectName(u"label_23")
+        self.label_23.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.verticalLayout_4.addWidget(self.label_23)
+
+        self.check_online = QCheckBox(self.settings_tab)
+        self.check_online.setObjectName(u"check_online")
+        self.check_online.setMinimumSize(QSize(400, 0))
+        self.check_online.setMaximumSize(QSize(400, 16777215))
+        self.check_online.setChecked(True)
+
+        self.verticalLayout_4.addWidget(self.check_online, 0, Qt.AlignmentFlag.AlignHCenter)
+
+        self.check_un = QCheckBox(self.settings_tab)
+        self.check_un.setObjectName(u"check_un")
+        self.check_un.setMinimumSize(QSize(400, 0))
+        self.check_un.setMaximumSize(QSize(400, 16777215))
+
+        self.verticalLayout_4.addWidget(self.check_un, 0, Qt.AlignmentFlag.AlignHCenter)
+
+        self.verticalSpacer_5 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_4.addItem(self.verticalSpacer_5)
+
+
+        self.gridLayout_7.addLayout(self.verticalLayout_4, 1, 4, 1, 1)
+
+        self.horizontalSpacer_7 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_7.addItem(self.horizontalSpacer_7, 2, 5, 1, 1)
+
+        self.horizontalSpacer_5 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_7.addItem(self.horizontalSpacer_5, 2, 0, 1, 1)
 
         self.label_25 = QLabel(self.settings_tab)
         self.label_25.setObjectName(u"label_25")
 
-        self.gridLayout_7.addWidget(self.label_25, 0, 1, 1, 1)
+        self.gridLayout_7.addWidget(self.label_25, 0, 2, 1, 1)
 
         self.tabWidget.addTab(self.settings_tab, "")
 
@@ -904,16 +918,13 @@ class Ui_MainWindow(object):
         self.token_display_2.setText("")
         self.button_loadtokens.setText(QCoreApplication.translate("MainWindow", u"Load Tokens", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tokens_tab_2), QCoreApplication.translate("MainWindow", u"  All Tokens  ", None))
-        self.label_23.setText(QCoreApplication.translate("MainWindow", u"Settings\n"
-"", None))
-        self.check_online.setText(QCoreApplication.translate("MainWindow", u"Online Mode", None))
-        self.check_un.setText(QCoreApplication.translate("MainWindow", u"Enable Un Cards", None))
         self.label_22.setText(QCoreApplication.translate("MainWindow", u"Enabled Card Types\n"
 "", None))
         self.check_creature.setText(QCoreApplication.translate("MainWindow", u"Creatures", None))
         self.check_artifact.setText(QCoreApplication.translate("MainWindow", u"Artifacts", None))
         self.check_enchantment.setText(QCoreApplication.translate("MainWindow", u"Enchantments", None))
         self.check_planeswalker.setText(QCoreApplication.translate("MainWindow", u"Planeswalkers", None))
+        self.check_land.setText(QCoreApplication.translate("MainWindow", u"Lands", None))
         self.check_battle.setText(QCoreApplication.translate("MainWindow", u"Battles", None))
         self.check_instant.setText(QCoreApplication.translate("MainWindow", u"Instants", None))
         self.check_sorcery.setText(QCoreApplication.translate("MainWindow", u"Sorceries", None))
@@ -926,9 +937,14 @@ class Ui_MainWindow(object):
         self.download_artifact.setText(QCoreApplication.translate("MainWindow", u"Artifacts", None))
         self.download_enchantment.setText(QCoreApplication.translate("MainWindow", u"Enchantments", None))
         self.download_planeswalker.setText(QCoreApplication.translate("MainWindow", u"Planeswalkers", None))
+        self.download_land.setText(QCoreApplication.translate("MainWindow", u"Lands", None))
         self.download_battle.setText(QCoreApplication.translate("MainWindow", u"Battles", None))
         self.download_instant.setText(QCoreApplication.translate("MainWindow", u"Instants", None))
         self.download_sorcery.setText(QCoreApplication.translate("MainWindow", u"Sorceries", None))
+        self.label_23.setText(QCoreApplication.translate("MainWindow", u"Settings\n"
+"", None))
+        self.check_online.setText(QCoreApplication.translate("MainWindow", u"Online Mode", None))
+        self.check_un.setText(QCoreApplication.translate("MainWindow", u"Enable Un Cards", None))
         self.label_25.setText("")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.settings_tab), QCoreApplication.translate("MainWindow", u"  Settings  ", None))
     # retranslateUi
