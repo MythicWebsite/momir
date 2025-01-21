@@ -30,16 +30,18 @@ class Ui_MainWindow(object):
 "	background-color: rgb(120, 120, 255);\n"
 "}\n"
 "QPushButton {\n"
-"	border: none;\n"
+"	border: 3px solid;\n"
 "	border-radius: 16px;\n"
 "	color:  black;\n"
 "	background-color: rgb(97, 97, 97);\n"
 "	font-size: 40px;\n"
 "	font-weight: bold;\n"
 "	color: white;\n"
+"	border-color: lightgray lightgray black black;\n"
 "}\n"
 "QPushButton:pressed {\n"
-"	background-color:rgb(50,50,50);\n"
+"	background-color:rgb(70,70,70);\n"
+"	border-color: black black lightgray lightgray;\n"
 "}\n"
 "QTabWidget::pane{\n"
 "	background: rgb(28, 20, 255);\n"
@@ -72,7 +74,7 @@ class Ui_MainWindow(object):
         self.tabWidget = QTabWidget(self.centralwidget)
         self.tabWidget.setObjectName(u"tabWidget")
         font = QFont()
-        font.setPointSize(60)
+        font.setPointSize(50)
         self.tabWidget.setFont(font)
         self.tabWidget.setTabShape(QTabWidget.TabShape.Rounded)
         self.tabWidget.setElideMode(Qt.TextElideMode.ElideLeft)
@@ -302,57 +304,21 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2 = QGridLayout()
         self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout_2.addItem(self.verticalSpacer_4, 5, 0, 1, 1)
-
-        self.check_un = QCheckBox(self.momir_tab)
-        self.check_un.setObjectName(u"check_un")
-        font2 = QFont()
-        font2.setPointSize(35)
-        font2.setStrikeOut(False)
-        self.check_un.setFont(font2)
-        self.check_un.setAutoFillBackground(False)
-        self.check_un.setIconSize(QSize(30, 30))
-        self.check_un.setTristate(False)
-
-        self.gridLayout_2.addWidget(self.check_un, 2, 0, 1, 1)
-
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.gridLayout_2.addItem(self.verticalSpacer, 7, 0, 1, 1)
+        self.gridLayout_2.addItem(self.verticalSpacer, 3, 0, 1, 1)
 
         self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.gridLayout_2.addItem(self.verticalSpacer_3, 1, 0, 1, 1)
 
-        self.check_noncreature = QCheckBox(self.momir_tab)
-        self.check_noncreature.setObjectName(u"check_noncreature")
-        font3 = QFont()
-        font3.setPointSize(35)
-        font3.setStrikeOut(True)
-        self.check_noncreature.setFont(font3)
-        self.check_noncreature.setIconSize(QSize(30, 30))
-
-        self.gridLayout_2.addWidget(self.check_noncreature, 4, 0, 1, 1)
-
-        self.line = QFrame(self.momir_tab)
-        self.line.setObjectName(u"line")
-        self.line.setAutoFillBackground(False)
-        self.line.setFrameShadow(QFrame.Shadow.Plain)
-        self.line.setLineWidth(200)
-        self.line.setMidLineWidth(200)
-        self.line.setFrameShape(QFrame.Shape.HLine)
-
-        self.gridLayout_2.addWidget(self.line, 3, 0, 1, 1)
-
         self.action_list = QListWidget(self.momir_tab)
         self.action_list.setObjectName(u"action_list")
         self.action_list.setMinimumSize(QSize(500, 800))
-        font4 = QFont()
-        font4.setPointSize(25)
-        font4.setBold(True)
-        self.action_list.setFont(font4)
+        font2 = QFont()
+        font2.setPointSize(25)
+        font2.setBold(True)
+        self.action_list.setFont(font2)
         self.action_list.setFrameShape(QFrame.Shape.Box)
         self.action_list.setFrameShadow(QFrame.Shadow.Plain)
         self.action_list.setLineWidth(3)
@@ -371,7 +337,7 @@ class Ui_MainWindow(object):
         self.action_list.setItemAlignment(Qt.AlignmentFlag.AlignCenter)
         self.action_list.setSortingEnabled(False)
 
-        self.gridLayout_2.addWidget(self.action_list, 6, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.action_list, 2, 0, 1, 1)
 
 
         self.gridLayout_3.addLayout(self.gridLayout_2, 0, 3, 1, 1)
@@ -381,21 +347,21 @@ class Ui_MainWindow(object):
         self.gridLayout_3.addItem(self.horizontalSpacer_4, 0, 6, 1, 1)
 
         self.tabWidget.addTab(self.momir_tab, "")
-        self.tab = QWidget()
-        self.tab.setObjectName(u"tab")
-        self.horizontalLayout_8 = QHBoxLayout(self.tab)
+        self.history_tab = QWidget()
+        self.history_tab.setObjectName(u"history_tab")
+        self.horizontalLayout_8 = QHBoxLayout(self.history_tab)
         self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
         self.gridLayout_6 = QGridLayout()
         self.gridLayout_6.setObjectName(u"gridLayout_6")
         self.gridLayout_6.setSizeConstraint(QLayout.SizeConstraint.SetMaximumSize)
-        self.button_print_history = QPushButton(self.tab)
+        self.button_print_history = QPushButton(self.history_tab)
         self.button_print_history.setObjectName(u"button_print_history")
         self.button_print_history.setMinimumSize(QSize(500, 100))
         self.button_print_history.setMaximumSize(QSize(600, 16777215))
 
         self.gridLayout_6.addWidget(self.button_print_history, 1, 0, 1, 1)
 
-        self.history_display = QLabel(self.tab)
+        self.history_display = QLabel(self.history_tab)
         self.history_display.setObjectName(u"history_display")
         self.history_display.setMinimumSize(QSize(500, 0))
         self.history_display.setMaximumSize(QSize(600, 16777215))
@@ -405,7 +371,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_8.addLayout(self.gridLayout_6)
 
-        self.scrollArea_3 = QScrollArea(self.tab)
+        self.scrollArea_3 = QScrollArea(self.history_tab)
         self.scrollArea_3.setObjectName(u"scrollArea_3")
         self.scrollArea_3.setFrameShape(QFrame.Shape.NoFrame)
         self.scrollArea_3.setFrameShadow(QFrame.Shadow.Plain)
@@ -476,7 +442,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_8.addWidget(self.scrollArea_3)
 
-        self.tabWidget.addTab(self.tab, "")
+        self.tabWidget.addTab(self.history_tab, "")
         self.tokens_tab = QWidget()
         self.tokens_tab.setObjectName(u"tokens_tab")
         self.horizontalLayout_6 = QHBoxLayout(self.tokens_tab)
@@ -611,6 +577,13 @@ class Ui_MainWindow(object):
         self.horizontalLayout_4.setContentsMargins(0, 0, 0, 0)
         self.token_grid_2 = QGridLayout()
         self.token_grid_2.setObjectName(u"token_grid_2")
+        self.button_loadtokens = QPushButton(self.scrollAreaWidgetContents)
+        self.button_loadtokens.setObjectName(u"button_loadtokens")
+        self.button_loadtokens.setMinimumSize(QSize(600, 600))
+        self.button_loadtokens.setMaximumSize(QSize(600, 600))
+
+        self.token_grid_2.addWidget(self.button_loadtokens, 0, 0, 1, 1)
+
 
         self.horizontalLayout_4.addLayout(self.token_grid_2)
 
@@ -619,6 +592,247 @@ class Ui_MainWindow(object):
         self.horizontalLayout_3.addWidget(self.scrollArea)
 
         self.tabWidget.addTab(self.tokens_tab_2, "")
+        self.settings_tab = QWidget()
+        self.settings_tab.setObjectName(u"settings_tab")
+        self.settings_tab.setStyleSheet(u"QVBoxLayout {\n"
+"	alignment:center;\n"
+"}\n"
+"QLabel {\n"
+"	font-size: 60px;\n"
+"}\n"
+"QPushButton {\n"
+"	alignment:center;\n"
+"}\n"
+"QCheckBox{\n"
+"	padding:10px;\n"
+"	font-size: 40px;\n"
+"}\n"
+"QCheckBox::indicator {\n"
+"    width: 30px;\n"
+"    height: 30px;\n"
+"    background-color: gray;\n"
+"    border-style: solid;\n"
+"    border-width: 3px;\n"
+"    border-color: lightgray lightgray black black;\n"
+"}\n"
+"QCheckBox::indicator:checked {\n"
+"    background-color: rgb(85, 205, 0);\n"
+"}\n"
+"QCheckBox:checked, QCheckBox::indicator:checked {\n"
+"    border-color: black black lightgray lightgray;\n"
+"}\n"
+"QCheckBox:checked {\n"
+"    background-color: rgb(110, 110, 190);\n"
+"}")
+        self.gridLayout_7 = QGridLayout(self.settings_tab)
+        self.gridLayout_7.setObjectName(u"gridLayout_7")
+        self.horizontalSpacer_5 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_7.addItem(self.horizontalSpacer_5, 1, 0, 1, 1)
+
+        self.horizontalSpacer_8 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_7.addItem(self.horizontalSpacer_8, 1, 6, 1, 1)
+
+        self.verticalLayout_4 = QVBoxLayout()
+        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
+        self.label_23 = QLabel(self.settings_tab)
+        self.label_23.setObjectName(u"label_23")
+        self.label_23.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.verticalLayout_4.addWidget(self.label_23)
+
+        self.check_online = QCheckBox(self.settings_tab)
+        self.check_online.setObjectName(u"check_online")
+        self.check_online.setMinimumSize(QSize(400, 0))
+        self.check_online.setMaximumSize(QSize(400, 16777215))
+        self.check_online.setChecked(True)
+
+        self.verticalLayout_4.addWidget(self.check_online, 0, Qt.AlignmentFlag.AlignHCenter)
+
+        self.check_un = QCheckBox(self.settings_tab)
+        self.check_un.setObjectName(u"check_un")
+        self.check_un.setMinimumSize(QSize(400, 0))
+        self.check_un.setMaximumSize(QSize(400, 16777215))
+
+        self.verticalLayout_4.addWidget(self.check_un, 0, Qt.AlignmentFlag.AlignHCenter)
+
+        self.verticalSpacer_5 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_4.addItem(self.verticalSpacer_5)
+
+
+        self.gridLayout_7.addLayout(self.verticalLayout_4, 1, 3, 1, 1)
+
+        self.verticalLayout_2 = QVBoxLayout()
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.label_22 = QLabel(self.settings_tab)
+        self.label_22.setObjectName(u"label_22")
+        self.label_22.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.verticalLayout_2.addWidget(self.label_22)
+
+        self.check_creature = QCheckBox(self.settings_tab)
+        self.check_creature.setObjectName(u"check_creature")
+        self.check_creature.setMinimumSize(QSize(400, 0))
+        self.check_creature.setMaximumSize(QSize(400, 16777215))
+        self.check_creature.setChecked(True)
+
+        self.verticalLayout_2.addWidget(self.check_creature, 0, Qt.AlignmentFlag.AlignHCenter)
+
+        self.check_artifact = QCheckBox(self.settings_tab)
+        self.check_artifact.setObjectName(u"check_artifact")
+        self.check_artifact.setMinimumSize(QSize(400, 0))
+        self.check_artifact.setMaximumSize(QSize(400, 16777215))
+
+        self.verticalLayout_2.addWidget(self.check_artifact, 0, Qt.AlignmentFlag.AlignHCenter)
+
+        self.check_enchantment = QCheckBox(self.settings_tab)
+        self.check_enchantment.setObjectName(u"check_enchantment")
+        self.check_enchantment.setMinimumSize(QSize(400, 0))
+        self.check_enchantment.setMaximumSize(QSize(400, 16777215))
+
+        self.verticalLayout_2.addWidget(self.check_enchantment, 0, Qt.AlignmentFlag.AlignHCenter)
+
+        self.check_planeswalker = QCheckBox(self.settings_tab)
+        self.check_planeswalker.setObjectName(u"check_planeswalker")
+        self.check_planeswalker.setMinimumSize(QSize(400, 0))
+        self.check_planeswalker.setMaximumSize(QSize(400, 16777215))
+
+        self.verticalLayout_2.addWidget(self.check_planeswalker, 0, Qt.AlignmentFlag.AlignHCenter)
+
+        self.check_battle = QCheckBox(self.settings_tab)
+        self.check_battle.setObjectName(u"check_battle")
+        self.check_battle.setMinimumSize(QSize(400, 0))
+        self.check_battle.setMaximumSize(QSize(400, 16777215))
+
+        self.verticalLayout_2.addWidget(self.check_battle, 0, Qt.AlignmentFlag.AlignHCenter)
+
+        self.check_instant = QCheckBox(self.settings_tab)
+        self.check_instant.setObjectName(u"check_instant")
+        self.check_instant.setMinimumSize(QSize(400, 0))
+        self.check_instant.setMaximumSize(QSize(400, 16777215))
+
+        self.verticalLayout_2.addWidget(self.check_instant, 0, Qt.AlignmentFlag.AlignHCenter)
+
+        self.check_sorcery = QCheckBox(self.settings_tab)
+        self.check_sorcery.setObjectName(u"check_sorcery")
+        self.check_sorcery.setMinimumSize(QSize(400, 0))
+        self.check_sorcery.setMaximumSize(QSize(400, 16777215))
+
+        self.verticalLayout_2.addWidget(self.check_sorcery, 0, Qt.AlignmentFlag.AlignHCenter)
+
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_2.addItem(self.verticalSpacer_2)
+
+
+        self.gridLayout_7.addLayout(self.verticalLayout_2, 1, 1, 1, 1)
+
+        self.verticalLayout_3 = QVBoxLayout()
+        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.label_24 = QLabel(self.settings_tab)
+        self.label_24.setObjectName(u"label_24")
+        self.label_24.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.verticalLayout_3.addWidget(self.label_24)
+
+        self.label_26 = QLabel(self.settings_tab)
+        self.label_26.setObjectName(u"label_26")
+        font3 = QFont()
+        self.label_26.setFont(font3)
+        self.label_26.setStyleSheet(u"font-size: 30px;")
+        self.label_26.setAlignment(Qt.AlignmentFlag.AlignHCenter|Qt.AlignmentFlag.AlignTop)
+
+        self.verticalLayout_3.addWidget(self.label_26)
+
+        self.download_everything = QPushButton(self.settings_tab)
+        self.download_everything.setObjectName(u"download_everything")
+        self.download_everything.setEnabled(True)
+        self.download_everything.setMinimumSize(QSize(400, 75))
+        self.download_everything.setMaximumSize(QSize(300, 16777215))
+        self.download_everything.setCheckable(False)
+        self.download_everything.setChecked(False)
+
+        self.verticalLayout_3.addWidget(self.download_everything, 0, Qt.AlignmentFlag.AlignHCenter|Qt.AlignmentFlag.AlignVCenter)
+
+        self.download_tokens = QPushButton(self.settings_tab)
+        self.download_tokens.setObjectName(u"download_tokens")
+        self.download_tokens.setMinimumSize(QSize(400, 75))
+        self.download_tokens.setMaximumSize(QSize(300, 16777215))
+
+        self.verticalLayout_3.addWidget(self.download_tokens, 0, Qt.AlignmentFlag.AlignHCenter)
+
+        self.download_creature = QPushButton(self.settings_tab)
+        self.download_creature.setObjectName(u"download_creature")
+        self.download_creature.setMinimumSize(QSize(400, 75))
+        self.download_creature.setMaximumSize(QSize(300, 16777215))
+
+        self.verticalLayout_3.addWidget(self.download_creature, 0, Qt.AlignmentFlag.AlignHCenter)
+
+        self.download_artifact = QPushButton(self.settings_tab)
+        self.download_artifact.setObjectName(u"download_artifact")
+        self.download_artifact.setMinimumSize(QSize(400, 75))
+        self.download_artifact.setMaximumSize(QSize(300, 16777215))
+
+        self.verticalLayout_3.addWidget(self.download_artifact, 0, Qt.AlignmentFlag.AlignHCenter)
+
+        self.download_enchantment = QPushButton(self.settings_tab)
+        self.download_enchantment.setObjectName(u"download_enchantment")
+        self.download_enchantment.setMinimumSize(QSize(400, 75))
+        self.download_enchantment.setMaximumSize(QSize(300, 16777215))
+
+        self.verticalLayout_3.addWidget(self.download_enchantment, 0, Qt.AlignmentFlag.AlignHCenter)
+
+        self.download_planeswalker = QPushButton(self.settings_tab)
+        self.download_planeswalker.setObjectName(u"download_planeswalker")
+        self.download_planeswalker.setMinimumSize(QSize(400, 75))
+        self.download_planeswalker.setMaximumSize(QSize(300, 16777215))
+
+        self.verticalLayout_3.addWidget(self.download_planeswalker, 0, Qt.AlignmentFlag.AlignHCenter)
+
+        self.download_battle = QPushButton(self.settings_tab)
+        self.download_battle.setObjectName(u"download_battle")
+        self.download_battle.setMinimumSize(QSize(400, 75))
+        self.download_battle.setMaximumSize(QSize(300, 16777215))
+
+        self.verticalLayout_3.addWidget(self.download_battle, 0, Qt.AlignmentFlag.AlignHCenter)
+
+        self.download_instant = QPushButton(self.settings_tab)
+        self.download_instant.setObjectName(u"download_instant")
+        self.download_instant.setMinimumSize(QSize(400, 75))
+        self.download_instant.setMaximumSize(QSize(300, 16777215))
+
+        self.verticalLayout_3.addWidget(self.download_instant, 0, Qt.AlignmentFlag.AlignHCenter)
+
+        self.download_sorcery = QPushButton(self.settings_tab)
+        self.download_sorcery.setObjectName(u"download_sorcery")
+        self.download_sorcery.setMinimumSize(QSize(400, 75))
+        self.download_sorcery.setMaximumSize(QSize(300, 16777215))
+
+        self.verticalLayout_3.addWidget(self.download_sorcery, 0, Qt.AlignmentFlag.AlignHCenter)
+
+        self.verticalSpacer_6 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_3.addItem(self.verticalSpacer_6)
+
+
+        self.gridLayout_7.addLayout(self.verticalLayout_3, 1, 5, 1, 1)
+
+        self.horizontalSpacer_7 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_7.addItem(self.horizontalSpacer_7, 1, 4, 1, 1)
+
+        self.horizontalSpacer_6 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_7.addItem(self.horizontalSpacer_6, 1, 2, 1, 1)
+
+        self.label_25 = QLabel(self.settings_tab)
+        self.label_25.setObjectName(u"label_25")
+
+        self.gridLayout_7.addWidget(self.label_25, 0, 1, 1, 1)
+
+        self.tabWidget.addTab(self.settings_tab, "")
 
         self.horizontalLayout_2.addWidget(self.tabWidget)
 
@@ -659,9 +873,6 @@ class Ui_MainWindow(object):
         self.button_13.setText(QCoreApplication.translate("MainWindow", u"13", None))
         self.label_3.setText("")
         self.card_display.setText("")
-        self.check_un.setText(QCoreApplication.translate("MainWindow", u"  Enable Un-Cards", None))
-        self.check_noncreature.setText(QCoreApplication.translate("MainWindow", u"  Enable non-creature \n"
-"  cards", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.momir_tab), QCoreApplication.translate("MainWindow", u"  Momir  ", None))
         self.button_print_history.setText(QCoreApplication.translate("MainWindow", u" Print", None))
         self.history_display.setText("")
@@ -675,7 +886,7 @@ class Ui_MainWindow(object):
         self.label_19.setText("")
         self.label_20.setText("")
         self.label_21.setText("")
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"  History  ", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.history_tab), QCoreApplication.translate("MainWindow", u"  History  ", None))
         self.button_print_token.setText(QCoreApplication.translate("MainWindow", u" Print", None))
         self.token_display.setText("")
         self.label_4.setText("")
@@ -691,6 +902,34 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tokens_tab), QCoreApplication.translate("MainWindow", u"  Tokens  ", None))
         self.button_print_token_2.setText(QCoreApplication.translate("MainWindow", u" Print", None))
         self.token_display_2.setText("")
+        self.button_loadtokens.setText(QCoreApplication.translate("MainWindow", u"Load Tokens", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tokens_tab_2), QCoreApplication.translate("MainWindow", u"  All Tokens  ", None))
+        self.label_23.setText(QCoreApplication.translate("MainWindow", u"Settings\n"
+"", None))
+        self.check_online.setText(QCoreApplication.translate("MainWindow", u"Online Mode", None))
+        self.check_un.setText(QCoreApplication.translate("MainWindow", u"Enable Un Cards", None))
+        self.label_22.setText(QCoreApplication.translate("MainWindow", u"Enabled Card Types\n"
+"", None))
+        self.check_creature.setText(QCoreApplication.translate("MainWindow", u"Creatures", None))
+        self.check_artifact.setText(QCoreApplication.translate("MainWindow", u"Artifacts", None))
+        self.check_enchantment.setText(QCoreApplication.translate("MainWindow", u"Enchantments", None))
+        self.check_planeswalker.setText(QCoreApplication.translate("MainWindow", u"Planeswalkers", None))
+        self.check_battle.setText(QCoreApplication.translate("MainWindow", u"Battles", None))
+        self.check_instant.setText(QCoreApplication.translate("MainWindow", u"Instants", None))
+        self.check_sorcery.setText(QCoreApplication.translate("MainWindow", u"Sorceries", None))
+        self.label_24.setText(QCoreApplication.translate("MainWindow", u"Image Downloads", None))
+        self.label_26.setText(QCoreApplication.translate("MainWindow", u"These can take a significant\n"
+"amount of time", None))
+        self.download_everything.setText(QCoreApplication.translate("MainWindow", u"Everything", None))
+        self.download_tokens.setText(QCoreApplication.translate("MainWindow", u"Tokens", None))
+        self.download_creature.setText(QCoreApplication.translate("MainWindow", u"Creatures", None))
+        self.download_artifact.setText(QCoreApplication.translate("MainWindow", u"Artifacts", None))
+        self.download_enchantment.setText(QCoreApplication.translate("MainWindow", u"Enchantments", None))
+        self.download_planeswalker.setText(QCoreApplication.translate("MainWindow", u"Planeswalkers", None))
+        self.download_battle.setText(QCoreApplication.translate("MainWindow", u"Battles", None))
+        self.download_instant.setText(QCoreApplication.translate("MainWindow", u"Instants", None))
+        self.download_sorcery.setText(QCoreApplication.translate("MainWindow", u"Sorceries", None))
+        self.label_25.setText("")
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.settings_tab), QCoreApplication.translate("MainWindow", u"  Settings  ", None))
     # retranslateUi
 
