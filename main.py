@@ -139,11 +139,11 @@ class LoadingWindow(QMainWindow):
             self.set_bar(100)
         else:
             self.set_bar(0)
-            total = len(card_types)
+            total = len(card_types) + 1
             count = 1
             for file in os.listdir('json'):
                 file_name = file.split('.')[0].capitalize()
-                if file_name in card_types and not file_name in ['oracle_cards', 'default_cards', 'bulk', 'settings']:
+                if not file_name.lower() in ['oracle_cards', 'default_cards', 'bulk', 'settings', '']:
                     self.set_info(f"Reading {file_name} data")
                     self.set_bar(count/total*100)
                     count += 1
@@ -185,8 +185,8 @@ class LoadingWindow(QMainWindow):
         return cmc_list
 
     def finished(self):
-        self.panel = MainWindow()
-        self.panel.card_data = self.card_data
+        self.panel = MainWindow(self.card_data)
+        # self.panel.card_data = self.card_data
         all_checks = self.panel.ui.centralwidget.findChildren(QCheckBox)
         for check in all_checks:
             if check.objectName().split('_')[1].capitalize() in self.card_data['settings']:
@@ -195,18 +195,21 @@ class LoadingWindow(QMainWindow):
         self.close()
 
 class DownloadWindow(QMainWindow):
-    oracle_cards = []
-
-    def __init__(self):
+    def __init__(self, card_data: dict, panel: QMainWindow):
         super().__init__()
         self.ui = Ui_LoadingWindow()
         self.ui.setupUi(self)
-
         self.set_info("Downloading missing images")
         self.set_bar(0)
-        total = len(self.oracle_cards)
+        self.panel = panel
+        QTimer.singleShot(1000, lambda: self.download_images(card_data))
+
+    def download_images(self, card_data: dict):
+        total = len(card_data)
         count = 1
-        for current_card in self.oracle_cards:
+        for current_card in card_data:
+            if self.isVisible() is False:
+                break
             if not os.path.exists(f'Images/{current_card["oracle_id"]}.png'):
                 self.set_info(f"({count}/{total})\nDownloading missing image:\n{current_card['name']}")
                 if current_card.get('card_faces', [{}])[0].get('image_uris',None) and "//" in current_card['name']:
@@ -218,7 +221,7 @@ class DownloadWindow(QMainWindow):
                         convert_card(download_img(img_url), current_card['oracle_id'])
                         convert_card(download_img(img_url2), f'{current_card["oracle_id"]}-1')
                 else:
-                    print(f"Creating image for {current_card['name']}")
+                    # print(f"Creating image for {current_card['name']}")
                     convert_card(download_img(current_card['image_uris']['border_crop']), current_card['oracle_id'])
                 
                 if current_card.get('all_parts', None):
@@ -238,8 +241,10 @@ class DownloadWindow(QMainWindow):
                                 else:
                                     continue
             count += 1
-            if count % int(total/100) == 0:
-                self.set_bar(count/total*100)
+            self.set_bar(count/total*100)
+        self.panel.debounce = False
+        self.close()
+        self.panel.showFullScreen()
     
     def set_bar(self, value):
         self.ui.progressBar.setValue(value)
@@ -256,12 +261,14 @@ class MainWindow(QMainWindow):
     debounce = False
     card_data = {}
     
-    def __init__(self):
+    def __init__(self, card_data: dict):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
         QFontDatabase.addApplicationFont("Planewalker-38m6.ttf")
+
+        self.card_data = card_data
 
         all_buttons = self.ui.centralwidget.findChildren(QPushButton)
         all_checks = self.ui.centralwidget.findChildren(QCheckBox)
@@ -273,6 +280,8 @@ class MainWindow(QMainWindow):
                 button.clicked.connect(self.on_print_click)
             elif button.objectName().split('_')[1] == 'loadtokens':
                 button.clicked.connect(self.on_loadtokens_click)
+            elif button.objectName().split('_')[0] == 'download':
+                button.clicked.connect(self.download_button_click)
 
         for check in all_checks:
             check.stateChanged.connect(self.on_check)
@@ -280,6 +289,24 @@ class MainWindow(QMainWindow):
         card_back = QPixmap("Images/preview_image.png").scaled(display_size*1.5, aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
         self.ui.card_display.setPixmap(card_back)
         self.ui.card_display.setAlignment(Qt.AlignCenter)
+
+    def download_button_click(self):
+        if not self.debounce:
+            self.debounce = True
+            card_list = []
+            card_type = self.sender().objectName().split('_')[1]
+            if card_type not in ["token", "everything"]:
+                card_dict = self.card_data[card_type.capitalize()]
+                for cmc in card_dict:
+                    card_list += card_dict[cmc]
+            elif card_type == "token":
+                card_list = self.card_data['Token']
+            elif card_type == "everything":
+                card_list = self.card_data['oracle_cards']
+            
+            panel = DownloadWindow(card_list, self)
+            panel.showNormal()
+            self.close()
 
 
     def on_cmc_click(self):
@@ -326,7 +353,7 @@ class MainWindow(QMainWindow):
                                 token_loc.append(f'Images/{part["id"]}.png')
                                 if os.path.exists(f'Images/{part["id"]}-1.png'):
                                     token_loc.append(f'Images/{part["id"]}-1.png')
-                            elif card_data['settings']['Online']:
+                            elif self.card_data['settings']['Online']:
                                 card_data = requests.get(part['uri']).json()
                                 if card_data.get('image_uris', None):
                                     token_loc.append(convert_card(download_img(card_data['image_uris']['border_crop']), part['id']))
@@ -365,7 +392,7 @@ class MainWindow(QMainWindow):
                     card_loc = []
                     img_url = []
                     img_count = 0
-                    if not os.path.exists(f'Images/{token["oracle_id"]}.png') and self.card_data['settings']['Online']:
+                    if not os.path.exists(f'Images/{token["oracle_id"]}.png') and self.card_data['settings']['Online'] and False:
                         print(f"Creating image for {token['name']}")
                         if token.get('image_uris', None):
                             img_url.append(token['image_uris']['border_crop'])

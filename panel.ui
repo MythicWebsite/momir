@@ -1495,7 +1495,7 @@ amount of time</string>
            </widget>
           </item>
           <item alignment="Qt::AlignmentFlag::AlignHCenter">
-           <widget class="QPushButton" name="download_tokens">
+           <widget class="QPushButton" name="download_token">
             <property name="minimumSize">
              <size>
               <width>400</width>

@@ -729,12 +729,12 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_3.addWidget(self.download_everything, 0, Qt.AlignmentFlag.AlignHCenter|Qt.AlignmentFlag.AlignVCenter)
 
-        self.download_tokens = QPushButton(self.settings_tab)
-        self.download_tokens.setObjectName(u"download_tokens")
-        self.download_tokens.setMinimumSize(QSize(400, 65))
-        self.download_tokens.setMaximumSize(QSize(300, 65))
+        self.download_token = QPushButton(self.settings_tab)
+        self.download_token.setObjectName(u"download_token")
+        self.download_token.setMinimumSize(QSize(400, 65))
+        self.download_token.setMaximumSize(QSize(300, 65))
 
-        self.verticalLayout_3.addWidget(self.download_tokens, 0, Qt.AlignmentFlag.AlignHCenter)
+        self.verticalLayout_3.addWidget(self.download_token, 0, Qt.AlignmentFlag.AlignHCenter)
 
         self.download_creature = QPushButton(self.settings_tab)
         self.download_creature.setObjectName(u"download_creature")
@@ -932,7 +932,7 @@ class Ui_MainWindow(object):
         self.label_26.setText(QCoreApplication.translate("MainWindow", u"These can take a significant\n"
 "amount of time", None))
         self.download_everything.setText(QCoreApplication.translate("MainWindow", u"Everything", None))
-        self.download_tokens.setText(QCoreApplication.translate("MainWindow", u"Tokens", None))
+        self.download_token.setText(QCoreApplication.translate("MainWindow", u"Tokens", None))
         self.download_creature.setText(QCoreApplication.translate("MainWindow", u"Creatures", None))
         self.download_artifact.setText(QCoreApplication.translate("MainWindow", u"Artifacts", None))
         self.download_enchantment.setText(QCoreApplication.translate("MainWindow", u"Enchantments", None))
