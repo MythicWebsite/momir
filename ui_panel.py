@@ -826,6 +826,27 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_4.addWidget(self.check_un, 0, Qt.AlignmentFlag.AlignHCenter)
 
+        self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_4.addItem(self.verticalSpacer_4)
+
+        self.verticalSpacer_7 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_4.addItem(self.verticalSpacer_7)
+
+        self.button_exit = QPushButton(self.settings_tab)
+        self.button_exit.setObjectName(u"button_exit")
+        self.button_exit.setMinimumSize(QSize(0, 100))
+        self.button_exit.setMaximumSize(QSize(16777215, 100))
+        self.button_exit.setStyleSheet(u"QPushButton {\n"
+"	background-color: rgb(200, 0, 0);\n"
+"}\n"
+"QPushButton::pressed {\n"
+"	background-color: rgb(170,0,0);\n"
+"}")
+
+        self.verticalLayout_4.addWidget(self.button_exit)
+
         self.verticalSpacer_5 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout_4.addItem(self.verticalSpacer_5)
@@ -945,6 +966,7 @@ class Ui_MainWindow(object):
 "", None))
         self.check_online.setText(QCoreApplication.translate("MainWindow", u"Online Mode", None))
         self.check_un.setText(QCoreApplication.translate("MainWindow", u"Enable Un Cards", None))
+        self.button_exit.setText(QCoreApplication.translate("MainWindow", u"Exit", None))
         self.label_25.setText("")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.settings_tab), QCoreApplication.translate("MainWindow", u"  Settings  ", None))
     # retranslateUi

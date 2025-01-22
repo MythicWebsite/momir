@@ -54,14 +54,10 @@ class Ui_LoadingWindow(object):
 
         self.verticalLayout.addItem(self.verticalSpacer_3)
 
-        self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.verticalLayout.addItem(self.verticalSpacer_4)
-
         self.loading_info = QLabel(self.centralwidget)
         self.loading_info.setObjectName(u"loading_info")
-        self.loading_info.setMinimumSize(QSize(0, 100))
-        self.loading_info.setMaximumSize(QSize(500, 100))
+        self.loading_info.setMinimumSize(QSize(0, 130))
+        self.loading_info.setMaximumSize(QSize(500, 130))
         font = QFont()
         font.setFamilies([u"Planewalker"])
         font.setPointSize(20)
@@ -116,7 +112,9 @@ class Ui_LoadingWindow(object):
 
     def retranslateUi(self, LoadingWindow):
         LoadingWindow.setWindowTitle(QCoreApplication.translate("LoadingWindow", u"Loading...", None))
-        self.loading_info.setText(QCoreApplication.translate("LoadingWindow", u"Loading card info sadaduahdiuahdiuahiusdhausdiudhau", None))
+        self.loading_info.setText(QCoreApplication.translate("LoadingWindow", u"Loading card info sadaduahdiuahdiuahiusdhausdiudhau\n"
+"sfefsefsfefef\n"
+"sefsefsefsefsef", None))
         self.label_2.setText(QCoreApplication.translate("LoadingWindow", u"All card data and images are collected from the Scryfall.com api", None))
     # retranslateUi
 

@@ -274,6 +274,7 @@ class MainWindow(QMainWindow):
         all_checks = self.ui.centralwidget.findChildren(QCheckBox)
 
         for button in all_buttons:
+            button.clicked.connect(self.button_animate)
             if button.objectName().split("_")[1].isdigit():
                 button.clicked.connect(self.on_cmc_click)
             elif button.objectName().split('_')[1] == 'print':
@@ -282,6 +283,8 @@ class MainWindow(QMainWindow):
                 button.clicked.connect(self.on_loadtokens_click)
             elif button.objectName().split('_')[0] == 'download':
                 button.clicked.connect(self.download_button_click)
+            elif button.objectName().split('_')[1] == 'exit':
+                button.clicked.connect(self.on_exit_click)
 
         for check in all_checks:
             check.stateChanged.connect(self.on_check)
@@ -289,6 +292,14 @@ class MainWindow(QMainWindow):
         card_back = QPixmap("Images/preview_image.png").scaled(display_size*1.5, aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
         self.ui.card_display.setPixmap(card_back)
         self.ui.card_display.setAlignment(Qt.AlignCenter)
+
+    def button_animate(self):
+        self.sender().setDown(True)
+        QApplication.processEvents()
+        self.sender().setDown(False)
+
+    def on_exit_click(self):
+        self.close()
 
     def download_button_click(self):
         if not self.debounce:
