@@ -65,7 +65,8 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-I've always wanted to be able to play Momir Basic in person, but it wasn't really feasible to carry around that many cards with me.
+I've always wanted to be able to play the Magic: The Gathering format Momir Basic in person, but it's an online only format and it wasn't really feasible to carry around that many cards with me.
+
 This project will bring Momir to paper by connecting to your default printer (preferably a receipt printer) and giving you a graphic interface to print tokens from. Everything this produces is intended to be used as a token and does not try to be anything more than that.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
