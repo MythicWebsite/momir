@@ -39,10 +39,3 @@ def flip_card_image(img: bytes, img2: bytes) -> bytes:
     combo_img.save(img_bytes, format='PNG')
     return img_bytes.getvalue()
     
-if __name__ == "__main__":
-    with open("test.jpg", "rb") as f:
-        img = f.read()
-        convert_card(img, "000")
-    with open("test2.jpg", "rb") as f:
-        img = f.read()
-        convert_card(img, "001")

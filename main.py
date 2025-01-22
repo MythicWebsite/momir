@@ -1,5 +1,4 @@
 import os
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
 import sys, json
 import random
 import requests
@@ -9,9 +8,12 @@ from PySide6.QtGui import QPixmap, QFontDatabase, QFont
 from PySide6.QtCore import Qt, QSize, QTimer
 from ui_panel import Ui_MainWindow
 from ui_loading import Ui_LoadingWindow
-from api_handler import find_newest_version, get_creature_card_list, download_img, get_token_list, download_all_images, check_bulk_data, download_json_file
+from api_handler import find_newest_version, download_img, check_bulk_data, download_json_file
 from image_handler import convert_card, flip_card_image
 from print_handler import print_card
+
+if getattr(sys, 'frozen', False):
+    os.chdir(os.path.dirname(sys.executable))
 
 token_ignore_list = [' Ad', 'Decklist', ' Bio', 'Checklist', 'Punchcard']
 token_types = ['token', 'dungeon', 'emblem', 'double_faced_token']
@@ -28,10 +30,9 @@ def un_filter(card_list: list, cmc:bool = True) -> list:
             card_list[cmc] = [card for card in card_list[cmc] if not (card['set_type'] == 'funny' or card['set'] == 'unf') and not card['layout'] in ['token', 'double_faced_token'] and not 'Mystery Booster' in card.get('set_name', '')]
         return card_list
 
-
-
 class LoadingWindow(QMainWindow):
     card_data: dict = {}
+    complete: bool = False
 
     def __init__(self):
         super().__init__()
@@ -45,10 +46,17 @@ class LoadingWindow(QMainWindow):
         self.set_info("Checking for settings")
         self.set_bar(0)
 
+        if not os.path.exists('json'):
+            os.mkdir('json')
+
+        if not os.path.exists('Images'):
+            os.mkdir('Images')
+
         if not os.path.exists('json/settings.json'):
             self.card_data['settings'] = {
                 'Online': True,
                 'Un': False,
+                'first_run': True,
                 'type_toggles': {
                     'Creature': True,
                     'Artifact': False,
@@ -65,6 +73,10 @@ class LoadingWindow(QMainWindow):
         else:
             with open('json/settings.json', 'r') as json_file:
                 self.card_data['settings'] = json.load(json_file)
+        
+        if self.card_data['settings']['first_run']:
+            if os.path.exists('json/bulk.json'):
+                os.remove('json/bulk.json')
 
         self.set_info("Checking for preview image")
         self.set_bar(20)
@@ -73,7 +85,7 @@ class LoadingWindow(QMainWindow):
             convert_card(download_img('https://cards.scryfall.io/border_crop/front/f/5/f5ed5ad3-b970-4720-b23b-308a25f42887.jpg?1562953277'),'preview_image')
         self.set_bar(50)
 
-        if self.card_data['settings']['Online']:
+        if self.card_data['settings']['Online'] or self.card_data['settings']['first_run']:
             self.set_info("Checking for updates")
             update = check_bulk_data()
         else:
@@ -155,8 +167,17 @@ class LoadingWindow(QMainWindow):
                     with open(f'json/{file}', 'r') as json_file:
                         self.card_data[file_name] = json.load(json_file)
 
+        self.card_data['settings']['first_run'] = False
+        self.complete = True
+        with open('json/settings.json', 'w') as json_file:
+            json.dump(self.card_data['settings'], json_file, indent=4)
+        
         QApplication.processEvents()
         QTimer.singleShot(1000, self.finished)
+
+    def closeEvent(self, event):
+        if not self.complete:
+            sys.exit()
 
     def set_bar(self, value):
         self.ui.progressBar.setValue(value)
