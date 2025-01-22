@@ -1,4 +1,6 @@
-import sys, os, json
+import os
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+import sys, json
 import random
 import requests
 import functools
@@ -27,6 +29,7 @@ def un_filter(card_list: list, cmc:bool = True) -> list:
         return card_list
 
 
+
 class LoadingWindow(QMainWindow):
     card_data: dict = {}
 
@@ -45,18 +48,20 @@ class LoadingWindow(QMainWindow):
         if not os.path.exists('json/settings.json'):
             self.card_data['settings'] = {
                 'Online': True,
-                'Creature': True,
-                'Artifact': False,
-                'Enchantment': False,
-                'Instant': False,
-                'Sorcery': False,
-                'Planeswalker': False,
-                'Land': False,
-                'Battle': False,
-                'Un': False
+                'Un': False,
+                'type_toggles': {
+                    'Creature': True,
+                    'Artifact': False,
+                    'Enchantment': False,
+                    'Instant': False,
+                    'Sorcery': False,
+                    'Planeswalker': False,
+                    'Land': False,
+                    'Battle': False
+                }
             }
             with open('json/settings.json', 'w') as json_file:
-                json.dump(self.card_data['settings'], json_file)
+                json.dump(self.card_data['settings'], json_file, indent=4)
         else:
             with open('json/settings.json', 'r') as json_file:
                 self.card_data['settings'] = json.load(json_file)
@@ -101,7 +106,7 @@ class LoadingWindow(QMainWindow):
             self.set_info("Gathering MTGO card data from unique cards")
             mtgo_cards = [card for card in self.card_data['oracle_cards'] if 'mtgo' in card.get('games', False) and not 'paper' in card.get('games', False) or 'Mystery Booster' in card.get('set_name', None)]
             self.set_bar(0)
-            self.set_info("Replacing MTGO card data with paper card data")
+            self.set_info("Replacing Mystery Booster card data with most recent print data to avoid issues")
             total = len(mtgo_cards)
             count = 1
             for card in mtgo_cards:
@@ -150,20 +155,6 @@ class LoadingWindow(QMainWindow):
                     with open(f'json/{file}', 'r') as json_file:
                         self.card_data[file_name] = json.load(json_file)
 
-        # self.set_info("Filtering out tokens from creature data")
-        # if all_data:
-        #     self.un_creatures = self.card_data['Creature']
-        # else:
-        #     with open('json/creature.json', 'r') as json_file:
-        #         self.un_creatures = json.load(json_file)
-        #     with open('json/tokens.json', 'r') as json_file:
-        #         self.tokens = json.load(json_file)
-        # self.set_bar(50)
-        # for cmc in self.un_creatures:
-        #     self.creatures[cmc] = [card for card in self.un_creatures[cmc] if not (card['set_type'] == 'funny' or card['set'] == 'unf') and not card['layout'] in ['token', 'double_faced_token'] and not 'Mystery Booster' in card.get('set_name', '')]
-        # self.creatures = [card for card in un_creatures if not (card['set_type'] == 'funny' or card['set'] == 'unf')]
-        # self.set_bar(70)
-
         QApplication.processEvents()
         QTimer.singleShot(1000, self.finished)
 
@@ -191,6 +182,8 @@ class LoadingWindow(QMainWindow):
         for check in all_checks:
             if check.objectName().split('_')[1].capitalize() in self.card_data['settings']:
                 check.setChecked(self.card_data['settings'][check.objectName().split('_')[1].capitalize()])
+        self.panel.debounce = False
+        self.panel.setup_cur_data()
         self.panel.showFullScreen()
         self.close()
 
@@ -258,7 +251,7 @@ class MainWindow(QMainWindow):
     card_print = None
     token_print = None
     history_print = None
-    debounce = False
+    debounce = True
     card_data = {}
     
     def __init__(self, card_data: dict):
@@ -293,6 +286,7 @@ class MainWindow(QMainWindow):
         self.ui.card_display.setPixmap(card_back)
         self.ui.card_display.setAlignment(Qt.AlignCenter)
 
+
     def button_animate(self):
         self.sender().setDown(True)
         QApplication.processEvents()
@@ -300,6 +294,15 @@ class MainWindow(QMainWindow):
 
     def on_exit_click(self):
         self.close()
+
+    def setup_cur_data(self):
+        self.card_data['cur_data'] = {}
+        for setting in self.card_data['settings']['type_toggles']:
+            if self.card_data['settings']['type_toggles'][setting]:
+                for cmc in set(self.card_data[setting].keys()).union(self.card_data['cur_data'].keys()):
+                    self.card_data['cur_data'][cmc] = self.card_data[setting].get(cmc, []) + self.card_data['cur_data'].get(cmc, [])
+        if not self.card_data['settings']['Un']:
+            self.card_data['cur_data'] = un_filter(self.card_data['cur_data'])
 
     def download_button_click(self):
         if not self.debounce:
@@ -319,12 +322,11 @@ class MainWindow(QMainWindow):
             panel.showNormal()
             self.close()
 
-
     def on_cmc_click(self):
         if not self.debounce:
             self.debounce = True
             cmc = self.sender().objectName().split("_")[1]
-            choice_list = self.card_data['Creature'] if self.card_data['settings']['Un'] else un_filter(self.card_data['Creature'])
+            choice_list = self.card_data['cur_data']
             if not choice_list.get(cmc, None):
                 self.debounce = False
                 self.logprint(f"No cards of {cmc} CMC exist")
@@ -436,10 +438,14 @@ class MainWindow(QMainWindow):
             self.debounce = True
             self.setEnabled(False)
             setting = self.sender().objectName().split('_')[1].capitalize()
-            # print(f"{setting} box state: ", state)
-            self.card_data['settings'][setting] = True if state else False
+            if setting in self.card_data['settings']['type_toggles'].keys():
+                self.card_data['settings']['type_toggles'][setting] = True if state else False
+                self.setup_cur_data()
+            else:
+                self.card_data['settings'][setting] = True if state else False
             with open('json/settings.json', 'w') as json_file:
-                json.dump(self.card_data['settings'], json_file)
+                json.dump(self.card_data['settings'], json_file, indent=4)
+            
             self.setEnabled(True)
             self.debounce = False
 
