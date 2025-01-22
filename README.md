@@ -97,8 +97,10 @@ If you have a suggestion that would make this better, please fork the repo and c
 ### Top contributors:
 
 <a href="https://github.com/MythicWebsite/momir/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=MythicWebsite/momir" alt="contrib.rocks image" />
+  <img src="https://contrib.rocks/image?repo=MythicWebsite/momir" />
 </a>
+
+Made with [contrib.rocks](https://contrib.rocks).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
