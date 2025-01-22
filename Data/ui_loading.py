@@ -59,7 +59,6 @@ class Ui_LoadingWindow(object):
         self.loading_info.setMinimumSize(QSize(0, 130))
         self.loading_info.setMaximumSize(QSize(500, 130))
         font = QFont()
-        font.setFamilies([u"Planewalker"])
         font.setPointSize(20)
         self.loading_info.setFont(font)
         self.loading_info.setAlignment(Qt.AlignmentFlag.AlignHCenter|Qt.AlignmentFlag.AlignTop)

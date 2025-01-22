@@ -3,7 +3,7 @@ json/all_creature_cards.json
 json/bulk.json
 Images/*
 json/*
-__pycache__/*
+*__pycache__/
 test.jpg
 test2.jpg
 Images.7z

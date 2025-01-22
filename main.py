@@ -6,11 +6,11 @@ import functools
 from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QGridLayout, QListWidgetItem, QCheckBox
 from PySide6.QtGui import QPixmap, QFontDatabase, QFont
 from PySide6.QtCore import Qt, QSize, QTimer
-from ui_panel import Ui_MainWindow
-from ui_loading import Ui_LoadingWindow
-from api_handler import find_newest_version, download_img, check_bulk_data, download_json_file
-from image_handler import convert_card, flip_card_image
-from print_handler import print_card
+from Data.ui_panel import Ui_MainWindow
+from Data.ui_loading import Ui_LoadingWindow
+from Data.api_handler import find_newest_version, download_img, check_bulk_data, download_json_file
+from Data.image_handler import convert_card, flip_card_image
+from Data.print_handler import print_card
 
 if getattr(sys, 'frozen', False):
     os.chdir(os.path.dirname(sys.executable))
@@ -39,7 +39,7 @@ class LoadingWindow(QMainWindow):
         self.ui = Ui_LoadingWindow()
         self.ui.setupUi(self)
 
-        QFontDatabase.addApplicationFont("Planewalker-38m6.ttf")
+        QFontDatabase.addApplicationFont("Data/Planewalker-38m6.ttf")
 
         self.show()
 

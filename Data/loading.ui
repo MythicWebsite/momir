@@ -98,7 +98,6 @@ QProgressBar::chunk {
         </property>
         <property name="font">
          <font>
-          <family>Planewalker</family>
           <pointsize>20</pointsize>
          </font>
         </property>
