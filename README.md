@@ -117,7 +117,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 Mythic - [not_mythic](https://discordapp.com/users/187356367030452224) on Discord
 
-Kofi - [https://ko-fi.com/not_mythic](https://ko-fi.com/not_mythic)
+<a href='https://ko-fi.com/Y8Y3193TFH' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi5.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 
 Project Link: [https://github.com/MythicWebsite/momir](https://github.com/MythicWebsite/momir)
 
