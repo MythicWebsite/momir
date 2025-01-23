@@ -3,11 +3,12 @@ import sys, json
 import random
 import requests
 import functools
-from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QGridLayout, QListWidgetItem, QCheckBox
+from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QGridLayout, QListWidgetItem, QCheckBox, QAbstractItemView
 from PySide6.QtGui import QPixmap, QFontDatabase, QFont
-from PySide6.QtCore import Qt, QSize, QTimer
+from PySide6.QtCore import Qt, QSize, QTimer, QEventLoop
 from Data.ui_panel import Ui_MainWindow
 from Data.ui_loading import Ui_LoadingWindow
+from Data.ui_select import Ui_SelectWindow
 from Data.api_handler import find_newest_version, download_img, check_bulk_data, download_json_file
 from Data.image_handler import convert_card, flip_card_image
 from Data.print_handler import print_card
@@ -19,6 +20,22 @@ token_ignore_list = [' Ad', 'Decklist', ' Bio', 'Checklist', 'Punchcard']
 token_types = ['token', 'dungeon', 'emblem', 'double_faced_token']
 token_card_types = ['Token', 'Card', 'Dungeon', 'Emblem']
 card_types = ['Creature', 'Artifact', 'Enchantment', 'Instant', 'Sorcery', 'Planeswalker', 'Land', 'Battle']
+default_settings = {
+'Online': True,
+'Un': False,
+'first_run': True,
+'Select': False,
+'type_toggles': {
+    'Creature': True,
+    'Artifact': False,
+    'Enchantment': False,
+    'Instant': False,
+    'Sorcery': False,
+    'Planeswalker': False,
+    'Land': False,
+    'Battle': False
+    }
+}
 
 display_size = QSize(700,700)
 
@@ -29,6 +46,43 @@ def un_filter(card_list: list, cmc:bool = True) -> list:
         for cmc in card_list:
             card_list[cmc] = [card for card in card_list[cmc] if not (card['set_type'] == 'funny' or card['set'] == 'unf') and not card['layout'] in ['token', 'double_faced_token'] and not 'Mystery Booster' in card.get('set_name', '')]
         return card_list
+
+def get_card_image(card: dict, card_data: dict) -> str:
+    card_loc = None
+    if not os.path.exists(f'Images/{card["oracle_id"]}.png') and card_data['settings']['Online']:
+        # print(f"Creating image for {current_card['name']}")
+        if card.get('card_faces', [{}])[0].get('image_uris',None) and "//" in card['type_line']:
+            img_url = card['card_faces'][0]['image_uris']['border_crop']
+            img_url2 = card['card_faces'][1]['image_uris']['border_crop']
+            card_loc = flip_card_image(download_img(img_url), download_img(img_url2))
+            card_loc = convert_card(card_loc, card['id'])
+        else:
+            img_url = card['image_uris']['border_crop']
+            card_loc = convert_card(download_img(img_url), card['id'])
+    elif os.path.exists(f'Images/{card["oracle_id"]}.png'):
+        card_loc = f'Images/{card["oracle_id"]}.png'
+    if card_loc:
+        return card_loc
+    else:
+        return None
+
+def get_related_tokens(card: dict, card_data: dict) -> list:
+    token_loc = []
+    if os.path.exists(f'Images/{card["id"]}.png'):
+        token_loc.append(f'Images/{card["id"]}.png')
+        if os.path.exists(f'Images/{card["id"]}-1.png'):
+            token_loc.append(f'Images/{card["id"]}-1.png')
+    elif card_data['settings']['Online']:
+        card_data = requests.get(card['uri']).json()
+        if card_data.get('image_uris', None):
+            token_loc.append(convert_card(download_img(card_data['image_uris']['border_crop']), card['id']))
+        elif card_data.get('card_faces', [{}])[0].get('image_uris',None):
+            face_count = 0
+            for face in card_data['card_faces']:
+                if face.get('image_uris', None):
+                    token_loc.append(convert_card(download_img(face['image_uris']['border_crop']), f'{card["id"]}{"-"+str(face_count) if face_count else ""}'))
+                    face_count += 1
+    return token_loc
 
 class LoadingWindow(QMainWindow):
     card_data: dict = {}
@@ -53,26 +107,15 @@ class LoadingWindow(QMainWindow):
             os.mkdir('Images')
 
         if not os.path.exists('json/settings.json'):
-            self.card_data['settings'] = {
-                'Online': True,
-                'Un': False,
-                'first_run': True,
-                'type_toggles': {
-                    'Creature': True,
-                    'Artifact': False,
-                    'Enchantment': False,
-                    'Instant': False,
-                    'Sorcery': False,
-                    'Planeswalker': False,
-                    'Land': False,
-                    'Battle': False
-                }
-            }
+            self.card_data['settings'] = default_settings
             with open('json/settings.json', 'w') as json_file:
                 json.dump(self.card_data['settings'], json_file, indent=4)
         else:
             with open('json/settings.json', 'r') as json_file:
                 self.card_data['settings'] = json.load(json_file)
+            for setting in default_settings:
+                if not setting in self.card_data['settings']:
+                    self.card_data['settings'][setting] = default_settings[setting]
         
         if self.card_data['settings']['first_run']:
             if os.path.exists('json/bulk.json'):
@@ -206,7 +249,7 @@ class LoadingWindow(QMainWindow):
         self.panel.debounce = False
         self.panel.setup_cur_data()
         self.panel.showFullScreen()
-        self.close()
+        self.deleteLater()
 
 class DownloadWindow(QMainWindow):
     def __init__(self, card_data: dict, panel: QMainWindow):
@@ -257,8 +300,8 @@ class DownloadWindow(QMainWindow):
             count += 1
             self.set_bar(count/total*100)
         self.panel.debounce = False
-        self.close()
         self.panel.showFullScreen()
+        self.deleteLater()
     
     def set_bar(self, value):
         self.ui.progressBar.setValue(value)
@@ -268,12 +311,41 @@ class DownloadWindow(QMainWindow):
         self.ui.loading_info.setText(message)
         QApplication.processEvents()
 
+class SelectWindow(QMainWindow):
+    debounce: bool = False
+
+    def __init__(self, card_list: list, card_locs: list, panel: QMainWindow):
+        super().__init__()
+        self.ui = Ui_SelectWindow()
+        self.ui.setupUi(self)
+        self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
+        self.card_list = card_list
+        self.panel = panel
+
+        labels = self.ui.centralwidget.findChildren(QLabel)
+        for label in labels:
+            if 'card_' in label.objectName():
+                card_no = int(label.objectName().strip('card_'))-1
+                print(card_locs[card_no])
+                pixmap = QPixmap(card_locs[card_no]).scaled(QSize(550,550), aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
+                label.setPixmap(pixmap)
+                label.setAlignment(Qt.AlignCenter)
+                label.mousePressEvent = functools.partial(self.on_card_click, source_object=label)
+
+    def on_card_click(self, event, source_object:QLabel = None):
+        if not self.debounce:
+            self.debounce = True
+            self.panel.selected_card = self.card_list[int(source_object.objectName().strip('card_'))-1]
+            self.panel.debounce = False
+            self.deleteLater()
+
 class MainWindow(QMainWindow):
     card_print = None
     token_print = None
     history_print = None
     debounce = True
     card_data = {}
+    selected_card = None
     
     def __init__(self, card_data: dict):
         super().__init__()
@@ -286,6 +358,8 @@ class MainWindow(QMainWindow):
 
         all_buttons = self.ui.centralwidget.findChildren(QPushButton)
         all_checks = self.ui.centralwidget.findChildren(QCheckBox)
+
+        self.ui.action_list.setDragDropMode(QAbstractItemView.NoDragDrop)
 
         for button in all_buttons:
             button.clicked.connect(self.button_animate)
@@ -356,49 +430,42 @@ class MainWindow(QMainWindow):
             found = False
             retry = 0
             while not found and retry < 1000:
-                current_card = {'type_line':"no"}
-                current_card = random.choice(choice_list[cmc])
-                if not current_card:
+                if not len(choice_list[cmc]):
                     break
-                # print(current_card["name"])
-                card_loc = None
-                if not os.path.exists(f'Images/{current_card["oracle_id"]}.png') and self.card_data['settings']['Online']:
-                    # print(f"Creating image for {current_card['name']}")
-                    if current_card.get('card_faces', [{}])[0].get('image_uris',None) and "//" in current_card['type_line']:
-                        img_url = current_card['card_faces'][0]['image_uris']['border_crop']
-                        img_url2 = current_card['card_faces'][1]['image_uris']['border_crop']
-                        card_loc = flip_card_image(download_img(img_url), download_img(img_url2))
-                        card_loc = convert_card(card_loc, current_card['id'])
-                    else:
-                        img_url = current_card['image_uris']['border_crop']
-                        card_loc = convert_card(download_img(img_url), current_card['id'])
-                    found = True
-                elif os.path.exists(f'Images/{current_card["oracle_id"]}.png'):
-                    card_loc = f'Images/{current_card["oracle_id"]}.png'
-                    found = True
+                if self.card_data['settings']['Select']:
+                    choices = []
+                    card_locs = []
+                    attempts = 0
+                    while len(choices) < 3:
+                        card = random.choice(choice_list[cmc])
+                        if not card in choices or attempts > 99:
+                            loc = get_card_image(card, self.card_data)
+                            if loc:
+                                choices.append(card)
+                                card_locs.append(loc)
+                        if attempts > 999:
+                            break
+                        attempts += 1
+                    select_window = SelectWindow(choices, card_locs, self)
+                    select_window.showNormal()
+                    loop = QEventLoop()
+                    select_window.destroyed.connect(loop.quit)
+                    loop.exec()
+                    if not self.selected_card:
+                        break
+                    current_card = self.selected_card
                 else:
+                    current_card = random.choice(choice_list[cmc])
+                # print(current_card["name"])
+                card_loc = get_card_image(current_card, self.card_data)
+                if not card_loc:
                     retry += 1
                     continue
+                found = True
                 if current_card.get('all_parts', None):
                     for part in current_card['all_parts']:
                         if part['component'] == 'token' or any (token_type in part['type_line'] for token_type in token_card_types):
-                            token_loc = []
-                            if os.path.exists(f'Images/{part["id"]}.png'):
-                                token_loc.append(f'Images/{part["id"]}.png')
-                                if os.path.exists(f'Images/{part["id"]}-1.png'):
-                                    token_loc.append(f'Images/{part["id"]}-1.png')
-                            elif self.card_data['settings']['Online']:
-                                card_data = requests.get(part['uri']).json()
-                                if card_data.get('image_uris', None):
-                                    token_loc.append(convert_card(download_img(card_data['image_uris']['border_crop']), part['id']))
-                                elif card_data.get('card_faces', [{}])[0].get('image_uris',None):
-                                    face_count = 0
-                                    for face in card_data['card_faces']:
-                                        if face.get('image_uris', None):
-                                            token_loc.append(convert_card(download_img(face['image_uris']['border_crop']), f'{part["id"]}{"-"+str(face_count) if face_count else ""}'))
-                                            face_count += 1
-                                else:
-                                    continue
+                            token_loc = get_related_tokens(part, self.card_data)
                             for token in token_loc:
                                 self.add_item_to_grid(part, token, self.ui.token_grid)
                                 
