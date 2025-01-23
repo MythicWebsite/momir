@@ -23,9 +23,9 @@ class Ui_SelectWindow(object):
     def setupUi(self, SelectWindow):
         if not SelectWindow.objectName():
             SelectWindow.setObjectName(u"SelectWindow")
-        SelectWindow.resize(1200, 700)
+        SelectWindow.resize(1360, 800)
         SelectWindow.setMinimumSize(QSize(1200, 700))
-        SelectWindow.setMaximumSize(QSize(1200, 700))
+        SelectWindow.setMaximumSize(QSize(99999, 99999))
         SelectWindow.setStyleSheet(u"QWidget {\n"
 "	background-color: rgb(120, 120, 255);\n"
 "}")
@@ -38,24 +38,24 @@ class Ui_SelectWindow(object):
         self.card_grid.setContentsMargins(6, 6, 6, 6)
         self.card_1 = QLabel(self.centralwidget)
         self.card_1.setObjectName(u"card_1")
-        self.card_1.setMinimumSize(QSize(390, 0))
-        self.card_1.setMaximumSize(QSize(390, 16777215))
+        self.card_1.setMinimumSize(QSize(0, 0))
+        self.card_1.setMaximumSize(QSize(99999, 16777215))
         self.card_1.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.card_grid.addWidget(self.card_1, 0, 0, 1, 1)
 
         self.card_2 = QLabel(self.centralwidget)
         self.card_2.setObjectName(u"card_2")
-        self.card_2.setMinimumSize(QSize(390, 0))
-        self.card_2.setMaximumSize(QSize(390, 16777215))
+        self.card_2.setMinimumSize(QSize(0, 0))
+        self.card_2.setMaximumSize(QSize(99999, 16777215))
         self.card_2.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.card_grid.addWidget(self.card_2, 0, 1, 1, 1)
 
         self.card_3 = QLabel(self.centralwidget)
         self.card_3.setObjectName(u"card_3")
-        self.card_3.setMinimumSize(QSize(390, 0))
-        self.card_3.setMaximumSize(QSize(390, 16777215))
+        self.card_3.setMinimumSize(QSize(0, 0))
+        self.card_3.setMaximumSize(QSize(99999, 16777215))
         self.card_3.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.card_grid.addWidget(self.card_3, 0, 2, 1, 1)
@@ -63,9 +63,10 @@ class Ui_SelectWindow(object):
         self.label = QLabel(self.centralwidget)
         self.label.setObjectName(u"label")
         self.label.setMinimumSize(QSize(0, 50))
-        self.label.setMaximumSize(QSize(16777215, 50))
+        self.label.setMaximumSize(QSize(16777215, 200))
         font = QFont()
-        font.setPointSize(30)
+        font.setPointSize(60)
+        font.setBold(True)
         self.label.setFont(font)
         self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
@@ -77,7 +78,7 @@ class Ui_SelectWindow(object):
         SelectWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(SelectWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1200, 22))
+        self.menubar.setGeometry(QRect(0, 0, 1360, 22))
         SelectWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(SelectWindow)
         self.statusbar.setObjectName(u"statusbar")

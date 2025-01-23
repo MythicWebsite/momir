@@ -326,8 +326,7 @@ class SelectWindow(QMainWindow):
         for label in labels:
             if 'card_' in label.objectName():
                 card_no = int(label.objectName().strip('card_'))-1
-                print(card_locs[card_no])
-                pixmap = QPixmap(card_locs[card_no]).scaled(QSize(550,550), aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
+                pixmap = QPixmap(card_locs[card_no]).scaled(QSize(1000,1000), aspectMode=Qt.KeepAspectRatio, mode = Qt.SmoothTransformation)
                 label.setPixmap(pixmap)
                 label.setAlignment(Qt.AlignCenter)
                 label.mousePressEvent = functools.partial(self.on_card_click, source_object=label)
@@ -447,7 +446,7 @@ class MainWindow(QMainWindow):
                             break
                         attempts += 1
                     select_window = SelectWindow(choices, card_locs, self)
-                    select_window.showNormal()
+                    select_window.showFullScreen()
                     loop = QEventLoop()
                     select_window.destroyed.connect(loop.quit)
                     loop.exec()
