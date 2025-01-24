@@ -55,12 +55,12 @@ def get_card_image(card: dict, card_data: dict) -> str:
         if card.get('card_faces', [{}])[0].get('image_uris',None) and "//" in card['type_line']:
             img_url = card['card_faces'][0]['image_uris']['border_crop']
             img_url2 = card['card_faces'][1]['image_uris']['border_crop']
-            card_loc = flip_card_image(download_img(img_url), download_img(img_url2), card['id'])
+            card_loc = flip_card_image(download_img(img_url), download_img(img_url2), card['oracle_id'])
             # card_loc = convert_card(card_loc, card['id'])
         else:
             img_url = card['image_uris']['border_crop']
             # card_loc = convert_card(download_img(img_url), card['id'])
-            card_loc = download_img(img_url, card['id'])
+            card_loc = download_img(img_url, card['oracle_id'])
     elif os.path.exists(f'Images/{card["oracle_id"]}.png'):
         card_loc = f'Images/{card["oracle_id"]}.png'
     if card_loc:
@@ -161,7 +161,7 @@ class LoadingWindow(QMainWindow):
             self.card_data['default_cards'] = [card for card in self.card_data['default_cards'] if 'paper' in card.get('games', []) and not card.get('variation', False) and not card.get('oversized', False) and not card.get('textless', False) and not 'alchemy' == card.get('set_type', '') and not card.get('full_art', '') and not card.get('set_type', '') in set_type_ignore]
             self.set_bar(50)
             self.set_info("Filtering all unique card data")
-            self.card_data['oracle_cards'] = [card for card in self.card_data['oracle_cards'] if any(c in card.get('games', []) for c in ['paper', 'mtgo']) and not card.get('set_type', '') in set_type_ignore]
+            self.card_data['oracle_cards'] = [card for card in self.card_data['oracle_cards'] if any(c in card.get('games', []) for c in ['paper', 'mtgo']) and not card.get('set_type', '') in set_type_ignore and not (card.get('layout', None) == 'meld' and card.get('cmc', None) and not card.get('mana_cost', None))]
             self.set_bar(80)
             self.set_info("Gathering MTGO card data from unique cards")
             mtgo_cards = [card for card in self.card_data['oracle_cards'] if 'mtgo' in card.get('games', False) and not 'paper' in card.get('games', False) or 'Mystery Booster' in card.get('set_name', None)]
@@ -277,40 +277,11 @@ class DownloadWindow(QMainWindow):
                 break
             if not os.path.exists(f'Images/{current_card["oracle_id"]}.png'):
                 self.set_info(f"({count}/{total})\nDownloading missing image:\n{current_card['name']}")
-                if current_card.get('card_faces', [{}])[0].get('image_uris',None) and "//" in current_card['name']:
-                    img_url = current_card['card_faces'][0]['image_uris']['border_crop']
-                    img_url2 = current_card['card_faces'][1]['image_uris']['border_crop']
-                    if not current_card['layout'] in ['token', 'double_faced_token']:
-                        # convert_card(flip_card_image(download_img(img_url), download_img(img_url2)), current_card['oracle_id'])
-                        flip_card_image(download_img(img_url), download_img(img_url2)), current_card['oracle_id']
-                    else:
-                        download_img(img_url, current_card['oracle_id'])
-                        download_img(img_url2, f'{current_card["oracle_id"]}-1')
-                        # convert_card(download_img(img_url), current_card['oracle_id'])
-                        # convert_card(download_img(img_url2), f'{current_card["oracle_id"]}-1')
-                else:
-                    # print(f"Creating image for {current_card['name']}")
-                    # convert_card(download_img(current_card['image_uris']['border_crop']), current_card['oracle_id'])
-                    download_img(current_card['image_uris']['border_crop'], current_card['oracle_id'])
-                
+                get_card_image(current_card, self.panel.card_data)
                 if current_card.get('all_parts', None):
                     for part in current_card['all_parts']:
-                        if part['component'] == 'token' or any (t_type in part['type_line'] for t_type in token_card_types):
-                            if not os.path.exists(f'Images/{part["id"]}.png'):
-                                self.set_info(f"({count}/{total})\nDownloading missing image:\n{part['name']}")
-                                card_data = requests.get(part['uri']).json()
-                                if card_data.get('image_uris', None):
-                                    # convert_card(download_img(card_data['image_uris']['border_crop']), part['id'])
-                                    download_img(card_data['image_uris']['border_crop'], part['id'])
-                                elif card_data.get('card_faces', [{}])[0].get('image_uris',None):
-                                    face_count = 0
-                                    for face in card_data['card_faces']:
-                                        if face.get('image_uris', None):
-                                            # convert_card(download_img(face['image_uris']['border_crop']), f'{part["id"]}{"-"+str(face_count) if face_count else ""}')
-                                            download_img(face['image_uris']['border_crop'], f'{part["id"]}{"-"+str(face_count) if face_count else ""}')
-                                            face_count += 1
-                                else:
-                                    continue
+                        if part['component'] in ['token', 'meld_result'] or any (token_type in part['type_line'] for token_type in token_card_types):
+                            get_related_tokens(part, self.panel.card_data)
             count += 1
             self.set_bar(count/total*100)
         self.panel.debounce = False
@@ -480,7 +451,7 @@ class MainWindow(QMainWindow):
                 found = True
                 if current_card.get('all_parts', None):
                     for part in current_card['all_parts']:
-                        if part['component'] == 'token' or any (token_type in part['type_line'] for token_type in token_card_types):
+                        if part['component'] in ['token','meld_result'] or any (token_type in part['type_line'] for token_type in token_card_types):
                             token_loc = get_related_tokens(part, self.card_data)
                             for token in token_loc:
                                 self.add_item_to_grid(part, token, self.ui.token_grid)
