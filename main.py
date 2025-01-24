@@ -20,6 +20,7 @@ token_ignore_list = [' Ad', 'Decklist', ' Bio', 'Checklist', 'Punchcard']
 token_types = ['token', 'dungeon', 'emblem', 'double_faced_token']
 token_card_types = ['Token', 'Card', 'Dungeon', 'Emblem']
 card_types = ['Creature', 'Artifact', 'Enchantment', 'Instant', 'Sorcery', 'Planeswalker', 'Land', 'Battle']
+set_type_ignore = ['alchemy', 'memorabilia', 'vanguard', 'archenemy', 'minigame']
 default_settings = {
 'Online': True,
 'Un': False,
@@ -54,11 +55,12 @@ def get_card_image(card: dict, card_data: dict) -> str:
         if card.get('card_faces', [{}])[0].get('image_uris',None) and "//" in card['type_line']:
             img_url = card['card_faces'][0]['image_uris']['border_crop']
             img_url2 = card['card_faces'][1]['image_uris']['border_crop']
-            card_loc = flip_card_image(download_img(img_url), download_img(img_url2))
-            card_loc = convert_card(card_loc, card['id'])
+            card_loc = flip_card_image(download_img(img_url), download_img(img_url2), card['id'])
+            # card_loc = convert_card(card_loc, card['id'])
         else:
             img_url = card['image_uris']['border_crop']
-            card_loc = convert_card(download_img(img_url), card['id'])
+            # card_loc = convert_card(download_img(img_url), card['id'])
+            card_loc = download_img(img_url, card['id'])
     elif os.path.exists(f'Images/{card["oracle_id"]}.png'):
         card_loc = f'Images/{card["oracle_id"]}.png'
     if card_loc:
@@ -75,12 +77,14 @@ def get_related_tokens(card: dict, card_data: dict) -> list:
     elif card_data['settings']['Online']:
         card_data = requests.get(card['uri']).json()
         if card_data.get('image_uris', None):
-            token_loc.append(convert_card(download_img(card_data['image_uris']['border_crop']), card['id']))
+            # token_loc.append(convert_card(download_img(card_data['image_uris']['border_crop']), card['id']))
+            token_loc.append(download_img(card_data['image_uris']['border_crop'], card['id']))
         elif card_data.get('card_faces', [{}])[0].get('image_uris',None):
             face_count = 0
             for face in card_data['card_faces']:
                 if face.get('image_uris', None):
-                    token_loc.append(convert_card(download_img(face['image_uris']['border_crop']), f'{card["id"]}{"-"+str(face_count) if face_count else ""}'))
+                    # token_loc.append(convert_card(download_img(face['image_uris']['border_crop']), f'{card["id"]}{"-"+str(face_count) if face_count else ""}'))
+                    token_loc.append(download_img(face['image_uris']['border_crop'], f'{card["id"]}{"-"+str(face_count) if face_count else ""}'))
                     face_count += 1
     return token_loc
 
@@ -125,7 +129,8 @@ class LoadingWindow(QMainWindow):
         self.set_bar(20)
 
         if not os.path.exists('Images/preview_image.png'):
-            convert_card(download_img('https://cards.scryfall.io/border_crop/front/f/5/f5ed5ad3-b970-4720-b23b-308a25f42887.jpg?1562953277'),'preview_image')
+            # convert_card(download_img('https://cards.scryfall.io/border_crop/front/f/5/f5ed5ad3-b970-4720-b23b-308a25f42887.jpg?1562953277'),'preview_image')
+            download_img('https://cards.scryfall.io/border_crop/front/f/5/f5ed5ad3-b970-4720-b23b-308a25f42887.jpg?1562953277','preview_image')
         self.set_bar(50)
 
         if self.card_data['settings']['Online'] or self.card_data['settings']['first_run']:
@@ -153,10 +158,10 @@ class LoadingWindow(QMainWindow):
 
         if update:
             self.set_info("Filtering all non-unique card data")
-            self.card_data['default_cards'] = [card for card in self.card_data['default_cards'] if 'paper' in card.get('games', []) and not card.get('variation', False) and not card.get('oversized', False) and not card.get('textless', False) and not 'alchemy' == card.get('set_type', '')]
+            self.card_data['default_cards'] = [card for card in self.card_data['default_cards'] if 'paper' in card.get('games', []) and not card.get('variation', False) and not card.get('oversized', False) and not card.get('textless', False) and not 'alchemy' == card.get('set_type', '') and not card.get('full_art', '') and not card.get('set_type', '') in set_type_ignore]
             self.set_bar(50)
             self.set_info("Filtering all unique card data")
-            self.card_data['oracle_cards'] = [card for card in self.card_data['oracle_cards'] if any(c in card.get('games', []) for c in ['paper', 'mtgo']) and not card.get('variation', False) and not card.get('oversized', False) and not card.get('textless', False) and not 'alchemy' == card.get('set_type', '')]
+            self.card_data['oracle_cards'] = [card for card in self.card_data['oracle_cards'] if any(c in card.get('games', []) for c in ['paper', 'mtgo']) and not card.get('set_type', '') in set_type_ignore]
             self.set_bar(80)
             self.set_info("Gathering MTGO card data from unique cards")
             mtgo_cards = [card for card in self.card_data['oracle_cards'] if 'mtgo' in card.get('games', False) and not 'paper' in card.get('games', False) or 'Mystery Booster' in card.get('set_name', None)]
@@ -256,6 +261,9 @@ class DownloadWindow(QMainWindow):
         super().__init__()
         self.ui = Ui_LoadingWindow()
         self.ui.setupUi(self)
+        
+        QFontDatabase.addApplicationFont("Data/Planewalker-38m6.ttf")
+        
         self.set_info("Downloading missing images")
         self.set_bar(0)
         self.panel = panel
@@ -273,13 +281,17 @@ class DownloadWindow(QMainWindow):
                     img_url = current_card['card_faces'][0]['image_uris']['border_crop']
                     img_url2 = current_card['card_faces'][1]['image_uris']['border_crop']
                     if not current_card['layout'] in ['token', 'double_faced_token']:
-                        convert_card(flip_card_image(download_img(img_url), download_img(img_url2)), current_card['oracle_id'])
+                        # convert_card(flip_card_image(download_img(img_url), download_img(img_url2)), current_card['oracle_id'])
+                        flip_card_image(download_img(img_url), download_img(img_url2)), current_card['oracle_id']
                     else:
-                        convert_card(download_img(img_url), current_card['oracle_id'])
-                        convert_card(download_img(img_url2), f'{current_card["oracle_id"]}-1')
+                        download_img(img_url, current_card['oracle_id'])
+                        download_img(img_url2, f'{current_card["oracle_id"]}-1')
+                        # convert_card(download_img(img_url), current_card['oracle_id'])
+                        # convert_card(download_img(img_url2), f'{current_card["oracle_id"]}-1')
                 else:
                     # print(f"Creating image for {current_card['name']}")
-                    convert_card(download_img(current_card['image_uris']['border_crop']), current_card['oracle_id'])
+                    # convert_card(download_img(current_card['image_uris']['border_crop']), current_card['oracle_id'])
+                    download_img(current_card['image_uris']['border_crop'], current_card['oracle_id'])
                 
                 if current_card.get('all_parts', None):
                     for part in current_card['all_parts']:
@@ -288,12 +300,14 @@ class DownloadWindow(QMainWindow):
                                 self.set_info(f"({count}/{total})\nDownloading missing image:\n{part['name']}")
                                 card_data = requests.get(part['uri']).json()
                                 if card_data.get('image_uris', None):
-                                    convert_card(download_img(card_data['image_uris']['border_crop']), part['id'])
+                                    # convert_card(download_img(card_data['image_uris']['border_crop']), part['id'])
+                                    download_img(card_data['image_uris']['border_crop'], part['id'])
                                 elif card_data.get('card_faces', [{}])[0].get('image_uris',None):
                                     face_count = 0
                                     for face in card_data['card_faces']:
                                         if face.get('image_uris', None):
-                                            convert_card(download_img(face['image_uris']['border_crop']), f'{part["id"]}{"-"+str(face_count) if face_count else ""}')
+                                            # convert_card(download_img(face['image_uris']['border_crop']), f'{part["id"]}{"-"+str(face_count) if face_count else ""}')
+                                            download_img(face['image_uris']['border_crop'], f'{part["id"]}{"-"+str(face_count) if face_count else ""}')
                                             face_count += 1
                                 else:
                                     continue
@@ -318,6 +332,9 @@ class SelectWindow(QMainWindow):
         super().__init__()
         self.ui = Ui_SelectWindow()
         self.ui.setupUi(self)
+        
+        QFontDatabase.addApplicationFont("Data/Planewalker-38m6.ttf")
+        
         self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
         self.card_list = card_list
         self.panel = panel
@@ -351,7 +368,7 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        QFontDatabase.addApplicationFont("Planewalker-38m6.ttf")
+        QFontDatabase.addApplicationFont("Data/Planewalker-38m6.ttf")
 
         self.card_data = card_data
 

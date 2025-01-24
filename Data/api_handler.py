@@ -40,8 +40,12 @@ def download_json_file(url, file_path) -> None:
         file.write(response.content)
     return response.json()
 
-def download_img(url):
+def download_img(url: str, id: str = None):
     response = requests.get(url)
+    if id:
+        with open(f"Images/{id}.png", 'wb') as file:
+            file.write(response.content)
+        return f"Images/{id}.png"
     return response.content
 
 def check_bulk_data() -> bool:

@@ -1,6 +1,7 @@
 import win32print
 import win32ui
 from PIL import Image, ImageWin
+from Data.image_handler import convert_card
 
 def print_card(file_name):
     printer_name = win32print.GetDefaultPrinter ()
@@ -8,7 +9,7 @@ def print_card(file_name):
     hDC = win32ui.CreateDC ()
     hDC.CreatePrinterDC (printer_name)
 
-    bmp = Image.open(file_name)
+    bmp = convert_card(file_name, img_return=True)
     if bmp.size[0] > bmp.size[1]:
         bmp = bmp.rotate (90)
 
