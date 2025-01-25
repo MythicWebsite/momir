@@ -13,14 +13,17 @@ from Data.api_handler import find_newest_version, download_img, check_bulk_data,
 from Data.image_handler import convert_card, flip_card_image
 from Data.print_handler import print_card
 
+app_path = os.path.dirname(os.path.abspath(__file__))
 if getattr(sys, 'frozen', False):
     os.chdir(os.path.dirname(sys.executable))
+
 
 token_ignore_list = [' Ad', 'Decklist', ' Bio', 'Checklist', 'Punchcard']
 token_types = ['token', 'dungeon', 'emblem', 'double_faced_token']
 token_card_types = ['Token', 'Card', 'Dungeon', 'Emblem']
 card_types = ['Creature', 'Artifact', 'Enchantment', 'Instant', 'Sorcery', 'Planeswalker', 'Land', 'Battle']
 set_type_ignore = ['alchemy', 'memorabilia', 'vanguard', 'archenemy', 'minigame']
+
 default_settings = {
 'Online': True,
 'Un': False,
@@ -96,8 +99,6 @@ class LoadingWindow(QMainWindow):
         super().__init__()
         self.ui = Ui_LoadingWindow()
         self.ui.setupUi(self)
-
-        QFontDatabase.addApplicationFont("Data/Planewalker-38m6.ttf")
 
         self.show()
 
@@ -189,7 +190,7 @@ class LoadingWindow(QMainWindow):
             self.set_info("Sorting card data")
             for card_type in card_types:
                 self.set_info(f"Sorting {card_type} data")
-                card_list = [card for card in self.card_data['oracle_cards'] if card_type in card['type_line'].split('//')[0] and not card['layout'] in ['token', 'double_faced_token']]
+                card_list = [card for card in self.card_data['oracle_cards'] if card_type in card['type_line'].split('//')[0] and not 'Token' in card['type_line'].split('//')[0] and not card['layout'] in ['token', 'double_faced_token']]
                 card_list = self.sort_data(card_list)
                 self.card_data[card_type] = card_list
                 with open(f'json/{card_type.lower()}.json', 'w') as json_file:
@@ -249,8 +250,11 @@ class LoadingWindow(QMainWindow):
         # self.panel.card_data = self.card_data
         all_checks = self.panel.ui.centralwidget.findChildren(QCheckBox)
         for check in all_checks:
-            if check.objectName().split('_')[1].capitalize() in self.card_data['settings']:
-                check.setChecked(self.card_data['settings'][check.objectName().split('_')[1].capitalize()])
+            check_name = check.objectName().split('_')[1].capitalize()
+            if check_name in self.card_data['settings']['type_toggles']:
+                check.setChecked(self.card_data['settings']['type_toggles'][check_name])
+            elif check_name in self.card_data['settings']:
+                check.setChecked(self.card_data['settings'][check_name])
         self.panel.debounce = False
         self.panel.setup_cur_data()
         self.panel.showFullScreen()
@@ -261,8 +265,6 @@ class DownloadWindow(QMainWindow):
         super().__init__()
         self.ui = Ui_LoadingWindow()
         self.ui.setupUi(self)
-        
-        QFontDatabase.addApplicationFont("Data/Planewalker-38m6.ttf")
         
         self.set_info("Downloading missing images")
         self.set_bar(0)
@@ -304,8 +306,6 @@ class SelectWindow(QMainWindow):
         self.ui = Ui_SelectWindow()
         self.ui.setupUi(self)
         
-        QFontDatabase.addApplicationFont("Data/Planewalker-38m6.ttf")
-        
         self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
         self.card_list = card_list
         self.panel = panel
@@ -338,8 +338,6 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-
-        QFontDatabase.addApplicationFont("Data/Planewalker-38m6.ttf")
 
         self.card_data = card_data
 
@@ -570,7 +568,21 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    app.setFont(QFont("Planewalker"))
+    if getattr(sys, 'frozen', False):
+        font_id = QFontDatabase.addApplicationFont(f"{app_path}\\Planewalker-38m6.ttf")
+    else:
+        font_id = QFontDatabase.addApplicationFont(f"{app_path}\\Data\\Planewalker-38m6.ttf")
+    if font_id != -1:
+        font_families = QFontDatabase.applicationFontFamilies(font_id)
+        if font_families:
+            print("Font loaded")
+            font = QFont(font_families[0])
+            app.setFont(font)
+        else:
+            print("Font not loaded")
+    else:
+        # sys.exit("Font not loaded")
+        pass
     window = LoadingWindow()
-    # window.show()
+    window.show()
     sys.exit(app.exec())
