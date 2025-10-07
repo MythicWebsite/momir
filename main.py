@@ -1017,6 +1017,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        self.ui.tabWidget.setCurrentIndex(0)
 
         self.card_data = card_data
 
