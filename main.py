@@ -19,7 +19,7 @@ from PySide6.QtCore import Qt, QSize, QTimer, QEventLoop
 from PySide6.QtGui import QPixmap, QFontDatabase, QFont
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QPushButton, QLabel, QGridLayout,
-    QListWidgetItem, QCheckBox, QAbstractItemView
+    QListWidgetItem, QCheckBox, QAbstractItemView, QFrame
 )
 
 from Data.ui_panel import Ui_MainWindow
@@ -1047,8 +1047,11 @@ class MainWindow(QMainWindow):
         self.ui.card_display.setPixmap(card_back)
         self.ui.card_display.setAlignment(Qt.AlignCenter)
         
-        # Initialize favorite button text
         self.ui.button_favorite_token.setText("Favorite")
+        
+        self._create_scroll_indicator()
+        
+        self.ui.scrollArea.verticalScrollBar().valueChanged.connect(self._on_token_scroll)
 
     def _create_scaled_pixmap(self, image_path: str, size: QSize) -> QPixmap:
         """Create a scaled pixmap with consistent parameters."""
@@ -1057,6 +1060,78 @@ class MainWindow(QMainWindow):
             aspectMode=Qt.KeepAspectRatio, 
             mode=Qt.SmoothTransformation
         )
+
+    def _create_scroll_indicator(self):
+        """Create a scroll indicator to show current letter position."""
+        self.scroll_indicator = QLabel(self.ui.tokens_tab_2)
+        self.scroll_indicator.setFixedSize(320, 450)
+        self.scroll_indicator.setAlignment(Qt.AlignCenter)
+        self.scroll_indicator.setStyleSheet("""
+            QLabel {
+                background-color: rgba(0, 0, 0, 255);
+                color: white;
+                font-size: 200px;
+                font-weight: bold;
+                border-radius: 15px;
+                border: 3px solid white;
+            }
+        """)
+        self.scroll_indicator.setText("A")
+        self.scroll_indicator.hide()
+        
+        self._position_scroll_indicator()
+        
+        self.scroll_timer = QTimer()
+        self.scroll_timer.setSingleShot(True)
+        self.scroll_timer.timeout.connect(self._hide_scroll_indicator)
+        
+        self.token_names_list = []
+
+    def _on_token_scroll(self, value):
+        """Handle scroll events to update the letter indicator."""
+        if not self.token_names_list or self.ui.token_grid_2.count() == 0:
+            return
+            
+        scroll_area = self.ui.scrollArea
+        scroll_bar = scroll_area.verticalScrollBar()
+        
+        if scroll_bar.maximum() == 0:
+            return
+            
+        scroll_percentage = value / scroll_bar.maximum() if scroll_bar.maximum() > 0 else 0
+        
+        token_index = int(scroll_percentage * len(self.token_names_list))
+        token_index = min(token_index, len(self.token_names_list) - 1)
+        
+        if token_index >= 0 and token_index < len(self.token_names_list):
+            token_name = self.token_names_list[token_index]
+            first_letter = token_name[0].upper() if token_name else "A"
+            
+            self.scroll_indicator.setText(first_letter)
+            self.scroll_indicator.show()
+            self._position_scroll_indicator()
+            
+            self.scroll_timer.stop()
+            self.scroll_timer.start(1500)
+
+    def _position_scroll_indicator(self):
+        """Position the scroll indicator over the card display area."""
+        if hasattr(self, 'scroll_indicator'):
+            card_display_geometry = self.ui.token_display_2.geometry()
+            
+            indicator_x = card_display_geometry.x() + (card_display_geometry.width() - self.scroll_indicator.width()) // 2
+            indicator_y = card_display_geometry.y() + (card_display_geometry.height() - self.scroll_indicator.height()) // 2
+            
+            self.scroll_indicator.move(indicator_x, indicator_y)
+
+    def _hide_scroll_indicator(self):
+        """Hide the scroll indicator."""
+        if hasattr(self, 'scroll_indicator'):
+            self.scroll_indicator.hide()
+
+    def _update_token_names_list(self, tokens_to_process):
+        """Update the list of token names for scroll indicator calculation."""
+        self.token_names_list = [token.get('name', '') for token in tokens_to_process]
 
     def button_animate(self):
         self.sender().setDown(True)
@@ -1069,7 +1144,6 @@ class MainWindow(QMainWindow):
     def on_favorite_click(self):
         """Toggle favorite status of currently selected token."""
         if not self.selected_token_id:
-            # No token selected, update button text to indicate this
             self.ui.button_favorite_token.setText("Select a token first")
             QTimer.singleShot(2000, lambda: self.ui.button_favorite_token.setText("Favorite"))
             return
@@ -1080,21 +1154,16 @@ class MainWindow(QMainWindow):
         favorites = self.card_data['settings']['favorites']
         
         if self.selected_token_id in favorites:
-            # Remove from favorites
             favorites.remove(self.selected_token_id)
             self.ui.button_favorite_token.setText("Favorite")
         else:
-            # Add to favorites
             favorites.append(self.selected_token_id)
             self.ui.button_favorite_token.setText("❤️ Unfavorite")
         
-        # Save settings
         self._save_settings()
         
-        # Refresh the token grid to show new order immediately
         self._refresh_token_grid()
         
-        # Update button text back to normal after a moment
         QTimer.singleShot(1500, self._update_favorite_button_text)
 
     def _save_settings(self):
@@ -1116,11 +1185,9 @@ class MainWindow(QMainWindow):
 
     def _refresh_token_grid(self):
         """Refresh the token grid to reflect new favorite order."""
-        # Check if tokens are currently loaded
         if self.ui.token_grid_2.count() == 0:
-            return  # No tokens loaded, nothing to refresh
+            return 
         
-        # Store current grid state
         current_widgets = []
         for i in range(self.ui.token_grid_2.count()):
             item = self.ui.token_grid_2.itemAt(i)
@@ -1133,23 +1200,28 @@ class MainWindow(QMainWindow):
                     'pixmap': widget.pixmap()
                 })
         
-        # Clear the grid
         while self.ui.token_grid_2.count():
             child = self.ui.token_grid_2.takeAt(0)
             if child.widget():
-                child.widget().setParent(None)  # Don't delete, just remove from layout
+                child.widget().setParent(None)
         
-        # Sort widgets: favorites first, then regular
         favorites = self.card_data['settings'].get('favorites', [])
         favorite_widgets = [w for w in current_widgets if w['token_id'] in favorites]
         regular_widgets = [w for w in current_widgets if w['token_id'] not in favorites]
         sorted_widgets = favorite_widgets + regular_widgets
         
-        # Re-add widgets to grid in new order
+        sorted_token_names = []
+        for widget_data in sorted_widgets:
+            token_id = widget_data['token_id']
+            for token in self.card_data['Token']:
+                if token.get('oracle_id', token.get('id', '')) == token_id:
+                    sorted_token_names.append(token.get('name', ''))
+                    break
+        self.token_names_list = sorted_token_names
+        
         for i, widget_data in enumerate(sorted_widgets):
             widget = widget_data['widget']
             
-            # Update visual styling for favorites
             if widget_data['token_id'] in favorites:
                 widget.setStyleSheet("border: 3px solid gold; border-radius: 5px;")
                 widget.setToolTip("Favorite")
@@ -1157,7 +1229,6 @@ class MainWindow(QMainWindow):
                 widget.setStyleSheet("")
                 widget.setToolTip("")
             
-            # Calculate grid position
             row = i // 8
             col = i % 8
             
@@ -1385,6 +1456,9 @@ class MainWindow(QMainWindow):
             
             # Combine favorites first, then regular tokens
             tokens_to_process = favorite_tokens + regular_tokens
+            
+            # Update token names list for scroll indicator
+            self._update_token_names_list(tokens_to_process)
             
             total_tokens = len(tokens_to_process)
             
