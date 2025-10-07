@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'panel.ui'
+## Form generated from reading UI file 'panelotdWrA.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.8.1
 ##
@@ -69,8 +69,8 @@ class Ui_MainWindow(object):
 "}")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        self.horizontalLayout_2 = QHBoxLayout(self.centralwidget)
-        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.gridLayout_8 = QGridLayout(self.centralwidget)
+        self.gridLayout_8.setObjectName(u"gridLayout_8")
         self.tabWidget = QTabWidget(self.centralwidget)
         self.tabWidget.setObjectName(u"tabWidget")
         font = QFont()
@@ -380,7 +380,7 @@ class Ui_MainWindow(object):
         self.scrollArea_3.setWidgetResizable(True)
         self.scrollAreaWidgetContents_3 = QWidget()
         self.scrollAreaWidgetContents_3.setObjectName(u"scrollAreaWidgetContents_3")
-        self.scrollAreaWidgetContents_3.setGeometry(QRect(0, 0, 80, 84))
+        self.scrollAreaWidgetContents_3.setGeometry(QRect(0, 0, 1320, 1062))
         self.horizontalLayout_7 = QHBoxLayout(self.scrollAreaWidgetContents_3)
         self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
         self.horizontalLayout_7.setContentsMargins(0, 0, 0, 0)
@@ -476,7 +476,7 @@ class Ui_MainWindow(object):
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName(u"scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 80, 84))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 1320, 1062))
         self.horizontalLayout_5 = QHBoxLayout(self.scrollAreaWidgetContents_2)
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
         self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
@@ -547,19 +547,31 @@ class Ui_MainWindow(object):
         self.gridLayout_4 = QGridLayout()
         self.gridLayout_4.setObjectName(u"gridLayout_4")
         self.gridLayout_4.setSizeConstraint(QLayout.SizeConstraint.SetMaximumSize)
+        self.token_display_2 = QLabel(self.tokens_tab_2)
+        self.token_display_2.setObjectName(u"token_display_2")
+        self.token_display_2.setMinimumSize(QSize(500, 600))
+        self.token_display_2.setMaximumSize(QSize(600, 16777215))
+
+        self.gridLayout_4.addWidget(self.token_display_2, 0, 0, 1, 1)
+
+        self.verticalLayout_5 = QVBoxLayout()
+        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
+        self.button_favorite_token = QPushButton(self.tokens_tab_2)
+        self.button_favorite_token.setObjectName(u"button_favorite_token")
+        self.button_favorite_token.setMinimumSize(QSize(500, 100))
+        self.button_favorite_token.setMaximumSize(QSize(600, 16777215))
+
+        self.verticalLayout_5.addWidget(self.button_favorite_token)
+
         self.button_print_token_2 = QPushButton(self.tokens_tab_2)
         self.button_print_token_2.setObjectName(u"button_print_token_2")
         self.button_print_token_2.setMinimumSize(QSize(500, 100))
         self.button_print_token_2.setMaximumSize(QSize(600, 16777215))
 
-        self.gridLayout_4.addWidget(self.button_print_token_2, 1, 0, 1, 1)
+        self.verticalLayout_5.addWidget(self.button_print_token_2)
 
-        self.token_display_2 = QLabel(self.tokens_tab_2)
-        self.token_display_2.setObjectName(u"token_display_2")
-        self.token_display_2.setMinimumSize(QSize(500, 0))
-        self.token_display_2.setMaximumSize(QSize(600, 16777215))
 
-        self.gridLayout_4.addWidget(self.token_display_2, 0, 0, 1, 1)
+        self.gridLayout_4.addLayout(self.verticalLayout_5, 1, 0, 1, 1)
 
 
         self.horizontalLayout_3.addLayout(self.gridLayout_4)
@@ -572,7 +584,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 602, 602))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1318, 1062))
         self.horizontalLayout_4 = QHBoxLayout(self.scrollAreaWidgetContents)
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
         self.horizontalLayout_4.setContentsMargins(0, 0, 0, 0)
@@ -627,13 +639,68 @@ class Ui_MainWindow(object):
 "}")
         self.gridLayout_7 = QGridLayout(self.settings_tab)
         self.gridLayout_7.setObjectName(u"gridLayout_7")
+        self.verticalLayout_4 = QVBoxLayout()
+        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
+        self.label_23 = QLabel(self.settings_tab)
+        self.label_23.setObjectName(u"label_23")
+        self.label_23.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.verticalLayout_4.addWidget(self.label_23)
+
+        self.check_online = QCheckBox(self.settings_tab)
+        self.check_online.setObjectName(u"check_online")
+        self.check_online.setMinimumSize(QSize(400, 0))
+        self.check_online.setMaximumSize(QSize(400, 16777215))
+        self.check_online.setChecked(True)
+
+        self.verticalLayout_4.addWidget(self.check_online)
+
+        self.check_un = QCheckBox(self.settings_tab)
+        self.check_un.setObjectName(u"check_un")
+        self.check_un.setMinimumSize(QSize(400, 0))
+        self.check_un.setMaximumSize(QSize(400, 16777215))
+
+        self.verticalLayout_4.addWidget(self.check_un)
+
+        self.check_select = QCheckBox(self.settings_tab)
+        self.check_select.setObjectName(u"check_select")
+        self.check_select.setMinimumSize(QSize(400, 0))
+        self.check_select.setMaximumSize(QSize(400, 16777215))
+        self.check_select.setChecked(False)
+
+        self.verticalLayout_4.addWidget(self.check_select)
+
+        self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_4.addItem(self.verticalSpacer_4)
+
+        self.verticalSpacer_7 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_4.addItem(self.verticalSpacer_7)
+
+        self.button_exit = QPushButton(self.settings_tab)
+        self.button_exit.setObjectName(u"button_exit")
+        self.button_exit.setMinimumSize(QSize(0, 100))
+        self.button_exit.setMaximumSize(QSize(16777215, 100))
+        self.button_exit.setStyleSheet(u"QPushButton {\n"
+"	background-color: rgb(200, 0, 0);\n"
+"}\n"
+"QPushButton::pressed {\n"
+"	background-color: rgb(170,0,0);\n"
+"}")
+
+        self.verticalLayout_4.addWidget(self.button_exit)
+
+        self.verticalSpacer_5 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_4.addItem(self.verticalSpacer_5)
+
+
+        self.gridLayout_7.addLayout(self.verticalLayout_4, 1, 4, 1, 1)
+
         self.horizontalSpacer_7 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.gridLayout_7.addItem(self.horizontalSpacer_7, 1, 5, 1, 1)
-
-        self.horizontalSpacer_6 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.gridLayout_7.addItem(self.horizontalSpacer_6, 1, 3, 1, 1)
 
         self.verticalLayout_2 = QVBoxLayout()
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
@@ -707,72 +774,17 @@ class Ui_MainWindow(object):
 
         self.gridLayout_7.addLayout(self.verticalLayout_2, 1, 1, 1, 1)
 
-        self.verticalLayout_4 = QVBoxLayout()
-        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
-        self.label_23 = QLabel(self.settings_tab)
-        self.label_23.setObjectName(u"label_23")
-        self.label_23.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.horizontalSpacer_5 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.verticalLayout_4.addWidget(self.label_23)
+        self.gridLayout_7.addItem(self.horizontalSpacer_5, 1, 0, 1, 1)
 
-        self.check_online = QCheckBox(self.settings_tab)
-        self.check_online.setObjectName(u"check_online")
-        self.check_online.setMinimumSize(QSize(400, 0))
-        self.check_online.setMaximumSize(QSize(400, 16777215))
-        self.check_online.setChecked(True)
+        self.horizontalSpacer_6 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.verticalLayout_4.addWidget(self.check_online)
-
-        self.check_un = QCheckBox(self.settings_tab)
-        self.check_un.setObjectName(u"check_un")
-        self.check_un.setMinimumSize(QSize(400, 0))
-        self.check_un.setMaximumSize(QSize(400, 16777215))
-
-        self.verticalLayout_4.addWidget(self.check_un)
-
-        self.check_select = QCheckBox(self.settings_tab)
-        self.check_select.setObjectName(u"check_select")
-        self.check_select.setMinimumSize(QSize(400, 0))
-        self.check_select.setMaximumSize(QSize(400, 16777215))
-        self.check_select.setChecked(False)
-
-        self.verticalLayout_4.addWidget(self.check_select)
-
-        self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.verticalLayout_4.addItem(self.verticalSpacer_4)
-
-        self.verticalSpacer_7 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.verticalLayout_4.addItem(self.verticalSpacer_7)
-
-        self.button_exit = QPushButton(self.settings_tab)
-        self.button_exit.setObjectName(u"button_exit")
-        self.button_exit.setMinimumSize(QSize(0, 100))
-        self.button_exit.setMaximumSize(QSize(16777215, 100))
-        self.button_exit.setStyleSheet(u"QPushButton {\n"
-"	background-color: rgb(200, 0, 0);\n"
-"}\n"
-"QPushButton::pressed {\n"
-"	background-color: rgb(170,0,0);\n"
-"}")
-
-        self.verticalLayout_4.addWidget(self.button_exit)
-
-        self.verticalSpacer_5 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.verticalLayout_4.addItem(self.verticalSpacer_5)
-
-
-        self.gridLayout_7.addLayout(self.verticalLayout_4, 1, 4, 1, 1)
+        self.gridLayout_7.addItem(self.horizontalSpacer_6, 1, 3, 1, 1)
 
         self.horizontalSpacer_8 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.gridLayout_7.addItem(self.horizontalSpacer_8, 1, 7, 1, 1)
-
-        self.horizontalSpacer_5 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.gridLayout_7.addItem(self.horizontalSpacer_5, 1, 0, 1, 1)
 
         self.verticalLayout_3 = QVBoxLayout()
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
@@ -878,7 +890,7 @@ class Ui_MainWindow(object):
 
         self.tabWidget.addTab(self.settings_tab, "")
 
-        self.horizontalLayout_2.addWidget(self.tabWidget)
+        self.gridLayout_8.addWidget(self.tabWidget, 0, 0, 1, 1)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
@@ -888,7 +900,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(4)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -944,10 +956,17 @@ class Ui_MainWindow(object):
         self.label_2.setText("")
         self.label_11.setText("")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tokens_tab), QCoreApplication.translate("MainWindow", u"  Tokens  ", None))
-        self.button_print_token_2.setText(QCoreApplication.translate("MainWindow", u" Print", None))
         self.token_display_2.setText("")
+        self.button_favorite_token.setText(QCoreApplication.translate("MainWindow", u"Favorite", None))
+        self.button_print_token_2.setText(QCoreApplication.translate("MainWindow", u" Print", None))
         self.button_loadtokens.setText(QCoreApplication.translate("MainWindow", u"Load Tokens", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tokens_tab_2), QCoreApplication.translate("MainWindow", u"  All Tokens  ", None))
+        self.label_23.setText(QCoreApplication.translate("MainWindow", u"Settings\n"
+"", None))
+        self.check_online.setText(QCoreApplication.translate("MainWindow", u"Online Mode", None))
+        self.check_un.setText(QCoreApplication.translate("MainWindow", u"Enable Un Cards", None))
+        self.check_select.setText(QCoreApplication.translate("MainWindow", u"Select 3 Mode", None))
+        self.button_exit.setText(QCoreApplication.translate("MainWindow", u"Exit", None))
         self.label_22.setText(QCoreApplication.translate("MainWindow", u"Enabled Card Types\n"
 "", None))
         self.check_creature.setText(QCoreApplication.translate("MainWindow", u"Creatures", None))
@@ -958,12 +977,6 @@ class Ui_MainWindow(object):
         self.check_battle.setText(QCoreApplication.translate("MainWindow", u"Battles", None))
         self.check_instant.setText(QCoreApplication.translate("MainWindow", u"Instants", None))
         self.check_sorcery.setText(QCoreApplication.translate("MainWindow", u"Sorceries", None))
-        self.label_23.setText(QCoreApplication.translate("MainWindow", u"Settings\n"
-"", None))
-        self.check_online.setText(QCoreApplication.translate("MainWindow", u"Online Mode", None))
-        self.check_un.setText(QCoreApplication.translate("MainWindow", u"Enable Un Cards", None))
-        self.check_select.setText(QCoreApplication.translate("MainWindow", u"Select 3 Mode", None))
-        self.button_exit.setText(QCoreApplication.translate("MainWindow", u"Exit", None))
         self.label_24.setText(QCoreApplication.translate("MainWindow", u"Image Downloads", None))
         self.label_26.setText(QCoreApplication.translate("MainWindow", u"These can take a significant\n"
 "amount of time", None))

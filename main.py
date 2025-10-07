@@ -34,7 +34,7 @@ if getattr(sys, 'frozen', False):
     os.chdir(os.path.dirname(sys.executable))
 
 # Constants for filtering and categorization
-TOKEN_IGNORE_LIST = [' Ad', 'Decklist', ' Bio', 'Checklist', 'Punchcard']
+TOKEN_IGNORE_LIST = [' Ad', 'Decklist', ' Bio', 'Checklist', 'Punchcard', '// Token']
 TOKEN_TYPES = ['token', 'dungeon', 'emblem', 'double_faced_token']
 TOKEN_CARD_TYPES = ['Token', 'Card', 'Dungeon', 'Emblem']
 CARD_TYPES = ['Creature', 'Artifact', 'Enchantment', 'Instant', 'Sorcery', 'Planeswalker', 'Land', 'Battle']
@@ -49,6 +49,7 @@ DEFAULT_SETTINGS = {
     'Un': False,
     'first_run': True,
     'Select': False,
+    'favorites': [],  # List of favorite token oracle_ids
     'type_toggles': {
         'Creature': True,
         'Artifact': False,
@@ -628,7 +629,7 @@ class DownloadWindow(QMainWindow):
                 image_path = f'Images/{current_card["oracle_id"]}.png'
                 if not os.path.exists(image_path):
                     if (current_card.get('card_faces', [{}])[0].get('image_uris', None) and 
-                        "//" in current_card['type_line']):
+                        "//" in current_card['type_line']) and not "// Token" in current_card['type_line']:
                         try:
                             front_url = current_card['card_faces'][0]['image_uris']['border_crop']
                             back_url = current_card['card_faces'][1]['image_uris']['border_crop']
@@ -1010,6 +1011,7 @@ class MainWindow(QMainWindow):
     debounce = True
     card_data = {}
     selected_card = None
+    selected_token_id = None  # Track currently selected token for favoriting
     
     def __init__(self, card_data: dict):
         super().__init__()
@@ -1031,6 +1033,8 @@ class MainWindow(QMainWindow):
                 button.clicked.connect(self.on_print_click)
             elif button.objectName().split('_')[1] == 'loadtokens':
                 button.clicked.connect(self.on_loadtokens_click)
+            elif button.objectName().split('_')[1] == 'favorite':
+                button.clicked.connect(self.on_favorite_click)
             elif button.objectName().split('_')[0] == 'download':
                 button.clicked.connect(self.download_button_click)
             elif button.objectName().split('_')[1] == 'exit':
@@ -1042,6 +1046,9 @@ class MainWindow(QMainWindow):
         card_back = self._create_scaled_pixmap("Images/preview_image.png", DISPLAY_SIZE*1.5)
         self.ui.card_display.setPixmap(card_back)
         self.ui.card_display.setAlignment(Qt.AlignCenter)
+        
+        # Initialize favorite button text
+        self.ui.button_favorite_token.setText("Favorite")
 
     def _create_scaled_pixmap(self, image_path: str, size: QSize) -> QPixmap:
         """Create a scaled pixmap with consistent parameters."""
@@ -1058,6 +1065,105 @@ class MainWindow(QMainWindow):
 
     def on_exit_click(self):
         self.close()
+
+    def on_favorite_click(self):
+        """Toggle favorite status of currently selected token."""
+        if not self.selected_token_id:
+            # No token selected, update button text to indicate this
+            self.ui.button_favorite_token.setText("Select a token first")
+            QTimer.singleShot(2000, lambda: self.ui.button_favorite_token.setText("Favorite"))
+            return
+        
+        if 'favorites' not in self.card_data['settings']:
+            self.card_data['settings']['favorites'] = []
+        
+        favorites = self.card_data['settings']['favorites']
+        
+        if self.selected_token_id in favorites:
+            # Remove from favorites
+            favorites.remove(self.selected_token_id)
+            self.ui.button_favorite_token.setText("Favorite")
+        else:
+            # Add to favorites
+            favorites.append(self.selected_token_id)
+            self.ui.button_favorite_token.setText("❤️ Unfavorite")
+        
+        # Save settings
+        self._save_settings()
+        
+        # Refresh the token grid to show new order immediately
+        self._refresh_token_grid()
+        
+        # Update button text back to normal after a moment
+        QTimer.singleShot(1500, self._update_favorite_button_text)
+
+    def _save_settings(self):
+        """Save current settings to file."""
+        try:
+            with open('json/settings.json', 'w') as json_file:
+                json.dump(self.card_data['settings'], json_file, indent=4)
+        except Exception as e:
+            print(f"Error saving settings: {e}")
+
+    def _update_favorite_button_text(self):
+        """Update favorite button text based on current selection."""
+        if not self.selected_token_id:
+            self.ui.button_favorite_token.setText("Favorite")
+        elif self.selected_token_id in self.card_data['settings'].get('favorites', []):
+            self.ui.button_favorite_token.setText("❤️ Unfavorite")
+        else:
+            self.ui.button_favorite_token.setText("Favorite")
+
+    def _refresh_token_grid(self):
+        """Refresh the token grid to reflect new favorite order."""
+        # Check if tokens are currently loaded
+        if self.ui.token_grid_2.count() == 0:
+            return  # No tokens loaded, nothing to refresh
+        
+        # Store current grid state
+        current_widgets = []
+        for i in range(self.ui.token_grid_2.count()):
+            item = self.ui.token_grid_2.itemAt(i)
+            if item and item.widget():
+                widget = item.widget()
+                token_id = str(widget.objectName).strip('{\'}')
+                current_widgets.append({
+                    'widget': widget,
+                    'token_id': token_id,
+                    'pixmap': widget.pixmap()
+                })
+        
+        # Clear the grid
+        while self.ui.token_grid_2.count():
+            child = self.ui.token_grid_2.takeAt(0)
+            if child.widget():
+                child.widget().setParent(None)  # Don't delete, just remove from layout
+        
+        # Sort widgets: favorites first, then regular
+        favorites = self.card_data['settings'].get('favorites', [])
+        favorite_widgets = [w for w in current_widgets if w['token_id'] in favorites]
+        regular_widgets = [w for w in current_widgets if w['token_id'] not in favorites]
+        sorted_widgets = favorite_widgets + regular_widgets
+        
+        # Re-add widgets to grid in new order
+        for i, widget_data in enumerate(sorted_widgets):
+            widget = widget_data['widget']
+            
+            # Update visual styling for favorites
+            if widget_data['token_id'] in favorites:
+                widget.setStyleSheet("border: 3px solid gold; border-radius: 5px;")
+                widget.setToolTip("Favorite")
+            else:
+                widget.setStyleSheet("")
+                widget.setToolTip("")
+            
+            # Calculate grid position
+            row = i // 8
+            col = i % 8
+            
+            self.ui.token_grid_2.addWidget(widget, row, col)
+        
+        QApplication.processEvents()
 
     def setup_cur_data(self):
         self.card_data['cur_data'] = {}
@@ -1223,11 +1329,14 @@ class MainWindow(QMainWindow):
                 
             lines = ["Loading All Tokens"]
             
+            # Update global token progress
             if progress is not None:
                 token_progress = progress
             
             if stage == "displaying":
-                lines.append(f"🖼️ Displaying: {progress}%")
+                lines.append(f"🖼️ Displaying: {progress}% added")
+                if details:
+                    lines.append(f"📈 Status: {details}")
             elif stage == "complete":
                 lines = [f"Load All Tokens ({details} loaded)"]
                 token_progress = 100
@@ -1237,8 +1346,13 @@ class MainWindow(QMainWindow):
             else:
                 lines.append(f"📊 Progress: {token_progress}%")
             
+            # Join lines with newlines to create multi-line text
             status_text = "\n".join(lines)
             self.ui.button_loadtokens.setText(status_text)
+            QApplication.processEvents()
+            
+        except RuntimeError:
+            pass  # UI object deleted
             self.ui.button_loadtokens.raise_()
             QApplication.processEvents()
             
@@ -1251,14 +1365,30 @@ class MainWindow(QMainWindow):
             if not self.ui or not hasattr(self.ui, 'button_loadtokens'):
                 return
                 
-            tokens_to_process = [
+            # Pre-filter tokens for better performance
+            filtered_tokens = [
                 token for token in self.card_data['Token']
                 if not any(ignore in token['name'] for ignore in TOKEN_IGNORE_LIST)
             ]
             
+            # Sort tokens to put favorites first
+            favorites = self.card_data['settings'].get('favorites', [])
+            favorite_tokens = []
+            regular_tokens = []
+            
+            for token in filtered_tokens:
+                token_id = token.get('oracle_id', token.get('id', ''))
+                if token_id in favorites:
+                    favorite_tokens.append(token)
+                else:
+                    regular_tokens.append(token)
+            
+            # Combine favorites first, then regular tokens
+            tokens_to_process = favorite_tokens + regular_tokens
+            
             total_tokens = len(tokens_to_process)
             
-            self._update_token_status("preparing", details=total_tokens)
+            self._update_token_status("preparing", details=f"{total_tokens} tokens ({len(favorite_tokens)} favorites)")
             
             if not tokens_to_process:
                 self._finish_token_loading(0)
@@ -1363,7 +1493,17 @@ class MainWindow(QMainWindow):
                     new_card = QLabel()
                     new_card.setPixmap(element['pixmap'])
                     new_card.objectName = {element['object_name']}
+                    new_card.setAlignment(Qt.AlignCenter)
                     
+                    # Add visual indicator for favorite tokens
+                    token_id = element['object_name']
+                    if token_id in self.card_data['settings'].get('favorites', []):
+                        new_card.setStyleSheet("border: 3px solid gold; border-radius: 5px;")
+                        new_card.setToolTip("⭐ Favorite Token")
+                    else:
+                        new_card.setStyleSheet("")
+                    
+                    # Calculate grid position
                     row = j // 8
                     col = j % 8
                     
@@ -1373,7 +1513,7 @@ class MainWindow(QMainWindow):
                         source_object=new_card
                     )
                 except RuntimeError:
-                    break
+                    break  # UI deleted
             
             progress = int(((batch_end) / total_elements) * 100)
             details = f"{batch_end}/{total_elements} tokens added"
@@ -1489,12 +1629,21 @@ class MainWindow(QMainWindow):
     def grid_item_click(self, event, source_object:QLabel = None, grid = 'token'):
         image_path = f'Images/{str(source_object.objectName).strip('{\'}')}.png'
         pixmap = self._create_scaled_pixmap(image_path, DISPLAY_SIZE)
+        
+        # Extract token ID from the source object name
+        token_id = str(source_object.objectName).strip('{\'}')
+        
         if grid == 'token':
             self.ui.token_display.setPixmap(pixmap)
             self.ui.token_display_2.setPixmap(pixmap)
             self.ui.token_display.setAlignment(Qt.AlignCenter)
             self.ui.token_display_2.setAlignment(Qt.AlignCenter)
             self.token_print = image_path
+            
+            # Update selected token for favoriting
+            self.selected_token_id = token_id
+            self._update_favorite_button_text()
+            
         elif grid == 'history':
             self.ui.history_display.setPixmap(pixmap)
             self.ui.history_display.setAlignment(Qt.AlignCenter)
