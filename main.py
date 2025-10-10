@@ -49,7 +49,28 @@ DEFAULT_SETTINGS = {
     'Un': False,
     'first_run': True,
     'Select': False,
-    'favorites': [],  # List of favorite token oracle_ids
+    'favorites': [
+        "ddc8c973-c31e-463f-be45-f3fa7d632362",
+        "4465eff4-5851-4721-a248-866c686c2ab8",
+        "eac25f12-6459-438c-a09e-93e23d2cf80d",
+        "2b7dba01-b08c-4218-9fc1-da55559d9155",
+        "d5cf6e2e-ff20-4efa-a722-9e12925e2052",
+        "f39a3005-bc92-49bf-9e32-28e99c4de5c5",
+        "6bb61f34-5d57-4eaa-a02c-f5d08c1ee920",
+        "b2224843-8274-4872-a7ca-2adf69cc066b",
+        "40c64f08-ab2f-4933-8e0e-d1a1c729008f",
+        "079c46cc-feb0-4998-8593-c8b739afdb82",
+        "695b14a0-920a-47bd-bd4a-7989862cdd0a",
+        "0eb3cd4b-c34e-448c-a9ab-e7b0b4524833",
+        "3aaf906a-e749-4e86-ac79-97650b92f271",
+        "60fe4897-6760-4c5a-8074-c92bd64df52b",
+        "dac8a765-6845-4b57-bb79-4ec463436f92",
+        "3c549374-6c37-42e0-8d88-a8555d46732d",
+        "1a6c2152-71ca-46be-ab83-c84633442257",
+        "496e1083-c792-40a4-adf4-fec1d559cd5e",
+        "03f45075-9423-454f-a256-94dcafb2a779",
+        "84142407-ba98-497d-bbc8-39176aa67c02"
+    ],  # List of favorite token oracle_ids
     'type_toggles': {
         'Creature': True,
         'Artifact': False,
